@@ -1,0 +1,6 @@
+【開発環境】
+Apache 2.4
+PHP 5.2.0
+jQuery v3.5.1
+Bootstrap v4.5.0
+Font Awesome Free 5.13.1

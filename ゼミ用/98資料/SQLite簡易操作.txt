@@ -1,0 +1,30 @@
+SQLiteをPHPで使用するには、
+php.iniの以下の項目を修正する必要がある。
+
+------------------------------------------------
+
+;extension=pdo_sqlite（931行付近）
+;extension=sqlite3（942行付近）
+
+↓↓↓↓↓
+
+extension=pdo_sqlite
+extension=sqlite3
+
+------------------------------------------------
+
+DB作成
+.open DB名.db
+.open correlation.db
+
+DBファイル作成確認
+.databases
+
+テーブルの構造表示
+.schema テーブル名
+.schema cor_user
+.schema acter
+.schema time_mst
+.schema rel
+.schema rel_mst
+.schema group_mst

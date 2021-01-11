@@ -1,0 +1,40 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: タイトル
+
+paths:
+  /posts/{id}sss:
+    get:
+      description: |
+        description
+        説明文
+
+      parameters:
+        -
+          name: id
+          in: path
+          description: Id of array
+          required: true
+          type: number
+          format: double
+
+      responses:
+        200:
+          description: Successful responses
+          schema:
+            title: ArrayOfPosts
+            type: array
+            items:
+              title: Posts
+              type: object
+              properties:
+                name:
+                  type: string
+                title:
+                  type: string
+                published:
+                  type: boolean
+                content:
+                  type: string
