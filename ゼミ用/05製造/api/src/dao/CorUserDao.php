@@ -14,10 +14,9 @@ class CorUserDao {
 
         // db接続
         $connectionManager = new ConnectionManager();
-        $db = $connectionManager->getDB();
 
         // プリペアドステートメントを作成
-        $stmt = $db->prepare($sql);
+        $stmt = $connectionManager->getDB()->prepare($sql);
 
         //  sql実行
         $result = $stmt->execute();
@@ -38,10 +37,9 @@ class CorUserDao {
 
         // db接続
         $connectionManager = new ConnectionManager();
-        $db = $connectionManager->getDB();
 
         // プリペアドステートメントを作成
-        $stmt = $db->prepare($sql);
+        $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
         $stmt->bindParam(1, $userId);
@@ -73,10 +71,9 @@ class CorUserDao {
 
         // db接続
         $connectionManager = new ConnectionManager();
-        $db = $connectionManager->getDB();
 
         // プリペアドステートメントを作成
-        $stmt = $db->prepare($sql);
+        $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
         $stmt->bindParam(1, $userId);

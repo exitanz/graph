@@ -8,14 +8,12 @@ if (!isset($_SESSION)) {
 // セッション値確認
 if (!isset($_SESSION['user_id']) && empty($_SESSION['user_id']) || !isset($_SESSION['password']) && empty($_SESSION['password'])) {
     // リダイレクトを実行
-    //header("Location: ./login.php");
-    echo ('0');
+    header("Location: ./login.php");
 }
 // ログイン確認
 if (CommonLoginControler::commonLogin($_SESSION['user_id'], $_SESSION['password'])) {
     // リダイレクトを実行
-    //header("Location: ./login.php");
-    echo ('1');
+    header("Location: ./login.php");
 }
 ?>
 <!DOCTYPE html>
