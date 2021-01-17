@@ -40,7 +40,7 @@ if (CommonLoginControler::commonLogin($_SESSION['user_id'], $_SESSION['password'
                         <hr>
                         <div class="form-group row">
                             <div class="col">
-                                <a href="./rel_diagram_list.php"><button type="submit" class="btn btn-secondary btn-block"> 関係図一覧 </button></a>
+                                <a href="./rel_diagram_list.php"><button type="submit" class="btn btn-secondary btn-block"> 相関図一覧 </button></a>
                             </div>
                         </div>
                         <div class="form-group row">
