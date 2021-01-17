@@ -43,7 +43,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fas fa-pencil-alt"></i> </span>
                                     </div>
-                                    <textarea row="3" class="form-control" placeholder="説明を入力してください。" name="acter_conf"></textarea>
+                                    <textarea rows="3" class="form-control" placeholder="説明を入力してください。" name="acter_conf"></textarea>
                                 </div>
                             </div>
                             <br />
@@ -68,18 +68,13 @@
                                         <span class="input-group-text"> <i class="fas fa-image"></i> </span>
                                     </div>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputFile">
+                                        <input type="file" class="custom-file-input">
                                         <label class="custom-file-label" for="inputFile" data-browse="参照">ファイルを選択</label>
                                     </div>
                                 </div>
                             </div>
                             <br />
                             <p class="text-center"><a href="./create.php" class="btn btn-secondary">送信</a></p>
-                            <br />
-                            <br />
-                            <table class="table">
-                                <th></th>
-                            </table>
                             <br />
                             <table class="table">
                                 <thead>
@@ -93,14 +88,14 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th>1</th>
+                                        <td>1</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                         <td><button type="button" class="btn btn-danger">×</button></td>
                                     </tr>
                                     <tr>
-                                        <th>2</th>
+                                        <td>2</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -111,6 +106,7 @@
                         </form>
                     </article>
                 </div>
+                <br />
             </aside>
             <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
         </div>
