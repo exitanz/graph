@@ -19,7 +19,7 @@
                     <article class="card-body">
                         <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
                         <hr>
-                            <div class="alert alert-danger"><strong>エラー ：</strong> グループが1件もありません<br /></div>
+                            <div class="alert alert-danger"><strong>エラー ：</strong> グループが1件もありません。<br /></div>
                         <div class="form-group row">
                             <div class="col">
                                 <a href="./rel_diagram_group.php"><button type="submit" class="btn btn-secondary btn-block"> グループ１ </button></a>
