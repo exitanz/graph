@@ -21,17 +21,17 @@
                         <hr>
                         <div class="form-group row">
                             <div class="col">
-                                <a href="./rel_diagram_acter.php"><button type="submit" class="btn btn-secondary btn-block"> 登場人物 </button></a>
+                                <a href="./rel_diagram_acter.php"><button type="submit" class="btn btn-primary btn-block"> 登場人物 </button></a>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col">
-                                <a href="./rel_diagram_time.php"><button type="submit" class="btn btn-secondary btn-block"> 時系列 </button></a>
+                                <a href="./rel_diagram_time.php"><button type="submit" class="btn btn-warning btn-block"> 時系列 </button></a>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col">
-                                <a href="./rel_diagram_rel.php"><button type="submit" class="btn btn-secondary btn-block"> 関係性 </button></a>
+                                <a href="./rel_diagram_rel.php"><button type="submit" class="btn btn-success btn-block"> 関係性 </button></a>
                             </div>
                         </div>
                         <div class="form-group row">

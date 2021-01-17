@@ -38,7 +38,7 @@ if (!isset($_SESSION)) {
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fas fa-signature"></i> </span>
                                     </div>
-                                    <input class="form-control" placeholder="ユーザ名を入力してください。" type="text" name="user_name">
+                                    <input class="form-control is-invalid" placeholder="ユーザ名を入力してください。" type="text" name="user_name">
                                 </div>
                             </div>
                             <br />
@@ -48,7 +48,7 @@ if (!isset($_SESSION)) {
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                                     </div>
-                                    <input class="form-control" placeholder="パスワードを入力してください。" type="password" name="password">
+                                    <input class="form-control is-invalid" placeholder="パスワードを入力してください。" type="password" name="password">
                                 </div>
                             </div>
                             <br />

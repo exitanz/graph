@@ -21,6 +21,13 @@
                         <hr>
                         <form action="../api/src/controller/LoginControler.php" method="POST">
                             <div class="form-group">
+                                <br />
+                                <div class="alert alert-danger">登場人物名は100文字以内で入力してください<br /></div>
+                                <br />
+                                <table class="table">
+                                    <th></th>
+                                </table>
+                                <br />
                                 <h3>登場人物名</h3>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -60,14 +67,47 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fas fa-image"></i> </span>
                                     </div>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="inputFile">
-                                            <label class="custom-file-label" for="inputFile" data-browse="参照">ファイルを選択</label>
-                                        </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputFile">
+                                        <label class="custom-file-label" for="inputFile" data-browse="参照">ファイルを選択</label>
+                                    </div>
                                 </div>
                             </div>
                             <br />
                             <p class="text-center"><a href="./create.php" class="btn btn-secondary">送信</a></p>
+                            <br />
+                            <br />
+                            <table class="table">
+                                <th></th>
+                            </table>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>登場人物名</th>
+                                        <th>説明</th>
+                                        <th>時系列</th>
+                                        <th>削除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>1</th>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><button type="button" class="btn btn-danger">×</button></td>
+                                    </tr>
+                                    <tr>
+                                        <th>2</th>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><button type="button" class="btn btn-danger">×</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </form>
                     </article>
                 </div>
