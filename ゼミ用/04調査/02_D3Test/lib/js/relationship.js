@@ -2,7 +2,6 @@ var sidedata = d3.select("#side_data");
 
 var sidedataimg = d3.select("#side_data_img");
 
-//カーソルを合わせたときに表示する情報領域
 var datatip = d3.select("#datatip");
 
 var svg = d3.select("svg"),
@@ -13,53 +12,47 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3
   .forceSimulation()
-  .velocityDecay(0.3) //摩擦
-  .force("charge", d3.forceManyBody()) //詳細設定は後で
+  .velocityDecay(0.3)
+  .force("charge", d3.forceManyBody())
   .force(
     "link",
     d3.forceLink().id(function (d) {
       return d.id;
     })
-  ) //詳細設定は後で
-  .force("colllision", d3.forceCollide(40)) //nodeの衝突半径：Nodeの最大値と同じとする
-  .force("positioningX", d3.forceX()) //詳細設定は後で
-  .force("positioningY", d3.forceY()) //詳細設定は後で
-  .force("center", d3.forceCenter(width / 2, height / 2)); //重力の中心
+  )
+  .force("colllision", d3.forceCollide(40))
+  .force("positioningX", d3.forceX())
+  .force("positioningY", d3.forceY())
+  .force("center", d3.forceCenter(width / 2, height / 2));
 
-//使用するnode図形計上形状定義(中心座標は(0,0))
 var Defs = svg.append("defs");
-//Circle
-var figCircle = Defs.append("circle").attr("id", "circle").attr("r", 20), //5⇒20
+var figCircle = Defs.append("circle").attr("id", "circle").attr("r", 20),
   lenCircle = figCircle.node().getTotalLength(),
   spCircle = figCircle.node().getPointAtLength(0);
-//Rect
 var figRect = Defs.append("rect")
-    .attr("id", "rect")
-    .attr("width", 40)
-    .attr("height", 30)
-    .attr("rx", 7) //角を丸める
-    .attr("ry", 7) //角を丸める
-    .attr("x", -(40 / 2)) //circleと中心を合わせる
-    .attr("y", -(30 / 2)), //circleと中心を合わせる
+  .attr("id", "rect")
+  .attr("width", 40)
+  .attr("height", 30)
+  .attr("rx", 7)
+  .attr("ry", 7)
+  .attr("x", -(40 / 2))
+  .attr("y", -(30 / 2)),
   lenRect = figRect.node().getTotalLength(),
   spRect = figRect.node().getPointAtLength(0);
 
-//Ellipse
 var figEllipse = Defs.append("ellipse")
-    .attr("id", "ellipse")
-    .attr("rx", 30)
-    .attr("ry", 20),
+  .attr("id", "ellipse")
+  .attr("rx", 30)
+  .attr("ry", 20),
   lenEllipse = figEllipse.node().getTotalLength(),
   spEllipse = figEllipse.node().getPointAtLength(0);
 
-// hexagon ※pointsは反時計回りで定義すると他の図形と記述の順番の整合が取れる
 var figHexagon = Defs.append("polygon")
-    .attr("id", "hexagon")
-    .attr("points", "0,20 -17.3,10 -17.3,-10 0,-20 17.3,-10 17.3,10"),
+  .attr("id", "hexagon")
+  .attr("points", "0,20 -17.3,10 -17.3,-10 0,-20 17.3,-10 17.3,10"),
   lenHexagon = figHexagon.node().getTotalLength(),
   spHexagon = figHexagon.node().getPointAtLength(0);
 
-//"svg"にZoomイベントを設定
 var zoom = d3
   .zoom()
   .scaleExtent([1 / 4, 4])
@@ -67,7 +60,6 @@ var zoom = d3
 
 svg.call(zoom);
 
-//"svg"上に"g"をappendしてdragイベントを設定
 var g = svg.append("g").call(d3.drag().on("drag", SVGdragged));
 
 function SVGzoomed() {
@@ -80,19 +72,13 @@ function SVGdragged(d) {
     .attr("cy", (d.y = d3.event.y));
 }
 
-//Jsonfileのデータを保持
 var jsondata;
 
 d3.json("./lib/json/miserables2.json", function (error, graph) {
-  //miserables2.jsonに変更
   if (error) throw error;
 
-  //jsondataに値を格納
-  jsondata = graph;
-
-  //Linksの定義
   var links = g
-    .append("g") //svg⇒gに
+    .append("g")
     .attr("class", "links")
     .selectAll("g")
     .data(graph.links)
@@ -100,9 +86,9 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
     .append("g")
     .attr("class", "linkArrow")
     .attr("fill", "#999")
-    .attr("stroke", "#999") //輪郭線の色指定追加
+    .attr("stroke", "#999")
     .on("mouseover", function (d) {
-      d3.select(this).attr("stroke", "red"); //カーソルが合ったら赤に
+      d3.select(this).attr("stroke", "red");
       datatip
         .style("left", d3.event.pageX + 20 + "px")
         .style("top", d3.event.pageY + 20 + "px")
@@ -144,18 +130,17 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
         .style("top", d3.event.pageY + 20 + "px");
     })
     .on("mouseout", function () {
-      d3.select(this).attr("stroke", "#999"); //カーソルが外れたら元の色に
+      d3.select(this).attr("stroke", "#999");
       datatip.style("z-index", -1).style("opacity", 0);
     })
     .call(
       d3
-        .drag() //無いとエラーになる。。
+        .drag()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended)
     );
 
-  //Markerの定義
   var marker = links
     .append("marker")
     .attr("id", function (d) {
@@ -171,26 +156,23 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
   marker
     .append("path")
     .attr("d", "M0.5,0.75L18.88,10L0.5,19.25z")
-    .attr("fill", "#ddd") //背景色と同じ
+    .attr("fill", "#ddd")
     .attr("stroke-width", 1);
 
-  //linkの定義
   var link = links
-    .append("path") //line⇒Path
-    //      .attr("stroke","#999")  //輪郭線の色指定追加
+    .append("path")
     .attr("marker-start", function (d) {
       return "url(#mkr" + d.source + d.target + ")";
     })
     .attr("marker-end", function (d) {
       return "url(#mkr" + d.source + d.target + ")";
     })
-    .attr("fill", "none") //塗りつぶしなしを追加
+    .attr("fill", "none")
     .attr("stroke-width", function (d) {
       return Math.sqrt(d.value);
     })
     .attr("stroke-dashoffset", 0);
 
-  // nodeの定義
   var node = g
     .append("g")
     .attr("class", "nodes")
@@ -207,22 +189,21 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
         .on("end", dragended)
     );
 
-  // node 図形の定義
   node
     .append("use")
     .attr("xlink:href", function (d) {
       return "#" + nodeTypeID(d.group);
-    }) //図形判定
+    })
     .attr("stroke", "#ccc")
     .attr("fill", function (d) {
       return color(d.group);
     })
-    .style("stroke-width", "2") //線の太さ
+    .style("stroke-width", "2")
     .style("stroke-dasharray", function (d) {
       return stroke_dasharrayCD(d);
-    }) //破線判定
+    })
     .on("mouseover", function (d) {
-      d3.select(this).attr("fill", "red"); //カーソルが合ったら赤に
+      d3.select(this).attr("fill", "red");
 
       datatip
         .style("left", d3.event.pageX + 20 + "px")
@@ -253,11 +234,10 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
     .on("mouseout", function () {
       d3.select(this).attr("fill", function (d) {
         return color(d.group);
-      }); //カーソルが外れたら元の色に
+      });
 
       datatip.style("z-index", -1).style("opacity", 0);
     });
-  //node textの定義
   node
     .append("text")
     .attr("text-anchor", "middle")
@@ -273,7 +253,6 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
       return d.id;
     });
 
-  //node imageの定義
   node
     .append("image")
     .attr("xlink:href", function (d) {
@@ -287,38 +266,28 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
     .attr("x", -15)
     .attr("y", -40);
 
-  /*表示がうっとおしいので削除
-    node.append("title")
-        .text(function(d) { return "node id:" + d.id; });
-  */
   simulation.nodes(graph.nodes).on("tick", ticked);
 
   simulation
     .force("link")
-    .distance(250) //Link長
+    .distance(250)
     .links(graph.links);
 
   simulation.force("charge").strength(function (d) {
     return -500;
-  }); //node間の力
+  });
 
   simulation
-    .force("positioningX") //X方向の中心に向けた引力
+    .force("positioningX")
     .strength(0.04);
 
   simulation
-    .force("positioningY") //Y方向の中心に向けた引力
+    .force("positioningY")
     .strength(0.04);
 
   function ticked() {
     link.attr("d", linkArc);
 
-    /*
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-    */
     node
       .attr("cx", function (d) {
         return d.x;
@@ -328,13 +297,11 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
       })
       .attr("transform", function (d) {
         return "translate(" + d.x + "," + d.y + ")";
-      }); //nodesの要素が連動して動くように設定
+      });
   }
 });
 
-//Sidedataに情報をセット
 function set_sidedata(d) {
-  //画像表示
   sidedata.style("z-index", 0).style("opacity", 1);
   sidedataimg.style("background-image", function () {
     if (typeof d.image === "undefined") {
@@ -344,10 +311,8 @@ function set_sidedata(d) {
     }
   });
 
-  //node名表示
   sidedata.select("#data_name").text(d.id);
 
-  //nodeのメモ表示
   sidedata.select("#data_memo").text(function () {
     if (typeof d.memo === "undefined") {
       return "";
@@ -355,15 +320,6 @@ function set_sidedata(d) {
       return d.memo.replace(/\n/g, "<br/>");
     }
   });
-  //   sidedata.select("#data_memo").attr("srcdoc", function () {
-  //     if (typeof d.memo === "undefined") {
-  //       return '<p style="font-size: 11px"></p>';
-  //     } else {
-  //       return (
-  //         '<p style="font-size: 11px">' + d.memo.replace(/\n/g, "<br/>") + "</p>"
-  //       );
-  //     }
-  //   });
 }
 
 function OnClickSearch() {
@@ -378,51 +334,51 @@ function OnClickSearch() {
       window.alert("無効な検索文字列です");
       document.getElementById("txt_search").value = "";
     } else {
-      //対象先にズームイン
       svg
         .transition()
         .duration(750)
         .call(zoom.transform, transform(search_data));
-      //sidedataにデータを表示
       set_sidedata(search_data);
     }
   }
 }
 
+/*function OnClickChange() {
+  if (document.getElementById("data_edit")) {
+    document.getElementById("data_name").disabled = false;
+  } else {
+    document.getElementById("data_name").disabled = true;
+  }
+}*/
+
 function transform(d) {
   return d3.zoomIdentity
-    .translate(width / 2, height / 2) //一旦中央に
-    .scale(4) //とりあえず4倍でZoomIn
-    .translate(-d.x, -d.y); //指定nodeの座標
+    .translate(width / 2, height / 2)
+    .scale(4)
+    .translate(-d.x, -d.y);
 }
 
-//破線判定
 function stroke_dasharrayCD(d) {
   var arr = [2, 4, 6, 7, 9, 10, 11, 12, 0];
   if (arr.indexOf(d.group) >= 0) {
-    return "3 2"; //3:2の破線
+    return "3 2";
   } else {
-    return "none"; //破線なし
+    return "none";
   }
 }
 
-//図形判定
 function nodeTypeID(d) {
   var arrRect = [3, 4];
   var arrEllipse = [5, 6, 7];
   var arrHexagon = [9, 10, 11, 12, 0];
 
   if (arrRect.indexOf(d) >= 0) {
-    //Rect
     return "rect";
   } else if (arrEllipse.indexOf(d) >= 0) {
-    //Ellipse
     return "ellipse";
   } else if (arrHexagon.indexOf(d) >= 0) {
-    //Hexagon
     return "hexagon";
   } else {
-    //Circle
     return "circle";
   }
 }
@@ -449,13 +405,12 @@ function linkArc(d) {
   );
 }
 
-//三点の座標から線の比率を返す
 function calcLoengthRate(pos1, pos2, pos3) {
   var v21 = { x: pos1.x - pos2.x, y: pos1.y - pos2.y },
     v23 = { x: pos3.x - pos2.x, y: pos3.y - pos2.y },
-    x = v21.x * v23.x + v21.y * v23.y, //v21・v23
-    y = v21.x * v23.y - v21.y * v23.x, //v21×v23
-    theta = Math.atan2(y, x); //角度（radian）
+    x = v21.x * v23.x + v21.y * v23.y,
+    y = v21.x * v23.y - v21.y * v23.x,
+    theta = Math.atan2(y, x);
   if (theta > 0) {
     return theta / (2 * Math.PI);
   } else {
@@ -463,7 +418,6 @@ function calcLoengthRate(pos1, pos2, pos3) {
   }
 }
 
-//node図形とlinkの交点座標を取得(d1側の座標)
 function getIntersectionPos(d1, d2) {
   var nodeID = nodeTypeID(d1.group);
   switch (nodeID) {

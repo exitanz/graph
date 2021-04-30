@@ -23,9 +23,13 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <button type="button" class="btn btn-primary mb-12" data-toggle="modal" data-target="#testModal">
+            <button type="button" class="btn btn-primary mb-12" data-toggle="modal" data-target="#testModal_Actor">
               Actor
               <i class="fas fa-user-plus fa-2x"></i>
+            </button>
+            <button type="button" class="btn btn-success mb-12" data-toggle="modal" data-target="#testModal_Link">
+              Link
+              <i class="fas fa-arrows-alt-h fa-2x"></i>
             </button>
           </a>
         </li>
@@ -39,11 +43,11 @@
             <i class="fas fa-cog fa-2x"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown">
-            <a class="dropdown-item" href="#">リンク1</a>
+            <a class="dropdown-item" href="#">読み込み</a>
             <a class="dropdown-item" href="#">リンク2</a>
             <a class="dropdown-item" href="#">リンク3</a>
             <a class="dropdown-item" href="#">
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_2">
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_diagram_Del">
                 図を削除
               </button>
             </a>
@@ -54,17 +58,18 @@
   </nav>
 
   <br />
+    <!-- サイド・アンダーバー -->
   <div class="container-fluid">
     <div class="row">
       <aside class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-        <div class="btn-group-vertical nav nav-tabs nav-item">
-          <a class="nav-link btn btn-primary" data-toggle="tab" href="#item1">
+        <div class="btn-group-vertical nav nav-tabs nav-item nav-pills">
+          <a class="nav-link btn btn-white active" data-toggle="tab" href="#item1">
             時系列１
           </a>
-          <a class="nav-link btn btn-primary" data-toggle="tab" href="#item2">
+          <a class="nav-link btn btn-white" data-toggle="tab" href="#item2">
             時系列２
           </a>
-          <a class="nav-link btn btn-primary" data-toggle="tab" href="#item3">
+          <a class="nav-link btn btn-white" data-toggle="tab" href="#item3">
             時系列３
           </a>
         </div>
@@ -73,7 +78,6 @@
         <div class="tab-content">
           <div class="tab-pane fade show active" id="item1">
             <svg width="980" height="600" style="background-color: #ddd"></svg>
-            <!-- ちょっと広くして色つけた-->
             <div class="card-group row">
               <div class="card col-8">
                 <div class="card-body" id="side_data">
@@ -82,16 +86,16 @@
                     <aside class="col-sm-8 col-md-8 col-lg-10 col-xl-10">
                       <div class="row">
                         <aside class="col">
-                          <h3 id="data_name"></h3>
+                          <h3><textarea class="form-control" id="data_name" rows="1" disabled></textarea></h3>
                         </aside>
                         <aside class="col text-right">
-                          <button type="button" class="btn btn-primary">
+                          <button type="button" class="btn btn-primary disabled">
                             保存
                           </button>
-                          <button type="button" class="btn btn-success">
+                          <button type="button" class="btn btn-success" id="data_edit">
                             編集
                           </button>
-                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_2">
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_Del">
                             削除
                           </button>
                         </aside>
@@ -109,7 +113,6 @@
                 <div class="card-body" id="sidebar">
                   <div class="row h-50 w-100">
                     <aside class="col-12" id="side_search">
-                      <!-- サイドバー設定-->
                       <h2>検索</h2>
                       <div class="input-group">
                         <input type="text" class="form-control is-invalid" name="group_id" id="txt_search" />
@@ -155,7 +158,7 @@
   </div>
 
   <!-- Actorボタンクリック後に表示される画面の内容 -->
-  <div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal fade" id="testModal_Actor" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -177,6 +180,12 @@
                   <option>遊戯王ZEXAL</option>
                   <option>遊戯王ARC-V</option>
                 </select>
+                <label class="mt-4">時系列</label>
+                <select class="form-control mb-4">
+                  <option>時系列1</option>
+                  <option>時系列2</option>
+                  <option>時系列3</option>
+                </select>
                 <div class="form-group mb-4">
                   <label class="mt-4">備考</label>
                   <textarea class="form-control" rows="3"></textarea>
@@ -186,7 +195,55 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+          <button type="button" class="btn btn-primary">登録</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linkボタンクリック後に表示される画面の内容 -->
+  <div class="modal fade" id="testModal_Link" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>
+            <class="modal-title" id="myModalLabel">入力画面
+          </h4>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="col-md">
+            <form>
+              <div class="form-group col-10">
+                <label class="mt-4">関係性</label>
+                <input type="text" class="form-control mb-4">
+                <div class="form-row">
+                  <div class="form-group col-sm-6">
+                    <label for="text4a">From</label>
+                    <input type="text" class="form-control" id="text4a">
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <label for="text4b">to</label>
+                    <input type="text" class="form-control" id="text4b">
+                  </div>
+                </div>
+                <label class="mt-4">時系列</label>
+                <select class="form-control mb-4">
+                  <option>時系列1</option>
+                  <option>時系列2</option>
+                  <option>時系列3</option>
+                </select>
+                <div class="form-group mb-4">
+                  <label class="mt-4">備考</label>
+                  <textarea class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
           <button type="button" class="btn btn-primary">登録</button>
         </div>
       </div>
@@ -194,7 +251,7 @@
   </div>
 
   <!-- 削除ボタンクリック後に表示される画面の内容 -->
-  <div class="modal fade" id="testModal_2" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal fade" id="testModal_Del" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -206,7 +263,7 @@
           <label>データを削除しますか？</label>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
           <button type="button" class="btn btn-danger">削除</button>
         </div>
       </div>
@@ -214,7 +271,7 @@
   </div>
 
   <!-- 図の削除ボタンクリック後に表示される画面の内容 -->
-  <div class="modal fade" id="testModal_2" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal fade" id="testModal_diagram_Del" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -226,7 +283,7 @@
           <label>データを削除しますか？</label>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
           <button type="button" class="btn btn-danger">削除</button>
         </div>
       </div>
