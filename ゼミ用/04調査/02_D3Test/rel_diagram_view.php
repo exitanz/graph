@@ -58,7 +58,7 @@
   </nav>
 
   <br />
-    <!-- サイド・アンダーバー -->
+  <!-- サイド・アンダーバー -->
   <div class="container-fluid">
     <div class="row">
       <aside class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
@@ -86,13 +86,13 @@
                     <aside class="col-sm-8 col-md-8 col-lg-10 col-xl-10">
                       <div class="row">
                         <aside class="col">
-                          <h3><textarea class="form-control" id="data_name" rows="1" disabled></textarea></h3>
+                          <h3><textarea id="data_name" class="form-control" rows="1" disabled></textarea></h3>
                         </aside>
                         <aside class="col text-right">
-                          <button type="button" class="btn btn-primary disabled">
+                          <button type="button" class="btn btn-primary" id="data_save" disabled>
                             保存
                           </button>
-                          <button type="button" class="btn btn-success" id="data_edit">
+                          <button type="submit" class="btn btn-success" id="data_edit">
                             編集
                           </button>
                           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_Del">
@@ -102,7 +102,7 @@
                       </div>
                       <div class="row">
                         <aside class="col">
-                          <textarea class="form-control" id="data_memo" rows="5" disabled></textarea>
+                          <textarea id="data_memo" class="form-control" rows="5" disabled></textarea>
                         </aside>
                       </div>
                     </aside>
@@ -300,7 +300,7 @@
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
   <script src="./lib/js/relationship.js"></script>
-  <script src="./lib/js/script.js"></script>
+  <script src="./lib/js/scripts.js"></script>
 </body>
 
 </html>

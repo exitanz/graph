@@ -343,13 +343,9 @@ function OnClickSearch() {
   }
 }
 
-/*function OnClickChange() {
-  if (document.getElementById("data_edit")) {
-    document.getElementById("data_name").disabled = false;
-  } else {
-    document.getElementById("data_name").disabled = true;
-  }
-}*/
+function OnClickChange() {
+  $("#data_save").prop("disabled", true);
+}
 
 function transform(d) {
   return d3.zoomIdentity
