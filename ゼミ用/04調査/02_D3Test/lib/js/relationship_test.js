@@ -17,7 +17,7 @@ var simulation = d3
   .force(
     "link",
     d3.forceLink().id(function (d) {
-      return d.id;
+      return d.actor_name;
     })
   )
   .force("colllision", d3.forceCollide(40))
@@ -74,7 +74,7 @@ function SVGdragged(d) {
 
 var jsondata;
 
-d3.json("./lib/json/miserables2.json", function (error, graph) {
+d3.json("./lib/json/diagram_data.json", function (error, graph) {
   if (error) throw error;
 
   var links = g
@@ -95,22 +95,22 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
         .style("z-index", 0)
         .style("opacity", 1)
         .style("background-image", function () {
-          if (typeof d.source.image === "undefined") {
-            if (typeof d.target.image === "undefined") {
+          if (typeof d.actor_name.actor_img === "undefined") {
+            if (typeof d.target_name.actor_img === "undefined") {
               return 'url("image/unknown.png"), url("image/unknown.png")';
             } else {
               return (
-                'url("image/unknown.png"), ' + 'url("' + d.target.image + '")'
+                'url("image/unknown.png"), ' + 'url("' + d.target_name.actor_img + '")'
               );
             }
           } else {
-            if (typeof d.target.image === "undefined") {
+            if (typeof d.target_name.actor_img === "undefined") {
               return (
-                'url("' + d.source.image + '"), ' + 'url("image/unknown.png")'
+                'url("' + d.actor_name.actor_img + '"), ' + 'url("image/unknown.png")'
               );
             } else {
               return (
-                'url("' + d.source.image + '"), url("' + d.target.image + '")'
+                'url("' + d.actor_name.actor_img + '"), url("' + d.target_name.actor_img + '")'
               );
             }
           }
@@ -118,11 +118,11 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
 
       datatip
         .select("h2")
-        .style("border-bottom", "2px solid " + color(d.source.group))
+        .style("border-bottom", "2px solid " + color(d.actor_name.group))
         .style("margin-right", "120px")
-        .text("value:" + d.value);
+        .text("関係性:" + d.rel_mst_info);
 
-      datatip.select("p").text(d.source.id + " to " + d.target.id);
+      datatip.select("p").text(d.actor_name.id + " to " + d.target_name.id);
     })
     .on("mousemove", function () {
       datatip
@@ -144,7 +144,7 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
   var marker = links
     .append("marker")
     .attr("id", function (d) {
-      return "mkr" + d.source + d.target;
+      return "mkr" + d.actor_name + d.target_name;
     })
     .attr("viewBox", "0 0 20 20")
     .attr("markerWidth", 7)
@@ -162,14 +162,14 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
   var link = links
     .append("path")
     .attr("marker-start", function (d) {
-      return "url(#mkr" + d.source + d.target + ")";
+      return "url(#mkr" + d.actor_name + d.target_name + ")";
     })
     .attr("marker-end", function (d) {
-      return "url(#mkr" + d.source + d.target + ")";
+      return "url(#mkr" + d.actor_name + d.target_name + ")";
     })
     .attr("fill", "none")
     .attr("stroke-width", function (d) {
-      return Math.sqrt(d.value);
+      return Math.sqrt(d.rel_mst_info);
     })
     .attr("stroke-dashoffset", 0);
 
@@ -192,11 +192,11 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
   node
     .append("use")
     .attr("xlink:href", function (d) {
-      return "#" + nodeTypeID(d.group);
+      return "#" + nodeTypeID(d.group_id);
     })
     .attr("stroke", "#ccc")
     .attr("fill", function (d) {
-      return color(d.group);
+      return color(d.group_id);
     })
     .style("stroke-width", "2")
     .style("stroke-dasharray", function (d) {
@@ -211,20 +211,20 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
         .style("z-index", 0)
         .style("opacity", 1)
         .style("background-image", function () {
-          if (typeof d.image === "undefined") {
+          if (typeof d.actor_img === "undefined") {
             return 'url("image/unknown.png")';
           } else {
-            return 'url("' + d.image + '")';
+            return 'url("' + d.actor_img + '")';
           }
         });
 
       datatip
         .select("h2")
-        .style("border-bottom", "2px solid " + color(d.group))
+        .style("border-bottom", "2px solid " + color(d.group_id))
         .style("margin-right", "0px")
-        .text(d.id);
+        .text(d.actor_name);
 
-      datatip.select("p").text("グループID:" + d.group);
+      datatip.select("p").text("グループID:" + d.group_id);
     })
     .on("mousemove", function () {
       datatip
@@ -233,7 +233,7 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
     })
     .on("mouseout", function () {
       d3.select(this).attr("fill", function (d) {
-        return color(d.group);
+        return color(d.group_id);
       });
 
       datatip.style("z-index", -1).style("opacity", 0);
@@ -250,16 +250,16 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
       return "bold";
     })
     .text(function (d) {
-      return d.id;
+      return d.actor_name;
     });
 
   node
     .append("image")
     .attr("xlink:href", function (d) {
-      if (typeof d.image === "undefined") {
+      if (typeof d.actor_img === "undefined") {
         return "image/unknown.png";
       } else {
-        return d.image;
+        return d.actor_img;
       }
     })
     .attr("width", 30)
@@ -304,35 +304,35 @@ d3.json("./lib/json/miserables2.json", function (error, graph) {
 function set_sidedata(d) {
   sidedata.style("z-index", 0).style("opacity", 1);
   sidedataimg.style("background-image", function () {
-    if (typeof d.image === "undefined") {
+    if (typeof d.actor_img === "undefined") {
       return 'url("image/unknown.png")';
     } else {
-      return 'url("' + d.image + '")';
+      return 'url("' + d.actor_img + '")';
     }
   });
 
-  sidedata.select("#data_name").text(d.id);
+  sidedata.select("#data_name").text(d.actor_name);
 
   sidedata.select("#data_memo").text(function () {
-    if (typeof d.memo === "undefined") {
+    if (typeof d.actor_info === "undefined") {
       return "";
     } else {
-      return d.memo.replace(/\n/g, "<br/>");
+      return d.actor_info.replace(/\n/g, "<br/>");
     }
   });
 }
 
 function OnClickSearch() {
-  var search_val = document.getElementById("txt_search").value;
+  var search_val = document.getElementById("txt_search").rel_mst_info;
   if (search_val == "") {
     window.alert("検索文字列を入力して下さい");
   } else {
     var search_data = jsondata.nodes.filter(function (d) {
-      if (d.id == search_val) return true;
+      if (d.actor_name == search_val) return true;
     })[0];
     if (typeof search_data === "undefined") {
       window.alert("無効な検索文字列です");
-      document.getElementById("txt_search").value = "";
+      document.getElementById("txt_search").rel_mst_info = "";
     } else {
       svg
         .transition()
@@ -356,7 +356,7 @@ function transform(d) {
 
 function stroke_dasharrayCD(d) {
   var arr = [2, 4, 6, 7, 9, 10, 11, 12, 0];
-  if (arr.indexOf(d.group) >= 0) {
+  if (arr.indexOf(d.group_id) >= 0) {
     return "3 2";
   } else {
     return "none";
@@ -380,11 +380,11 @@ function nodeTypeID(d) {
 }
 
 function linkArc(d) {
-  var dx = d.target.x - d.source.x,
-    dy = d.target.y - d.source.y,
+  var dx = d.target_name.x - d.actor_name.x,
+    dy = d.target_name.y - d.actor_name.y,
     dr = Math.sqrt(dx * dx + dy * dy),
-    srcPos = getIntersectionPos(d.source, d.target),
-    tgtPos = getIntersectionPos(d.target, d.source);
+    srcPos = getIntersectionPos(d.actor_name, d.target_name),
+    tgtPos = getIntersectionPos(d.target_name, d.actor_name);
   return (
     "M" +
     srcPos.x +

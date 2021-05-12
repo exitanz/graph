@@ -19,7 +19,7 @@
     </a>
 
     <div class="collapse navbar-collapse">
-      <p class="h2 text-light mr-auto">遊戯王</p>
+      <p class="h2 text-light mr-auto">レミゼラブル</p>
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
@@ -175,10 +175,10 @@
                 <input type="text" class="form-control mb-4">
                 <label class="mt-4">グループ</label>
                 <select class="form-control mb-4">
-                  <option>遊戯王デュエルモンスターズ</option>
-                  <option>遊戯王5D's</option>
-                  <option>遊戯王ZEXAL</option>
-                  <option>遊戯王ARC-V</option>
+                  <option>グループ1</option>
+                  <option>グループ2</option>
+                  <option>グループ3</option>
+                  <option>グループ4</option>
                 </select>
                 <label class="mt-4">時系列</label>
                 <select class="form-control mb-4">
@@ -186,6 +186,18 @@
                   <option>時系列2</option>
                   <option>時系列3</option>
                 </select>
+                <div class="form-group">
+                  <h3>アイコン</h3>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fas fa-image"></i> </span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input">
+                      <label class="custom-file-label" for="inputFile" data-browse="参照">ファイルを選択</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group mb-4">
                   <label class="mt-4">備考</label>
                   <textarea class="form-control" rows="3"></textarea>
@@ -299,7 +311,7 @@
   <script src="./lib/Bootstrap4/bootstrap.bundle.min.js"></script>
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
-  <script src="./lib/js/relationship.js"></script>
+  <script src="./lib/js/relationships.js"></script>
   <script src="./lib/js/scripts.js"></script>
 </body>
 
