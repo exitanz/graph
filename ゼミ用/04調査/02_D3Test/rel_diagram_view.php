@@ -19,7 +19,7 @@
     </a>
 
     <div class="collapse navbar-collapse">
-      <p class="h2 text-light mr-auto">遊戯王</p>
+      <p class="h2 text-light mr-auto">レミゼラブル</p>
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
