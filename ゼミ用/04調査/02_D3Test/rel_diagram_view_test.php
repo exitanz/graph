@@ -307,7 +307,7 @@
   <script src="./lib/Bootstrap4/bootstrap.bundle.min.js"></script>
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
-  <script src="./lib/js/relationships.js"></script>
+  <script src="./lib/js/relationships_test.js"></script>
   <script src="./lib/js/scripts.js"></script>
 </body>
 
