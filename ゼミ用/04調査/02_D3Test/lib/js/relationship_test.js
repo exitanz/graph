@@ -320,6 +320,8 @@ function set_sidedata(d) {
       return d.actor_info.replace(/\n/g, "<br/>");
     }
   });
+
+  sidedata.select("#data_group").text(d.group_id);
 }
 
 function OnClickSearch() {

@@ -1,6 +1,6 @@
 var sidedata = d3.select("#side_data");
 
-//var sidedataimg = d3.select("#side_data_img");
+var sidedataimg = d3.select("#side_data_img");
 
 var datatip = d3.select("#datatip");
 
@@ -321,7 +321,8 @@ function set_sidedata(d) {
     }
   });
   
-  sidedata.select("#data_group").text(d.group);
+  //sidedata.select("#data_group").text(d.group);
+  //sidedata.select("#data_time").text(d.time);
 }
 
 function OnClickSearch() {

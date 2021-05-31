@@ -8,7 +8,7 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="./lib/FontAwesome/css/all.css" />
   <link rel="stylesheet" href="./lib/Bootstrap4/bootstrap.min.css" />
-  <link rel="stylesheet" href="./lib/css/style.css" />
+  <link rel="stylesheet" href="./lib/css/styles.css" />
 </head>
 
 <body>
@@ -101,6 +101,24 @@
                       <div class="row">
                         <aside class="col">
                           <textarea id="data_memo" class="form-control" rows="5" disabled></textarea>
+                        </aside>
+                      </div>
+                      <br>
+                      <div class="row">
+                        <aside class="col">
+                          <!--<h3><textarea id="data_group" class="form-control" rows="1" disabled></textarea></h3>-->
+                          <select id="data_group" class="form-control mb-4" rows="1" disabled>
+                            <option>グループ1</option>
+                            <option>グループ2</option>
+                            <option>グループ3</option>
+                            <option>グループ4</option>
+                          </select>
+                          <!--<h3><textarea id="data_time" class="form-control" rows="1" disabled></textarea></h3>-->
+                          <select id="data_time" class="form-control mb-4" rows="1" disabled>
+                            <option>時系列1</option>
+                            <option>時系列2</option>
+                            <option>時系列3</option>
+                          </select>
                         </aside>
                       </div>
                     </aside>
@@ -307,8 +325,8 @@
   <script src="./lib/Bootstrap4/bootstrap.bundle.min.js"></script>
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
-  <script src="./lib/js/relationships.js"></script>
-  <script src="./lib/js/scripts.js"></script>
+  <script src="./lib/js/relationship.js"></script>
+  <script src="./lib/js/script.js"></script>
 </body>
 
 </html>
