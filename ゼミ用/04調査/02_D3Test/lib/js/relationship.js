@@ -74,7 +74,7 @@ function SVGdragged(d) {
 
 var jsondata;
 
-d3.json("./lib/json/miserables.json", function (error, graph) {
+d3.json("./lib/json/miserables2.json", function (error, graph) {
   if (error) throw error;
 
   var links = g

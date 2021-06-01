@@ -17,7 +17,7 @@ var simulation = d3
   .force(
     "link",
     d3.forceLink().id(function (d) {
-      return d.actor_name;
+      return d.id;
     })
   )
   .force("colllision", d3.forceCollide(40))
@@ -74,7 +74,7 @@ function SVGdragged(d) {
 
 var jsondata;
 
-d3.json("./lib/json/diagram_data.json", function (error, graph) {
+d3.json("./lib/json/diagram_data_test.json", function (error, graph) {
   if (error) throw error;
 
   var links = g
@@ -95,22 +95,22 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
         .style("z-index", 0)
         .style("opacity", 1)
         .style("background-image", function () {
-          if (typeof d.actor_name.actor_img === "undefined") {
-            if (typeof d.target_name.actor_img === "undefined") {
+          if (typeof d.source.image === "undefined") {
+            if (typeof d.target.image === "undefined") {
               return 'url("image/unknown.png"), url("image/unknown.png")';
             } else {
               return (
-                'url("image/unknown.png"), ' + 'url("' + d.target_name.actor_img + '")'
+                'url("image/unknown.png"), ' + 'url("' + d.target.image + '")'
               );
             }
           } else {
-            if (typeof d.target_name.actor_img === "undefined") {
+            if (typeof d.target.image === "undefined") {
               return (
-                'url("' + d.actor_name.actor_img + '"), ' + 'url("image/unknown.png")'
+                'url("' + d.source.image + '"), ' + 'url("image/unknown.png")'
               );
             } else {
               return (
-                'url("' + d.actor_name.actor_img + '"), url("' + d.target_name.actor_img + '")'
+                'url("' + d.source.image + '"), url("' + d.target.image + '")'
               );
             }
           }
@@ -118,11 +118,11 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
 
       datatip
         .select("h2")
-        .style("border-bottom", "2px solid " + color(d.actor_name.group))
+        .style("border-bottom", "2px solid " + color(d.source.group))
         .style("margin-right", "120px")
-        .text("関係性:" + d.rel_mst_info);
+        .text("value:" + d.value);
 
-      datatip.select("p").text(d.actor_name.id + " to " + d.target_name.id);
+      datatip.select("p").text(d.source.id + " to " + d.target.id);
     })
     .on("mousemove", function () {
       datatip
@@ -144,7 +144,7 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
   var marker = links
     .append("marker")
     .attr("id", function (d) {
-      return "mkr" + d.actor_name + d.target_name;
+      return "mkr" + d.source + d.target;
     })
     .attr("viewBox", "0 0 20 20")
     .attr("markerWidth", 7)
@@ -162,14 +162,14 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
   var link = links
     .append("path")
     .attr("marker-start", function (d) {
-      return "url(#mkr" + d.actor_name + d.target_name + ")";
+      return "url(#mkr" + d.source + d.target + ")";
     })
     .attr("marker-end", function (d) {
-      return "url(#mkr" + d.actor_name + d.target_name + ")";
+      return "url(#mkr" + d.source + d.target + ")";
     })
     .attr("fill", "none")
     .attr("stroke-width", function (d) {
-      return Math.sqrt(d.rel_mst_info);
+      return Math.sqrt(d.value);
     })
     .attr("stroke-dashoffset", 0);
 
@@ -192,11 +192,11 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
   node
     .append("use")
     .attr("xlink:href", function (d) {
-      return "#" + nodeTypeID(d.group_id);
+      return "#" + nodeTypeID(d.group);
     })
     .attr("stroke", "#ccc")
     .attr("fill", function (d) {
-      return color(d.group_id);
+      return color(d.group);
     })
     .style("stroke-width", "2")
     .style("stroke-dasharray", function (d) {
@@ -211,20 +211,20 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
         .style("z-index", 0)
         .style("opacity", 1)
         .style("background-image", function () {
-          if (typeof d.actor_img === "undefined") {
+          if (typeof d.image === "undefined") {
             return 'url("image/unknown.png")';
           } else {
-            return 'url("' + d.actor_img + '")';
+            return 'url("' + d.image + '")';
           }
         });
 
       datatip
         .select("h2")
-        .style("border-bottom", "2px solid " + color(d.group_id))
+        .style("border-bottom", "2px solid " + color(d.group))
         .style("margin-right", "0px")
-        .text(d.actor_name);
+        .text(d.id);
 
-      datatip.select("p").text("グループID:" + d.group_id);
+      datatip.select("p").text("グループID:" + d.group);
     })
     .on("mousemove", function () {
       datatip
@@ -233,7 +233,7 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
     })
     .on("mouseout", function () {
       d3.select(this).attr("fill", function (d) {
-        return color(d.group_id);
+        return color(d.group);
       });
 
       datatip.style("z-index", -1).style("opacity", 0);
@@ -250,16 +250,16 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
       return "bold";
     })
     .text(function (d) {
-      return d.actor_name;
+      return d.id;
     });
 
   node
     .append("image")
     .attr("xlink:href", function (d) {
-      if (typeof d.actor_img === "undefined") {
+      if (typeof d.image === "undefined") {
         return "image/unknown.png";
       } else {
-        return d.actor_img;
+        return d.image;
       }
     })
     .attr("width", 30)
@@ -304,37 +304,38 @@ d3.json("./lib/json/diagram_data.json", function (error, graph) {
 function set_sidedata(d) {
   sidedata.style("z-index", 0).style("opacity", 1);
   sidedataimg.style("background-image", function () {
-    if (typeof d.actor_img === "undefined") {
+    if (typeof d.image === "undefined") {
       return 'url("image/unknown.png")';
     } else {
-      return 'url("' + d.actor_img + '")';
+      return 'url("' + d.image + '")';
     }
   });
 
-  sidedata.select("#data_name").text(d.actor_name);
+  sidedata.select("#data_name").text(d.id);
 
   sidedata.select("#data_memo").text(function () {
-    if (typeof d.actor_info === "undefined") {
+    if (typeof d.memo === "undefined") {
       return "";
     } else {
-      return d.actor_info.replace(/\n/g, "<br/>");
+      return d.memo.replace(/\n/g, "<br/>");
     }
   });
-
-  sidedata.select("#data_group").text(d.group_id);
+  
+  //sidedata.select("#data_group").text(d.group);
+  //sidedata.select("#data_time").text(d.time);
 }
 
 function OnClickSearch() {
-  var search_val = document.getElementById("txt_search").rel_mst_info;
+  var search_val = document.getElementById("txt_search").value;
   if (search_val == "") {
     window.alert("検索文字列を入力して下さい");
   } else {
     var search_data = jsondata.nodes.filter(function (d) {
-      if (d.actor_name == search_val) return true;
+      if (d.id == search_val) return true;
     })[0];
     if (typeof search_data === "undefined") {
       window.alert("無効な検索文字列です");
-      document.getElementById("txt_search").rel_mst_info = "";
+      document.getElementById("txt_search").value = "";
     } else {
       svg
         .transition()
@@ -358,7 +359,7 @@ function transform(d) {
 
 function stroke_dasharrayCD(d) {
   var arr = [2, 4, 6, 7, 9, 10, 11, 12, 0];
-  if (arr.indexOf(d.group_id) >= 0) {
+  if (arr.indexOf(d.group) >= 0) {
     return "3 2";
   } else {
     return "none";
@@ -382,11 +383,11 @@ function nodeTypeID(d) {
 }
 
 function linkArc(d) {
-  var dx = d.target_name.x - d.actor_name.x,
-    dy = d.target_name.y - d.actor_name.y,
+  var dx = d.target.x - d.source.x,
+    dy = d.target.y - d.source.y,
     dr = Math.sqrt(dx * dx + dy * dy),
-    srcPos = getIntersectionPos(d.actor_name, d.target_name),
-    tgtPos = getIntersectionPos(d.target_name, d.actor_name);
+    srcPos = getIntersectionPos(d.source, d.target),
+    tgtPos = getIntersectionPos(d.target, d.source);
   return (
     "M" +
     srcPos.x +

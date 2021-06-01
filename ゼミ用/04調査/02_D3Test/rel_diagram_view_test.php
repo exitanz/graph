@@ -1,3 +1,11 @@
+<?php
+    $actor_name = "Mme.Thenardier";
+    $actor_group = "グループ1";
+    $actor_img = "image/Mme.Thenardier.jpg";
+    $actor_memo = "テナルディエの妻（ファーストネームは不明）。宿屋のおかみ。ブロンドの髪（第1部での初登場時では赤毛となっていた）を持ち、赤あざでデコボコした顔に女性でありながら口ひげをはやした、口八丁手八丁の恰幅の良い大女。夫よりは12～15歳ほど年下である。窓ガラスや家具すら震え上がるほど響く声と、くるみを一打で叩き割るほどの怪力の持ち主。夫に負けず劣らずの悪党だが、息子ふたりを売るときに一抹の寂しさを覚えたこともあり、若干の良心は持っている模様。\n自分の娘は可愛がるが、自分の息子や他人の子供には愛情を持てず、夫しか怖がらない偏った心の持ち主。それゆえに、里子のコゼットに無茶な肉体労働をさせたり、顔面を殴ったりするなど肉体的な虐待を加えた。ゆえにコゼットは彼女を極端なまでに恐れた。\n1800年代初頭に有名だった作家ピゴー・ルブラン (Pigault-Lebrun) やデュクレー・デュミニル (Francois Guillaume Ducray-Duminil) の書いた、淫猥でくだらない小説をよく読み、娘たちに読んでいた小説の登場人物の名をつけ、おめかしさせて、荷馬車にぶらさがった大きい鎖でできたブランコで遊ばせていた。しかし、息子のガヴローシュが泣き続けても、彼女は「くさくさしちまう」と言って放置し続けた。\n実はガヴローシュの弟をふたり産んでいるが、手持ち無沙汰であったため、1823年、パリ在住の悪女マニョンに月10フラン[11]の貸賃で息子たちを売った。\nその後、夫や子供たちとともにパリに移住。娘たちには愛情を注いでいたが、夫への愛情は冷めていった。ゴルボー屋敷での一件で夫や娘たちとともにジャヴェールに逮捕され、みじめな最期を迎えることとなる。\nゴルボー屋敷待ち伏せ事件では、男たちが次々と降参する中、最後までジャヴェールに抵抗した。しかし、結局、先に逮捕されたふたりの娘の身の上を嘆きながら、夫と一緒に逮捕される。サディズムの語源となったサド侯爵も収監されたサン・ラザール監獄 (Prison Saint-Lazare) にて、予審中に獄死した。";
+    $actor_time = "時系列1";
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -8,7 +16,7 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="./lib/FontAwesome/css/all.css" />
   <link rel="stylesheet" href="./lib/Bootstrap4/bootstrap.min.css" />
-  <link rel="stylesheet" href="./lib/css/style.css" />
+  <link rel="stylesheet" href="./lib/css/styles.css" />
 </head>
 
 <body>
@@ -87,10 +95,7 @@
                           <h3><textarea id="data_name" class="form-control" rows="1" disabled></textarea></h3>
                         </aside>
                         <aside class="col text-right">
-                          <button type="button" class="btn btn-primary" id="data_save" disabled>
-                            保存
-                          </button>
-                          <button type="submit" class="btn btn-success" id="data_edit">
+                          <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#testModal_Edit">
                             編集
                           </button>
                           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#testModal_Del">
@@ -155,7 +160,7 @@
     </div>
   </div>
 
-  <!-- Actorボタンクリック後に表示される画面の内容 -->
+<!-- Actorボタンクリック後に表示される画面の内容 -->
   <div class="modal fade" id="testModal_Actor" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -212,7 +217,7 @@
     </div>
   </div>
 
-  <!-- Linkボタンクリック後に表示される画面の内容 -->
+<!-- Linkボタンクリック後に表示される画面の内容 -->
   <div class="modal fade" id="testModal_Link" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -260,6 +265,64 @@
     </div>
   </div>
 
+<!-- 編集ボタンクリック後に表示される画面の内容 -->
+  <div class="modal fade" id="testModal_Edit" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>
+            <class="modal-title" id="myModalLabel">編集画面
+          </h4>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="col-md">
+            <form>
+              <div class="form-group col-10">
+                <label class="mt-4">名前</label>
+                <input type="text" class="form-control mb-4" value=<?= $actor_name ?>>
+                <label class="mt-4">グループ</label>
+                <select class="form-control mb-4">
+                  <option value="グループ1">グループ1</option>
+                  <option value="グループ2">グループ2</option>
+                  <option value="グループ3">グループ3</option>
+                  <option value="グループ4">グループ4</option>
+                </select>
+                <label class="mt-4">時系列</label>
+                <select class="form-control mb-4">
+                  <option value="時系列1">時系列1</option>
+                  <option value="時系列2">時系列2</option>
+                  <option value="時系列3">時系列3</option>
+                </select>
+                <div class="form-group">
+                  <h3>アイコン</h3>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fas fa-image"></i> </span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input">
+                      <label class="custom-file-label" for="inputFile" data-browse="参照">ファイルを選択</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mb-4">
+                  <label class="mt-4">備考</label>
+                  <textarea class="form-control" rows="3" ><?= $actor_memo ?></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+          <button type="button" class="btn btn-primary">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- 削除ボタンクリック後に表示される画面の内容 -->
   <div class="modal fade" id="testModal_Del" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -307,8 +370,8 @@
   <script src="./lib/Bootstrap4/bootstrap.bundle.min.js"></script>
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
-  <script src="./lib/js/relationships_test.js"></script>
-  <script src="./lib/js/scripts.js"></script>
+  <script src="./lib/js/relationship_test.js"></script>
+  <script src="./lib/js/script_test.js"></script>
 </body>
 
 </html>
