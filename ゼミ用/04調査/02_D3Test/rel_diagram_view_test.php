@@ -27,7 +27,7 @@
     </a>
 
     <div class="collapse navbar-collapse">
-      <p class="h2 text-light mr-auto">レミゼラブル</p>
+      <p class="h2 text-light mr-auto">作品名Ａ</p>
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#">
@@ -370,7 +370,7 @@
   <script src="./lib/Bootstrap4/bootstrap.bundle.min.js"></script>
   <script src="./lib/FontAwesome/js/all.js"></script>
   <script src="./lib/js/d3/d3.min.js"></script>
-  <script src="./lib/js/relationship_test.js"></script>
+  <script src="./lib/js/re_test.js"></script>
   <script src="./lib/js/script_test.js"></script>
 </body>
 
