@@ -1,8 +1,6 @@
-var sidedata = d3.select("#side_data");
-
-var sidedataimg = d3.select("#side_data_img");
-
-var datatip = d3.select("#datatip");
+var sidedata = d3.select("#side_data"); //id=side_data(rel_diagram_view_test.php)
+var sidedataimg = d3.select("#side_data_img"); //id=side_data_img(rel_diagram_view_test.php)
+var datatip = d3.select("#datatip");//datatip
 
 var svg = d3.select("svg"),
   width = +svg.attr("width"),
@@ -74,7 +72,7 @@ function SVGdragged(d) {
 
 var jsondata;
 
-d3.json("./lib/json/data_test.json", function (error, graph) {
+d3.json("./lib/json/miserables_test.json", function (error, graph) {
   if (error) throw error;
 
   var links = g
@@ -87,30 +85,32 @@ d3.json("./lib/json/data_test.json", function (error, graph) {
     .attr("class", "linkArrow")
     .attr("fill", "#999")
     .attr("stroke", "#999")
+    //---------------mouseover----------------
     .on("mouseover", function (d) {
-      d3.select(this).attr("stroke", "red");
+      d3.select(this).attr("stroke", "red"); //色を赤に変える
       datatip
         .style("left", d3.event.pageX + 20 + "px")
         .style("top", d3.event.pageY + 20 + "px")
         .style("z-index", 0)
         .style("opacity", 1)
+        //------------image--------------
         .style("background-image", function () {
-          if (typeof d.source.image === "undefined") {
-            if (typeof d.target.image === "undefined") {
-              return 'url("image/unknown.png"), url("image/unknown.png")';
+          if (typeof d.source.image === "undefined") { //souce.imageがなかったら
+            if (typeof d.target.image === "undefined") { //target.imageがなかったら
+              return 'url("image/unknown.png"), url("image/unknown.png")'; //imageはunknown.pngにする
             } else {
               return (
-                'url("image/unknown.png"), ' + 'url("' + d.target.image + '")'
+                'url("image/unknown.png"), ' + 'url("' + d.target.image + '")' //target.imageのみ表示
               );
             }
           } else {
-            if (typeof d.target.image === "undefined") {
+            if (typeof d.target.image === "undefined") { //target.imageがなかったら
               return (
-                'url("' + d.source.image + '"), ' + 'url("image/unknown.png")'
+                'url("' + d.source.image + '"), ' + 'url("image/unknown.png")' //source.imageのみ表示
               );
             } else {
               return (
-                'url("' + d.source.image + '"), url("' + d.target.image + '")'
+                'url("' + d.source.image + '"), url("' + d.target.image + '")' //source.image、target.image共に表示
               );
             }
           }
@@ -122,7 +122,7 @@ d3.json("./lib/json/data_test.json", function (error, graph) {
         .style("margin-right", "120px")
         .text("value:" + d.value);
 
-      datatip.select("p").text(d.source.id + " to " + d.target.id);
+      datatip.select("p").text(d.source.id + " to " + d.target.id); //text欄souce.id(名前)to+target.id(名前)
     })
     .on("mousemove", function () {
       datatip
@@ -301,6 +301,7 @@ d3.json("./lib/json/data_test.json", function (error, graph) {
   }
 });
 
+//-------------------sidedata(サイドデータ欄)の設定------------------------
 function set_sidedata(d) {
   sidedata.style("z-index", 0).style("opacity", 1);
   sidedataimg.style("background-image", function () {
