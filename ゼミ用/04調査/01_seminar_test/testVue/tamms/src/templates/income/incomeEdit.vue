@@ -1,0 +1,71 @@
+<template>
+  <div class="row">
+    <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
+    <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
+      <div class="card">
+        <article class="card-body">
+          <h4 class="card-title text-center mb-4 mt-1">収入編集</h4>
+          <hr>
+          <div class="form-group">
+            <br />
+            <div class="alert alert-danger">値段は100文字以内で入力してください<br /></div>
+            <br />
+            <table class="table">
+              <th></th>
+            </table>
+            <h3>値段</h3>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-yen-sign"></i> </span>
+              </div>
+              <input
+                class="form-control"
+                placeholder="値段を入力してください。"
+                type="text"
+                name="price"
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <h3>日付</h3>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-calendar-day"></i> </span>
+              </div>
+              <input
+                class="form-control is-invalid"
+                placeholder="日付を入力してください。"
+                type="text"
+                name="date"
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <h3>メモ</h3>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-pencil-alt"></i> </span>
+              </div>
+              <textarea
+                rows="3"
+                class="form-control"
+                name="income_conf"
+              ></textarea>
+            </div>
+          </div>
+          <br />
+          <p class="text-center"><a class="btn btn-secondary">編集</a></p>
+          <br />
+        </article>
+      </div>
+      <br />
+    </aside>
+    <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
+  </div>
+</template>
+
+<script>
+</script>
+
+<style>
+</style>

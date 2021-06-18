@@ -1,0 +1,136 @@
+<template>
+  <div class="row">
+    <aside class="col-sm-0 col-md-50 col-lg-20 col-xl-2"></aside>
+    <aside class="col-sm-12 col-md-50 col-lg-80 col-xl-8">
+      <div class="card">
+        <article class="card-body">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>
+                  <i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i>
+                </th>
+                <th>1月1日</th>
+                <th>1月2日</th>
+                <th>1月3日</th>
+                <th>1月4日</th>
+                <th>1月5日</th>
+                <th>1月6日</th>
+              </tr>
+            </thead>
+            <tbody>
+              <br />
+              <tr>
+                <td>0:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>1:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>2:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>3:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>4:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>5:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>6:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>7:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>8:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>9:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>10:00:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </aside>
+    <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
+  </div>
+
+</template>
+
+<script>
+</script>
+
+<style>
+</style>

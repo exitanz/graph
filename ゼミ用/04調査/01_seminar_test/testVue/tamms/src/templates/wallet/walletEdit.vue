@@ -1,0 +1,92 @@
+<template>
+  <div class="row">
+    <aside class="col-sm-0 col-md-20 col-lg-2 col-xl-2"></aside>
+    <aside class="col-sm-12 col-md-20 col-lg-8 col-xl-8">
+      <div class="card">
+        <article class="card-body">
+          <h4 class="card-title text-center mb-4 mt-1">お財布編集</h4>
+          <hr>
+          <div class="form-group">
+            <br />
+            <div class="alert alert-success">お財布を編集しました。<br /></div>
+            <div class="alert alert-danger">お財布名は20文字以内で入力してください<br /></div>
+            <br />
+            <hr>
+            <br />
+            <h3>お財布名</h3>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-wallet"></i> </span>
+              </div>
+              <input
+                class="form-control"
+                placeholder="お財布名を入力してください。"
+                type="text"
+                name="wallet_name"
+              >
+            </div>
+          </div>
+          <br />
+          <div class="form-group">
+            <p class="control-label"><b>アイコン</b></p>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="radio2"
+                id="radio2a"
+                value="A"
+              >
+              <label
+                class="form-check-label"
+                for="radio2a"
+              ><i class="fas fa-university fa-4x"></i></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="radio2"
+                id="radio2b"
+                value="B"
+              >
+              <label
+                class="form-check-label"
+                for="radio2b"
+              ><i class="fas fa-credit-card fa-4x"></i></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="radio2"
+                id="radio2b"
+                value="B"
+              >
+              <label
+                class="form-check-label"
+                for="radio2b"
+              ><i class="fas fa-piggy-bank fa-4x"></i></label>
+            </div>
+            <br />
+            <br />
+            <p class="text-center"><a class="btn btn-secondary">編集</a></p>
+            <br />
+            <br />
+            <table class="table">
+              <th></th>
+            </table>
+            <br />
+          </div>
+        </article>
+      </div>
+    </aside>
+    <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
+  </div>
+</template>
+
+<script>
+</script>
+
+<style>
+</style>
