@@ -16,7 +16,7 @@
       <div class="row">
         <div class="col-12 col-md">
           <small class="d-block mb-3 text-muted">
-            Copyright © 2021 ryome&K All Rights Reserved.
+            Copyright © 2021 exitanz All Rights Reserved.
           </small>
         </div>
       </div>

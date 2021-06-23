@@ -1,130 +1,65 @@
 <template>
   <div class="row">
-    <!-----------時系列タブ-------------->
-    <div>
-      <b-tabs pills vertical nav-wrapper-class="w-40">
-        <b-tab title="時系列１" active></b-tab>
-        <b-tab title="時系列２"></b-tab>
-        <b-tab title="時系列３"></b-tab>
-      </b-tabs>
-    </div>
-
-    <aside class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-      <svg width="980" height="600" style="background-color: #ddd"></svg>
-      <!-----------アンダーメニュー-------------->
-      <div class="card-group row">
-        <div class="card col-8">
-          <!-----------人物情報-------------->
-          <div class="card-body" id="side_data">
-            <div class="row">
-              <aside
-                class="col-sm-4 col-md-4 col-lg-2 col-xl-2"
-                id="side_data_img"
-              ></aside>
-              <aside class="col-sm-8 col-md-8 col-lg-10 col-xl-10">
-                <div class="row">
-                  <aside class="col">
-                    <h3>
-                      <!-----------名前表示欄-------------->
-                      <b-form-input v-model="text" disabled></b-form-input>
-                    </h3>
-                  </aside>
-                  <aside class="col text-right">
-                    <!-----------編集ボタン-------------->
-                    <b-button v-b-modal="'edit_modal'" variant="success"
-                      >編集</b-button
-                    ><!-----------編集モーダルウィンドウ-------------->
-                    <b-modal
-                      id="edit_modal"
-                      ref="modal"
-                      title="編集画面"
-                      @show="resetModal"
-                      @hidden="resetModal"
-                      @ok="handleOk"
-                    >
-                      <form ref="form" @submit.stop.prevent="handleSubmit">
-                        <div class="mt-3">名前</div>
-                        <b-form-input id="edit_name-input"></b-form-input>
-                        <div class="mt-3">時系列</div>
-                        <b-form-select v-model="selected">
-                          <b-form-select-option>時系列１</b-form-select-option>
-                          <b-form-select-option>時系列２</b-form-select-option>
-                          <b-form-select-option>時系列３</b-form-select-option>
-                        </b-form-select>
-                        <div class="mt-3">グループ</div>
-                        <b-form-select v-model="selected">
-                          <b-form-select-option>グループA</b-form-select-option>
-                          <b-form-select-option>グループB</b-form-select-option>
-                          <b-form-select-option>グループC</b-form-select-option>
-                        </b-form-select>
-                        <div class="mt-3">アイコン</div>
-                        <b-form-file
-                          v-model="file1"
-                          placeholder="ファイルを選択"
-                        ></b-form-file>
-                        <div class="mt-3">詳細情報</div>
-                        <b-form-textarea
-                          id="edit_info"
-                          v-model="text"
-                          rows="3"
-                          max-rows="10"
-                        ></b-form-textarea>
-                      </form>
-                    </b-modal>
-                    <!-----------削除ボタン-------------->
-                    <b-button variant="danger" v-b-modal.modal-4>削除</b-button
-                    ><!-----------削除モーダルウィンドウ-------------->
-                    <b-modal id="modal-4" title="削除確認画面">
-                      <p class="my-4">データを削除しますか？</p>
-                    </b-modal>
-                  </aside>
-                </div>
-                <div class="row">
-                  <aside class="col">
-                    <!-----------詳細情報表示欄-------------->
-                    <b-form-textarea
-                      id="textarea"
-                      v-model="text"
-                      rows="3"
-                      max-rows="6"
-                      disabled
-                    ></b-form-textarea>
-                  </aside>
-                </div>
-              </aside>
-            </div>
-          </div>
-        </div>
-        <!-----------検索-------------->
-        <div class="card col-4">
-          <div class="card-body" id="side_bar">
-            <div class="row h-50 w-100">
-              <aside class="col-12" id="side_search">
-                <b-form inline>
-                  <label class="mr-sm-2">検索</label>
-                  <b-form-input
-                    class="mb-2 mr-sm-2 mb-sm-0"
-                    placeholder="Search"
-                  ></b-form-input>
-                  <b-button variant="info">
-                    <font-awesome-icon icon="search" />
-                  </b-button>
-                </b-form>
-              </aside>
-              <!-----------検索タブ-------------->
-              <aside class="col-12 p-3">
-                <b-tabs pills>
-                  <b-tab title="人物名" active></b-tab>
-                  <b-tab title="関係性名"></b-tab>
-                  <b-tab title="グループ"></b-tab>
-                </b-tabs>
-              </aside>
-            </div>
-          </div>
-        </div>
+    <!--------------------------作品一覧画面-------------------------------->
+    <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
+    <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
+      <div class="card">
+        <article class="card-body">
+          <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
+          <hr />
+          <br />
+          <b-alert show variant="success">作品名が作成されました。</b-alert>
+          <b-alert show variant="danger"
+            >〇〇文字以内で入力してください。</b-alert
+          >
+          <hr />
+        </article>
+        <b-container fluid>
+          <b-row class="my-1">
+            <b-col sm="2">
+              <label class="mb-4 mt-1">作品名：</label>
+            </b-col>
+            <b-col sm="8">
+              <b-form-input id="work-input"></b-form-input>
+            </b-col>
+            <b-col sm="2">
+              <b-button variant="info"> 追加 </b-button>
+            </b-col>
+          </b-row>
+        </b-container>
+        <br />
+        <br />
+        <b-table :items="time" :fields="time_fields" striped responsive="sm">
+          <template #cell(作品名)>
+            <b-form-input class="mb-2 mr-sm-2 mb-sm-0" disabled></b-form-input>
+          </template>
+          <template #cell(編集)>
+            <b-button size="sm" class="mr-2" variant="success">
+              <font-awesome-icon icon="pencil-alt" />
+            </b-button>
+          </template>
+          <template #cell(削除)>
+            <b-button
+              size="sm"
+              class="mr-2"
+              variant="danger"
+              v-b-modal.delete_modal
+            >
+              <font-awesome-icon icon="times" />
+            </b-button>
+          </template>
+          <template #cell(閲覧)>
+            <b-button size="sm" class="mr-2" variant="info">
+              <font-awesome-icon icon="eye" />
+            </b-button>
+          </template>
+        </b-table>
+        <!-----------削除モーダルウィンドウ-------------->
+        <b-modal id="delete_modal" title="削除確認画面">
+          <p class="my-4">データを削除しますか？</p>
+        </b-modal>
       </div>
     </aside>
-    <aside class="col-sm-0 col-md-0 col-lg-2 col-xl-2"></aside>
   </div>
 </template>
 
@@ -133,6 +68,24 @@
 //import { CommonUtils } from "../../common/CommonUtils.js";
 //import { VueFaileName } from "../../constants/VueFaileName.js";
 
+export default {
+  data() {
+    return {
+      time_fields: ["作品名", "編集", "削除", "閲覧"],
+      time: [
+        {
+          作品名: "作品名A",
+        },
+        {
+          作品名: "作品名B",
+        },
+        {
+          作品名: "作品名C",
+        },
+      ],
+    };
+  },
+};
 /*export default {
   data() {
     return {

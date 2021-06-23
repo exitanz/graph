@@ -44,10 +44,15 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 import {
+  faEye,
+  faPlusCircle,
+  faArrowCircleLeft,
   faUserPlus,
   faArrowsAltH,
   faDownload,
   faCog,
+  faPencilAlt,
+  faTimes,
   faSearch
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -58,10 +63,15 @@ import {
 } from '@fortawesome/vue-fontawesome';
 
 library.add(
+  faEye,
+  faPlusCircle,
+  faArrowCircleLeft,
   faUserPlus,
   faArrowsAltH,
   faDownload,
   faCog,
+  faPencilAlt,
+  faTimes,
   faSearch
 );
 
