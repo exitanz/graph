@@ -49,7 +49,7 @@
             </b-button>
           </template>
           <template #cell(閲覧)>
-            <b-button size="sm" class="mr-2" variant="info">
+            <b-button size="sm" class="mr-2" variant="info" @click="read_graph">
               <font-awesome-icon icon="eye" />
             </b-button>
           </template>
@@ -66,7 +66,7 @@
 <script>
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-//import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFaileName } from "../../constants/VueFaileName.js";
 
 export default {
   data() {
@@ -84,6 +84,19 @@ export default {
         },
       ],
     };
+  },
+  datas: {
+    isActive: true
+  },
+  methods: {
+    read_graph() {
+      this.$router.push({
+        name: VueFaileName.question,
+        function() {
+          this.isActive = !this.isActive;
+        },
+      });
+    },
   },
 };
 /*export default {
