@@ -20,8 +20,8 @@
         <font-awesome-icon icon="arrows-alt-h" />
       </b-button>
       <!-----------UpLoadボタン------------->
-      <b-button variant="secondary">
-        <font-awesome-icon icon="download" />
+      <b-button v-b-modal="'upload_modal'" no-caret
+        ><font-awesome-icon icon="upload" />
       </b-button>
       <!-----------SetUpボタン------------->
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
@@ -30,7 +30,7 @@
         </template>
         <b-dropdown-item v-b-modal.time_modal>時系列名編集</b-dropdown-item>
         <b-dropdown-item v-b-modal.group_modal>グループ名編集</b-dropdown-item>
-        <b-dropdown-item variant="danger" v-b-modal.delete_modal
+        <b-dropdown-item variant="danger" v-b-modal="'delete_modal'"
           >図を削除する</b-dropdown-item
         >
       </b-dropdown>

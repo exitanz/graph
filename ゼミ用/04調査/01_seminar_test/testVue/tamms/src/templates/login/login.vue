@@ -29,31 +29,49 @@
         </b-container>
         <br />
         <br />
-        <b-table :items="time" :fields="time_fields" striped responsive="sm">
-          <template #cell(作品名)>
-            <b-form-input class="mb-2 mr-sm-2 mb-sm-0" disabled></b-form-input>
-          </template>
-          <template #cell(編集)>
-            <b-button size="sm" class="mr-2" variant="success">
-              <font-awesome-icon icon="pencil-alt" />
-            </b-button>
-          </template>
-          <template #cell(削除)>
-            <b-button
-              size="sm"
-              class="mr-2"
-              variant="danger"
-              v-b-modal.delete_modal
-            >
-              <font-awesome-icon icon="times" />
-            </b-button>
-          </template>
-          <template #cell(閲覧)>
-            <b-button size="sm" class="mr-2" variant="info" @click="read_graph">
-              <font-awesome-icon icon="eye" />
-            </b-button>
-          </template>
-        </b-table>
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th>作品名</th>
+              <th>編集</th>
+              <th>削除</th>
+              <th>閲覧</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, key) in works" :key="key">
+              <td>{{ row.workName }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  v-b-modal.work_edit_modal
+                >
+                  <font-awesome-icon icon="pencil-alt" />
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  v-b-modal.delete_modal
+                >
+                  <font-awesome-icon icon="times" />
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-info" @click="read_graph">
+                  <font-awesome-icon icon="eye" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-----------編集モーダルウィンドウ-------------->
+        <b-modal id="work_edit_modal" title="編集画面">
+          <div class="mt-3">作品名</div>
+          <b-form-input id="work_name-input"></b-form-input>
+        </b-modal>
         <!-----------削除モーダルウィンドウ-------------->
         <b-modal id="delete_modal" title="削除確認画面">
           <p class="my-4">データを削除しますか？</p>
@@ -71,22 +89,8 @@ import { VueFaileName } from "../../constants/VueFaileName.js";
 export default {
   data() {
     return {
-      time_fields: ["作品名", "編集", "削除", "閲覧"],
-      time: [
-        {
-          作品名: "作品名A",
-        },
-        {
-          作品名: "作品名B",
-        },
-        {
-          作品名: "作品名C",
-        },
-      ],
+      works: [],
     };
-  },
-  datas: {
-    isActive: true
   },
   methods: {
     read_graph() {
@@ -99,84 +103,6 @@ export default {
     },
   },
 };
-/*export default {
-  data() {
-    return {
-      loginStatus: false,
-      errors: [],
-      userId: "",
-      password: "",
-      userIdValid: "",
-      passwordValid: "",
-      userCreate: VueFaileName.userCreate,
-      question: VueFaileName.question,
-    };
-  },
-  methods: {
-    accountLogin() {
-      // パラメータ生成
-      const params = {
-        userId: this.userId,
-        password: this.password,
-      };
-
-      // バリデーションチェック
-      if (this.validation(params)) {
-        throw "バリデーションエラー";
-      }
-
-      this.$http
-        .post(ApiURL.LOGIN, params)
-        .then((response) => {
-          // ログイン成功
-
-          // CookieにJSESSIONIDを登録
-          CommonUtils.setCookie("JSESSIONID", response.data.optional.sessionId);
-
-          // VuexにJSESSIONIDを補完
-          this.$store.commit("setJsessionId", response.data.optional.sessionId);
-
-          // 画面変更
-          this.$router.push({
-            name: VueFaileName.calendar,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          // ログイン失敗
-          this.errors.push("ユーザIDまたはパスワードが違います。");
-        });
-    },
-
-    validation(params) {
-      // 初期化
-      let validationFlg = false;
-      this.errors = [];
-
-      if (CommonUtils.eq(params.userId, "")) {
-        this.errors.push("ユーザIDは必須項目です。");
-        this.userIdValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.userId.length != 12) {
-        this.errors.push("ユーザIDは12文字で入力してください。");
-        this.userIdValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (CommonUtils.eq(params.password, "")) {
-        this.errors.push("パスワードは必須項目です。");
-        this.passwordValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.password.length < 1 || 20 < params.password.length) {
-        this.errors.push("パスワードは1から20文字以内で入力してください。");
-        this.passwordValid = "is-invalid";
-        validationFlg = true;
-      }
-      return validationFlg;
-    },
-  },
-};*/
 </script>
 
 <style>

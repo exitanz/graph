@@ -3,152 +3,173 @@
     <!--------------------------相関図制作画面-------------------------------->
     <!----------------------メニュー欄----------------------------->
     <!-----------Actorモーダルウィンドウ-------------->
-      <b-modal
-        id="actor_modal"
-        ref="modal"
-        title="入力画面"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-          <div class="mt-3">名前</div>
-          <b-form-input id="actor_name-input"></b-form-input>
-          <div class="mt-3">時系列</div>
-          <b-form-select v-model="selected" :options="options">
-            <b-form-select-option>時系列１</b-form-select-option>
-            <b-form-select-option>時系列２</b-form-select-option>
-            <b-form-select-option>時系列３</b-form-select-option>
-          </b-form-select>
-          <div class="mt-3">グループ</div>
-          <b-form-select v-model="selected" :options="options">
-            <b-form-select-option>グループA</b-form-select-option>
-            <b-form-select-option>グループB</b-form-select-option>
-            <b-form-select-option>グループC</b-form-select-option>
-          </b-form-select>
-          <div class="mt-3">アイコン</div>
-          <b-form-file
-            v-model="file1"
-            placeholder="ファイルを選択"
-          ></b-form-file>
-          <div class="mt-3">詳細情報</div>
-          <b-form-textarea
-            id="actor_info"
-            v-model="text"
-            rows="3"
-            max-rows="10"
-          ></b-form-textarea>
-        </form>
-      </b-modal>
-      <!-----------Linkモーダルウィンドウ-------------->
-      <b-modal
-        id="link_modal"
-        ref="modal"
-        title="入力画面"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-          <div class="mt-3">関係性名</div>
-          <b-form-input id="link_name_input"></b-form-input>
-          <div class="mt-3">From</div>
-          <b-form-select v-model="selected" :options="options">
-            <b-form-select-option>A</b-form-select-option>
-            <b-form-select-option>B</b-form-select-option>
-            <b-form-select-option>C</b-form-select-option>
-          </b-form-select>
-          <div class="mt-3">to</div>
-          <b-form-select v-model="selected" :options="options">
-            <b-form-select-option>A</b-form-select-option>
-            <b-form-select-option>B</b-form-select-option>
-            <b-form-select-option>C</b-form-select-option>
-          </b-form-select>
-          <div class="mt-3">時系列</div>
-          <b-form-select v-model="selected" :options="options">
-            <b-form-select-option>時系列１</b-form-select-option>
-            <b-form-select-option>時系列２</b-form-select-option>
-            <b-form-select-option>時系列３</b-form-select-option>
-          </b-form-select>
-          <div class="mt-3">詳細情報</div>
-          <b-form-textarea
-            id="link_info"
-            v-model="text"
-            rows="3"
-            max-rows="10"
-          ></b-form-textarea>
-        </form>
-      </b-modal>
-      <!-----------時系列名編集モーダルウィンドウ-------------->
-      <b-modal
-        id="time_modal"
-        ref="modal"
-        title="編集画面"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <b-form inline>
-          <div class="mt-3">時系列名</div>
-          <b-form-input class="mb-2 mr-sm-2 mb-sm-0"></b-form-input>
-          <b-button variant="info"> 追加 </b-button>
-        </b-form>
-        <br />
-        <br />
-        <b-table :items="time" :fields="time_fields" striped responsive="sm">
-          <template #cell(時系列名)>
-            <b-form-input
-              class="mb-2 mr-sm-2 mb-sm-0"
-              disabled
-            ></b-form-input>
-          </template>
-          <template #cell(編集)>
-            <b-button size="sm" class="mr-2" variant="success">
-              <font-awesome-icon icon="pencil-alt" />
-            </b-button>
-          </template>
-          <template #cell(削除)>
-            <b-button size="sm" class="mr-2" variant="danger">
-              <font-awesome-icon icon="times" />
-            </b-button>
-          </template>
-        </b-table>
-      </b-modal>
-      <!-----------グループ名編集モーダルウィンドウ-------------->
-      <b-modal
-        id="group_modal"
-        ref="modal"
-        title="編集画面"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok="handleOk"
-      >
-        <b-form inline>
-          <div class="mt-3">グループ名</div>
-          <b-form-input class="mb-2 mr-sm-2 mb-sm-0"></b-form-input>
-          <b-button variant="info"> 追加 </b-button>
-        </b-form>
-        <br />
-        <br />
-        <b-table :items="group" :fields="group_fields" striped responsive="sm">
-          <template #cell(グループ名)>
-            <b-form-input
-              class="mb-2 mr-sm-2 mb-sm-0"
-              disabled
-            ></b-form-input>
-          </template>
-          <template #cell(編集)>
-            <b-button size="sm" class="mr-2" variant="success">
-              <font-awesome-icon icon="pencil-alt" />
-            </b-button>
-          </template>
-          <template #cell(削除)>
-            <b-button size="sm" class="mr-2" variant="danger">
-              <font-awesome-icon icon="times" />
-            </b-button>
-          </template>
-        </b-table>
-      </b-modal>
+    <b-modal
+      id="actor_modal"
+      ref="modal"
+      title="入力画面"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <div class="mt-3">名前</div>
+        <b-form-input id="actor_name-input"></b-form-input>
+        <div class="mt-3">時系列</div>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>時系列１</b-form-select-option>
+          <b-form-select-option>時系列２</b-form-select-option>
+          <b-form-select-option>時系列３</b-form-select-option>
+        </b-form-select>
+        <div class="mt-3">グループ</div>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>グループA</b-form-select-option>
+          <b-form-select-option>グループB</b-form-select-option>
+          <b-form-select-option>グループC</b-form-select-option>
+        </b-form-select>
+        <div class="mt-3">アイコン</div>
+        <b-form-file v-model="file1" placeholder="ファイルを選択"></b-form-file>
+        <div class="mt-3">詳細情報</div>
+        <b-form-textarea
+          id="actor_info"
+          v-model="text"
+          rows="3"
+          max-rows="10"
+        ></b-form-textarea>
+      </form>
+    </b-modal>
+    <!-----------Linkモーダルウィンドウ-------------->
+    <b-modal
+      id="link_modal"
+      ref="modal"
+      title="入力画面"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <div class="mt-3">関係性名</div>
+        <b-form-input id="link_name_input"></b-form-input>
+        <div class="mt-3">From</div>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>A</b-form-select-option>
+          <b-form-select-option>B</b-form-select-option>
+          <b-form-select-option>C</b-form-select-option>
+        </b-form-select>
+        <div class="mt-3">to</div>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>A</b-form-select-option>
+          <b-form-select-option>B</b-form-select-option>
+          <b-form-select-option>C</b-form-select-option>
+        </b-form-select>
+        <div class="mt-3">時系列</div>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>時系列１</b-form-select-option>
+          <b-form-select-option>時系列２</b-form-select-option>
+          <b-form-select-option>時系列３</b-form-select-option>
+        </b-form-select>
+        <div class="mt-3">詳細情報</div>
+        <b-form-textarea
+          id="link_info"
+          v-model="text"
+          rows="3"
+          max-rows="10"
+        ></b-form-textarea>
+      </form>
+    </b-modal>
+    <!-----------アップロードモーダルウィンドウ-------------->
+    <b-modal id="upload_modal" title="確認画面">
+      <p class="my-4">アップロードしますか？</p>
+    </b-modal>
+    <!-----------時系列名編集モーダルウィンドウ-------------->
+    <b-modal
+      id="time_modal"
+      ref="modal"
+      title="編集画面"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <b-form inline>
+        <div class="mt-3">時系列名</div>
+        <b-form-input class="mb-2 mr-sm-2 mb-sm-0"></b-form-input>
+        <b-button variant="info"> 追加 </b-button>
+      </b-form>
+      <br />
+      <br />
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>時系列名</th>
+            <th>編集</th>
+            <th>削除</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, key) in times" :key="key">
+            <td>{{ row.timesName }}</td>
+            <td>
+              <button type="button" class="btn btn-success">
+                <font-awesome-icon icon="pencil-alt" />
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger"
+                v-b-modal.delete_modal
+              >
+                <font-awesome-icon icon="times" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-modal>
+    <!-----------グループ名編集モーダルウィンドウ-------------->
+    <b-modal
+      id="group_modal"
+      ref="modal"
+      title="編集画面"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <b-form inline>
+        <div class="mt-3">グループ名</div>
+        <b-form-input class="mb-2 mr-sm-2 mb-sm-0"></b-form-input>
+        <b-button variant="info"> 追加 </b-button>
+      </b-form>
+      <br />
+      <br />
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>グループ名</th>
+            <th>編集</th>
+            <th>削除</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, key) in group" :key="key">
+            <td>{{ row.groupName }}</td>
+            <td>
+              <button type="button" class="btn btn-success">
+                <font-awesome-icon icon="pencil-alt" />
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger"
+                v-b-modal.delete_modal
+              >
+                <font-awesome-icon icon="times" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-modal>
     <!-----------時系列タブ-------------->
     <div>
       <b-tabs pills vertical nav-wrapper-class="w-40">
@@ -221,7 +242,8 @@
                       </form>
                     </b-modal>
                     <!-----------削除ボタン-------------->
-                    <b-button variant="danger" v-b-modal.delete_modal>削除</b-button
+                    <b-button variant="danger" v-b-modal.delete_modal
+                      >削除</b-button
                     ><!-----------削除モーダルウィンドウ-------------->
                     <b-modal id="delete_modal" title="削除確認画面">
                       <p class="my-4">データを削除しますか？</p>
@@ -284,27 +306,8 @@
 export default {
   data() {
     return {
-      time_fields: ["時系列名", "編集", "削除"],
-      time: [
-        {
-          時系列名: "時系列１",
-        },
-        {
-          時系列名: "時系列２",
-        },
-        {
-          時系列名: "時系列３",
-        },
-      ],
-      group_fields: ["グループ名", "編集", "削除"],
-      group: [
-        {
-          グループ名: "グループA",
-        },
-        {
-          グループ名: "グループB",
-        },
-      ],
+      times: [],
+      group: [],
     };
   },
 };
