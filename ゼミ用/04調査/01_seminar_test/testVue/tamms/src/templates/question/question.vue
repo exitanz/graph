@@ -76,9 +76,9 @@
         ></b-form-textarea>
       </form>
     </b-modal>
-    <!-----------アップロードモーダルウィンドウ-------------->
+    <!-----------相関図制作画面のアップロードモーダルウィンドウ-------------->
     <b-modal id="upload_modal" title="確認画面">
-      <p class="my-4">アップロードしますか？</p>
+      <p class="my-4">相関図を投稿しますか？</p>
     </b-modal>
     <!-----------時系列名編集モーダルウィンドウ-------------->
     <b-modal
@@ -108,7 +108,11 @@
           <tr v-for="(row, key) in times" :key="key">
             <td>{{ row.timesName }}</td>
             <td>
-              <button type="button" class="btn btn-success">
+              <button
+                type="button"
+                class="btn btn-success"
+                v-b-modal.edit_modal
+              >
                 <font-awesome-icon icon="pencil-alt" />
               </button>
             </td>
@@ -153,7 +157,11 @@
           <tr v-for="(row, key) in group" :key="key">
             <td>{{ row.groupName }}</td>
             <td>
-              <button type="button" class="btn btn-success">
+              <button
+                type="button"
+                class="btn btn-success"
+                v-b-modal.edit_modal
+              >
                 <font-awesome-icon icon="pencil-alt" />
               </button>
             </td>
@@ -169,6 +177,20 @@
           </tr>
         </tbody>
       </table>
+    </b-modal>
+    <!-----------時系列・グループ編集モーダルウィンドウ-------------->
+    <b-modal
+      id="edit_modal"
+      ref="modal"
+      title="編集画面"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <div class="mt-3">名前</div>
+        <b-form-input id="edit_name-input"></b-form-input>
+      </form>
     </b-modal>
     <!-----------時系列タブ-------------->
     <div>
@@ -200,12 +222,12 @@
                     </h3>
                   </aside>
                   <aside class="col text-right">
-                    <!-----------編集ボタン-------------->
-                    <b-button v-b-modal="'edit_modal'" variant="success"
+                    <!-----------人物情報編集ボタン-------------->
+                    <b-button v-b-modal="'actor_edit_modal'" variant="success"
                       >編集</b-button
-                    ><!-----------編集モーダルウィンドウ-------------->
+                    ><!-----------人物情報編集モーダルウィンドウ-------------->
                     <b-modal
-                      id="edit_modal"
+                      id="actor_edit_modal"
                       ref="modal"
                       title="編集画面"
                       @show="resetModal"
@@ -239,6 +261,13 @@
                           rows="3"
                           max-rows="10"
                         ></b-form-textarea>
+                        <button
+                          type="button"
+                          class="btn btn-success"
+                          v-b-modal.edit_modal
+                        >
+                          <font-awesome-icon icon="pencil-alt" />
+                        </button>
                       </form>
                     </b-modal>
                     <!-----------削除ボタン-------------->
@@ -247,6 +276,10 @@
                     ><!-----------削除モーダルウィンドウ-------------->
                     <b-modal id="delete_modal" title="削除確認画面">
                       <p class="my-4">データを削除しますか？</p>
+                    </b-modal>
+                    <!-----------ログアウトモーダルウィンドウ-------------->
+                    <b-modal id="logout_modal" title="確認画面">
+                      <p class="my-4">ログアウトしますか？</p>
                     </b-modal>
                   </aside>
                 </div>

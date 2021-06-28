@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <!--------------------------作品一覧画面-------------------------------->
+    <!--------------------------相関図一覧画面-------------------------------->
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <div class="card">
@@ -8,11 +8,11 @@
           <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
           <hr />
           <br />
-          <b-alert show variant="success">作品名が作成されました。</b-alert>
+          <b-alert show variant="success">相関図が作成されました。</b-alert>
           <b-alert show variant="danger"
-            >〇〇文字以内で入力してください。</b-alert
+            >作品名は〇文字以内で入力してください。</b-alert
           >
-          <hr />
+          <br />
         </article>
         <b-container fluid>
           <b-row class="my-1">
@@ -45,7 +45,7 @@
                 <button
                   type="button"
                   class="btn btn-success"
-                  v-b-modal.work_edit_modal
+                  v-b-modal="'edit_modal'"
                 >
                   <font-awesome-icon icon="pencil-alt" />
                 </button>
@@ -54,7 +54,7 @@
                 <button
                   type="button"
                   class="btn btn-danger"
-                  v-b-modal.delete_modal
+                  v-b-modal="'delete_modal'"
                 >
                   <font-awesome-icon icon="times" />
                 </button>
@@ -68,13 +68,37 @@
           </tbody>
         </table>
         <!-----------編集モーダルウィンドウ-------------->
-        <b-modal id="work_edit_modal" title="編集画面">
+        <b-modal id="edit_modal" title="編集画面">
           <div class="mt-3">作品名</div>
           <b-form-input id="work_name-input"></b-form-input>
         </b-modal>
         <!-----------削除モーダルウィンドウ-------------->
         <b-modal id="delete_modal" title="削除確認画面">
           <p class="my-4">データを削除しますか？</p>
+        </b-modal>
+        <!-----------相関図一覧画面のアップロードモーダルウィンドウ-------------->
+        <b-modal id="upload_set_modal" title="確認画面">
+          <p class="my-4">投稿する相関図を選択してください。</p>
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>選択</th>
+                <th>作品名</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, key) in works" :key="key">
+                <td>
+                   <b-form-checkbox size="lg"></b-form-checkbox>
+                </td>
+                <td>{{ row.workName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </b-modal>
+        <!-----------ログアウトモーダルウィンドウ-------------->
+        <b-modal id="logout_modal" title="確認画面">
+          <p class="my-4">ログアウトしますか？</p>
         </b-modal>
       </div>
     </aside>
