@@ -4,7 +4,7 @@
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <div class="card">
         <article class="card-body">
-          <h4 class="card-title text-center mb-4 mt-1">パスワード変更</h4>
+          <h4 class="card-title text-center mb-4 mt-1">新規登録</h4>
           <hr>
           <div class="form-group">
             <br />
@@ -18,29 +18,30 @@
               v-if="complete"
               class="alert alert-success"
             >
-              パスワード変更が完了しました。<br />
+              ユーザ登録が完了しました。<br />
+              （ユーザID：<span class="bg-warning">{{userId}}</span>）<br />
             </div>
             <br />
-            <h3>ユーザID</h3>
+            <h3>ユーザ名</h3>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">
-                  <font-awesome-icon icon="user" />
+                  <font-awesome-icon icon="signature" />
                 </span>
               </div>
               <input
                 class="form-control"
-                v-bind:class="[userIdValid]"
-                placeholder="ユーザIDを入力してください。"
+                v-bind:class="[userNameValid]"
+                placeholder="ユーザ名を入力してください。"
                 type="text"
-                name="userId"
-                v-model="userId"
-              />
+                name="user_name"
+                v-model="userName"
+              >
             </div>
           </div>
           <br />
           <div class="form-group">
-            <h3>新しいパスワード</h3>
+            <h3>パスワード</h3>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">
@@ -49,11 +50,11 @@
               </div>
               <input
                 class="form-control"
-                v-bind:class="[newPasswordValid]"
-                placeholder="新しいパスワードを入力してください。"
+                v-bind:class="[passwordValid]"
+                placeholder="パスワードを入力してください。"
                 type="password"
-                name="newPassword"
-                v-model="newPassword"
+                name="password"
+                v-model="password"
               >
             </div>
           </div>
@@ -109,7 +110,7 @@
           <div class="form-group row">
             <div class="col">
               <button
-                @click="changePassword"
+                @click="userCreate"
                 type="submit"
                 class="btn btn-primary btn-block"
                 id="usercreatesend"
@@ -145,13 +146,14 @@ export default {
   data() {
     return {
       errors: [],
-      complete: false,
       userId: "",
-      newPassword: "",
+      complete: false,
+      userName: "",
+      password: "",
       secretQuestionId: "",
       secretAnswer: "",
-      userIdValid: "",
-      newPasswordValid: "",
+      userNameValid: "",
+      passwordValid: "",
       secretQuestionIdValid: "",
       secretAnswerValid: "",
       items: [],
@@ -171,18 +173,17 @@ export default {
         .get(ApiURL.QUESTION)
         .then((response) => {
           // 秘密の質問取得
-          console.log(response.data.optional.secretQuestionList);
           this.items = response.data.optional.secretQuestionList;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    changePassword() {
+    userCreate() {
       // パラメータ生成
       const params = {
-        userId: this.userId,
-        newPassword: this.newPassword,
+        userName: this.userName,
+        password: this.password,
         secretQuestionId: this.secretQuestionId,
         secretAnswer: this.secretAnswer,
       };
@@ -193,52 +194,47 @@ export default {
       }
 
       this.$http
-        .post(ApiURL.QUESTION, params)
+        .post(ApiURL.SIGNUP, params)
         .then((response) => {
           // ログイン成功
-          console.log(response);
-          // 画面変更
+          // 完了処理
           this.complete = true;
+          this.userId = response.data.optional.userId;
         })
         .catch((error) => {
           console.log(error);
           // ユーザ登録失敗
-          this.errors.push(
-            "ユーザIDまたは秘密の質問と質問の答えが一致しません。"
-          );
+          this.errors.push("ユーザ登録に失敗しました。");
         });
     },
-
     validation(params) {
       // 初期化
       let validationFlg = false;
       this.complete = false;
       this.errors = [];
-      this.userIdValid = "";
-      this.newPasswordValid = "";
+      this.userNameValid = "";
+      this.passwordValid = "";
       this.secretQuestionIdValid = "";
       this.secretAnswerValid = "";
 
-      if (CommonUtils.eq(params.userId, "")) {
-        this.errors.push("ユーザIDは必須項目です。");
-        this.userIdValid = "is-invalid";
+      if (CommonUtils.eq(params.userName, "")) {
+        this.errors.push("ユーザ名は必須項目です。");
+        this.userNameValid = "is-invalid";
         validationFlg = true;
       }
-      if (params.userId.length != 12) {
-        this.errors.push("ユーザIDは12文字で入力してください。");
-        this.userIdValid = "is-invalid";
+      if (params.userName.length < 1 || 20 < params.userName.length) {
+        this.errors.push("ユーザ名は1から20文字以内で入力してください。");
+        this.userNameValid = "is-invalid";
         validationFlg = true;
       }
-      if (CommonUtils.eq(params.newPassword, "")) {
-        this.errors.push("新しいパスワードは必須項目です。");
-        this.newPasswordValid = "is-invalid";
+      if (CommonUtils.eq(params.password, "")) {
+        this.errors.push("パスワードは必須項目です。");
+        this.passwordValid = "is-invalid";
         validationFlg = true;
       }
-      if (params.newPassword.length < 1 || 20 < params.newPassword.length) {
-        this.errors.push(
-          "新しいパスワードは1から20文字以内で入力してください。"
-        );
-        this.newPasswordValid = "is-invalid";
+      if (params.password.length < 1 || 20 < params.password.length) {
+        this.errors.push("パスワードは1から20文字以内で入力してください。");
+        this.passwordValid = "is-invalid";
         validationFlg = true;
       }
       if (CommonUtils.eq(params.secretQuestionId, "")) {

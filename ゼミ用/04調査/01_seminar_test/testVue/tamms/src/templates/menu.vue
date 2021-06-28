@@ -1,10 +1,10 @@
 <template>
   <!--------------------------メニューバー-------------------------->
   <b-navbar toggleable type="dark" variant="dark">
-    <!--ログイン、ログアウト、新規登録、パスワード変更画面のメニューバー--
-    <b-navbar-brand> 相関図制作システム </b-navbar-brand>-->
+    <!--ログイン、ログアウト、新規登録、パスワード変更画面のメニューバー-->
+    <b-navbar-brand> 相関図制作システム </b-navbar-brand>
 
-    <!--相関図一覧画面のメニューバー-->
+    <!--相関図一覧画面のメニューバー--
     <b-navbar-brand> 相関図制作システム </b-navbar-brand>
     <b-navbar-brand>
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
@@ -24,10 +24,10 @@
           >ログアウトする</b-dropdown-item
         >
       </b-dropdown>
-    </b-navbar-brand>
+    </b-navbar-brand>-->
 
     <!--相関図制作画面のメニューバー--
-    <b-button variant="secondary" @click="read_work">
+    <b-button variant="secondary">
       <font-awesome-icon icon="arrow-circle-left" />
     </b-button>
     <b-navbar-brand> 作品名A</b-navbar-brand>
@@ -49,13 +49,6 @@
         <b-dropdown-item v-b-modal="'upload_modal'"
           >相関図を投稿する</b-dropdown-item
         >
-        <b-dropdown-item>投稿画面へ</b-dropdown-item>
-      </b-dropdown>
-      <b-dropdown right toggle-class="text-decoration-none" no-caret>
-        <template #button-content>
-          <font-awesome-icon icon="upload" />
-        </template>
-        <b-dropdown-item v-b-modal="'upload_modal'">相関図を投稿する</b-dropdown-item>
         <b-dropdown-item>投稿画面へ</b-dropdown-item>
       </b-dropdown>
       <-----------SetUpボタン-------------

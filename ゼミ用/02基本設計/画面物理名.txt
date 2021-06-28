@@ -1,0 +1,15 @@
+
+graphCreate 相関図
+
+graphList 相関図一覧
+
+graphSubmit 相関図投稿
+
+login ログイン
+
+logout ログアウト
+
+question パスワード変更
+
+userCreate 新規登録
+
