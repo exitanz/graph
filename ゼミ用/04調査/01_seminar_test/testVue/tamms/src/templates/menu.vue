@@ -1,10 +1,10 @@
 <template>
-  <!--------------------------メニューバー-------------------------->
+  <!-----------------------------------メニューバー--------------------------------------->
   <b-navbar toggleable type="dark" variant="dark">
-    <!--ログイン、ログアウト、新規登録、パスワード変更画面のメニューバー-->
+    <!------------ログイン、ログアウト、新規登録、パスワード変更画面のメニューバー------------->
     <b-navbar-brand> 相関図制作システム </b-navbar-brand>
 
-    <!--相関図一覧画面のメニューバー--
+    <!---------------------------相関図一覧画面のメニューバー------------------------------
     <b-navbar-brand> 相関図制作システム </b-navbar-brand>
     <b-navbar-brand>
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
@@ -26,22 +26,19 @@
       </b-dropdown>
     </b-navbar-brand>-->
 
-    <!--相関図制作画面のメニューバー--
+    <!---------------------------相関図画面のメニューバー-----------------------------
     <b-button variant="secondary">
       <font-awesome-icon icon="arrow-circle-left" />
     </b-button>
     <b-navbar-brand> 作品名A</b-navbar-brand>
     <b-navbar-brand>
-      <-----------Actorボタン-------------
       <b-button v-b-modal="'actor_modal'" variant="info"
         >Actor<font-awesome-icon icon="user-plus" />
       </b-button>
-      <-----------Linkボタン--------------
       <b-button v-b-modal="'link_modal'" variant="success"
         >Link
         <font-awesome-icon icon="arrows-alt-h" />
       </b-button>
-      <-----------UpLoadボタン-------------
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
         <template #button-content>
           <font-awesome-icon icon="upload" />
@@ -51,7 +48,6 @@
         >
         <b-dropdown-item>投稿画面へ</b-dropdown-item>
       </b-dropdown>
-      <-----------SetUpボタン-------------
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
         <template #button-content>
           <font-awesome-icon icon="cog" />
@@ -66,7 +62,7 @@
         >
       </b-dropdown>
     </b-navbar-brand>-->
-    <!--相関図投稿画面のメニューバー--
+    <!----------------------------相関図投稿画面のメニューバー-------------------------------
     <b-navbar-brand> 相関図投稿画面 </b-navbar-brand>
     <b-navbar-brand>
       <b-button v-b-modal="'upload_set_modal'" variant="success"

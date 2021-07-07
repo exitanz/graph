@@ -202,7 +202,7 @@
     </div>
 
     <aside class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-      <svg width="980" height="600" style="background-color: #ddd"></svg>
+      <svg width="1000" height="600" style="background-color: #ddd"></svg>
       <!-----------アンダーメニュー-------------->
       <div class="card-group row">
         <div class="card col-8">
