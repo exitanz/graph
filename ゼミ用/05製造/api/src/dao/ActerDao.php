@@ -9,7 +9,7 @@ class ActerDao {
 
         try {
             // データベースへの接続を表すPDOインスタンスを生成
-            $pdo = new PDO($db->getDB());
+            $pdo = $db->getDB();
 
             // プリペアドステートメントを作成
             $stmt = $pdo->prepare($sql);

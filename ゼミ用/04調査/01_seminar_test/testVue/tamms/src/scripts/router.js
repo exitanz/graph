@@ -23,6 +23,14 @@ export default new Router({
       },
     },
     {
+      path: '/graphCreate',
+      name: 'graphCreate',
+      components: {
+        default: loadView('/seminar/graphCreate'),
+        menu: loadView('/' + VueFaileName.menu),
+      },
+    },
+    {
       path: VueURL.SIGNUP,
       name: VueFaileName.userCreate,
       components: {
