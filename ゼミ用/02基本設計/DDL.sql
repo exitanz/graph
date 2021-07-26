@@ -94,7 +94,6 @@ PRIMARY KEY(acter_id)
 );
 
 /* ŠÖŒW */
-DROP TABLE IF EXISTS rel;
 CREATE TABLE rel(
 rel_id VARCHAR(9) NOT NULL UNIQUE  ,
 rel_mst_id VARCHAR(10) NOT NULL ,

@@ -35,6 +35,9 @@ import VueCookies from 'vue-cookies';
 // Vuex
 import store from './store';
 
+// d3
+import { d3 } from 'd3-scale';
+
 // Bootstrap
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -95,6 +98,7 @@ Vue.config.productionTip = false;
 // グローバル変数設定
 Vue.prototype.$http = client;
 Vue.prototype.$loginStatus = false;
+Vue.prototype.$d3 = d3;
 
 new Vue({
   router,
