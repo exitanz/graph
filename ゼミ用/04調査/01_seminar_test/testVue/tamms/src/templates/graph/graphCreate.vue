@@ -87,8 +87,7 @@
     <!-----------アップロードモーダルウィンドウ-------------->
     <b-modal id="upload_modal" title="確認画面">
       <p class="my-4">相関図を投稿しますか？</p>
-      <template #modal-footer="{ cancel, ok }">
-        <b-button @click="cancel()"> Cancel </b-button>
+      <template #modal-footer="{ ok }">
         <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
           OK
         </b-button>

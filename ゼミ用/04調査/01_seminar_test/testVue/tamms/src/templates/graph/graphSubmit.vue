@@ -68,8 +68,7 @@
               </tr>
             </tbody>
           </table>
-          <template #modal-footer="{ cancel, ok }">
-            <b-button @click="cancel()"> Cancel </b-button>
+          <template #modal-footer="{ ok }">
             <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
               OK
             </b-button>
