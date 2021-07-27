@@ -54,3 +54,8 @@ npm install js-cookie
 npm install vuex
 ```
 
+### d3
+```
+npm install d3
+```
+
