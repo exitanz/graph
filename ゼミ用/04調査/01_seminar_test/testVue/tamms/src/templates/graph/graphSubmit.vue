@@ -68,6 +68,20 @@
               </tr>
             </tbody>
           </table>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
+              OK
+            </b-button>
+          </template>
+        </b-modal>
+        <!-----------確認モーダルウィンドウ-------------->
+        <b-modal id="check_modal" title="確認画面">
+          <p class="my-4">相関図が投稿されました。</p>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button variant="primary" @click="ok()"> OK </b-button>
+          </template>
         </b-modal>
         <!-----------投稿管理モーダルウィンドウ-------------->
         <b-modal id="submit_set_modal" title="管理画面">
@@ -116,10 +130,20 @@
               </tr>
             </tbody>
           </table>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button variant="primary" @click="ok()"> OK </b-button>
+          </template>
         </b-modal>
         <!-----------ログアウトモーダルウィンドウ-------------->
         <b-modal id="logout_modal" title="確認画面">
           <p class="my-4">ログアウトしますか？</p>
+          <template #modal-footer="{ cancel }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <router-link v-bind:to="{ name: login }">
+              <b-button variant="primary"> OK </b-button>
+            </router-link>
+          </template>
         </b-modal>
       </article>
     </aside>
@@ -128,6 +152,19 @@
 </template>
 
 <script>
+//import { ApiURL } from "../../constants/ApiURL.js";
+//import { CommonUtils } from "../../common/CommonUtils.js";
+import { VueFaileName } from "../../constants/VueFaileName.js";
+
+export default {
+  data() {
+    return {
+      works: [],
+      graphCreate: VueFaileName.graphCreate,
+      login: VueFaileName.login,
+    };
+  },
+};
 </script>
 
 <style>

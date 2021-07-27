@@ -36,6 +36,10 @@
           max-rows="10"
         ></b-form-textarea>
       </form>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------Linkモーダルウィンドウ-------------->
     <b-modal
@@ -75,10 +79,28 @@
           max-rows="10"
         ></b-form-textarea>
       </form>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------アップロードモーダルウィンドウ-------------->
     <b-modal id="upload_modal" title="確認画面">
       <p class="my-4">相関図を投稿しますか？</p>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
+          OK
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------確認モーダルウィンドウ-------------->
+    <b-modal id="check_modal" title="確認画面">
+      <p class="my-4">相関図が投稿されました。</p>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------時系列名編集モーダルウィンドウ-------------->
     <b-modal
@@ -128,6 +150,10 @@
           </tr>
         </tbody>
       </table>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------グループ名編集モーダルウィンドウ-------------->
     <b-modal
@@ -177,6 +203,10 @@
           </tr>
         </tbody>
       </table>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------時系列・グループ編集モーダルウィンドウ-------------->
     <b-modal
@@ -191,6 +221,10 @@
         <div class="mt-3">名前</div>
         <b-form-input id="edit_name-input"></b-form-input>
       </form>
+      <template #modal-footer="{ cancel, ok }">
+        <b-button @click="cancel()"> Cancel </b-button>
+        <b-button variant="primary" @click="ok()"> OK </b-button>
+      </template>
     </b-modal>
     <!-----------時系列タブ-------------->
     <div>
@@ -262,6 +296,12 @@
                           max-rows="10"
                         ></b-form-textarea>
                       </form>
+                      <template #modal-footer="{ cancel, ok }">
+                        <b-button @click="cancel()"> Cancel </b-button>
+                        <b-button variant="primary" @click="ok()">
+                          OK
+                        </b-button>
+                      </template>
                     </b-modal>
                     <!-----------削除ボタン-------------->
                     <b-button variant="danger" v-b-modal.delete_modal
@@ -269,10 +309,22 @@
                     ><!-----------削除モーダルウィンドウ-------------->
                     <b-modal id="delete_modal" title="削除確認画面">
                       <p class="my-4">データを削除しますか？</p>
+                      <template #modal-footer="{ cancel, ok }">
+                        <b-button @click="cancel()"> Cancel </b-button>
+                        <b-button variant="primary" @click="ok()">
+                          OK
+                        </b-button>
+                      </template>
                     </b-modal>
                     <!-----------ログアウトモーダルウィンドウ-------------->
                     <b-modal id="logout_modal" title="確認画面">
                       <p class="my-4">ログアウトしますか？</p>
+                      <template #modal-footer="{ cancel }">
+                        <b-button @click="cancel()"> Cancel </b-button>
+                        <router-link v-bind:to="{ name: login }">
+                          <b-button variant="primary"> OK </b-button>
+                        </router-link>
+                      </template>
                     </b-modal>
                   </aside>
                 </div>
@@ -327,13 +379,14 @@
 <script>
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-//import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFaileName } from "../../constants/VueFaileName.js";
 
 export default {
   data() {
     return {
       times: [],
       group: [],
+      login: VueFaileName.login,
     };
   },
 };

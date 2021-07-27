@@ -61,9 +61,13 @@
               </td>
               <td>
                 <router-link v-bind:to="{ name: graphCreate }">
-                <button type="button" class="btn btn-info" @click="read_graph">
-                  <font-awesome-icon icon="eye" />
-                </button>
+                  <button
+                    type="button"
+                    class="btn btn-info"
+                    @click="read_graph"
+                  >
+                    <font-awesome-icon icon="eye" />
+                  </button>
                 </router-link>
               </td>
             </tr>
@@ -73,10 +77,18 @@
         <b-modal id="edit_modal" title="編集画面">
           <div class="mt-3">作品名</div>
           <b-form-input id="work_name-input"></b-form-input>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button variant="primary" @click="ok()"> OK </b-button>
+          </template>
         </b-modal>
         <!-----------削除モーダルウィンドウ-------------->
         <b-modal id="delete_modal" title="削除確認画面">
           <p class="my-4">データを削除しますか？</p>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button variant="primary" @click="ok()"> OK </b-button>
+          </template>
         </b-modal>
         <!-----------アップロードモーダルウィンドウ-------------->
         <b-modal id="upload_set_modal" title="確認画面">
@@ -91,16 +103,36 @@
             <tbody>
               <tr v-for="(row, key) in works" :key="key">
                 <td>
-                   <b-form-checkbox size="lg"></b-form-checkbox>
+                  <b-form-checkbox size="lg"></b-form-checkbox>
                 </td>
                 <td>{{ row.workName }}</td>
               </tr>
             </tbody>
           </table>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
+              OK
+            </b-button>
+          </template>
+        </b-modal>
+        <!-----------確認モーダルウィンドウ-------------->
+        <b-modal id="check_modal" title="確認画面">
+          <p class="my-4">相関図が投稿されました。</p>
+          <template #modal-footer="{ cancel, ok }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <b-button variant="primary" @click="ok()"> OK </b-button>
+          </template>
         </b-modal>
         <!-----------ログアウトモーダルウィンドウ-------------->
         <b-modal id="logout_modal" title="確認画面">
           <p class="my-4">ログアウトしますか？</p>
+          <template #modal-footer="{ cancel }">
+            <b-button @click="cancel()"> Cancel </b-button>
+            <router-link v-bind:to="{ name: login }">
+              <b-button variant="primary"> OK </b-button>
+            </router-link>
+          </template>
         </b-modal>
       </div>
     </aside>
@@ -117,17 +149,8 @@ export default {
     return {
       works: [],
       graphCreate: VueFaileName.graphCreate,
+      login: VueFaileName.login,
     };
-  },
-  methods: {
-    read_graph() {
-      this.$router.push({
-        name: VueFaileName.question,
-        function() {
-          this.isActive = !this.isActive;
-        },
-      });
-    },
   },
 };
 </script>
