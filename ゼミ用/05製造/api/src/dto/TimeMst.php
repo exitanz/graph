@@ -3,42 +3,62 @@
 /**
  * 時系列マスタを格納するクラス
  */
-class TimeMst {
+class TimeMst
+{
 
   private $timeId;
   private $timeName;
-  private $groupId;
+  private $opusId;
+  private $userId;
   private $version;
 
-  public function getTimeId() {
+  public function getTimeId()
+  {
     return $this->timeId;
   }
 
-  public function setTimeId($timeId) {
+  public function setTimeId($timeId)
+  {
     $this->timeId = $timeId;
   }
 
-  public function getTimeName() {
+  public function getTimeName()
+  {
     return $this->timeName;
   }
 
-  public function setTimeName($timeName) {
+  public function setTimeName($timeName)
+  {
     $this->timeName = $timeName;
   }
 
-  public function getGroupId() {
-    return $this->groupId;
+  public function getOpusId()
+  {
+    return $this->opusId;
   }
 
-  public function setGroupId($groupId) {
-    $this->groupId = $groupId;
+  public function setOpusId($opusId)
+  {
+    $this->opusId = $opusId;
   }
 
-  public function getVersion() {
+  public function getUserId()
+  {
+    return $this->userId;
+  }
+
+  public function setUserId($userId)
+  {
+    $this->userId = $userId;
+  }
+
+  public function getVersion()
+  {
     return $this->version;
   }
 
-  public function setVersion($version) {
+  public function setVersion($version)
+  {
     $this->version = $version;
   }
 }

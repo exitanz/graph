@@ -7,10 +7,12 @@ class Acter {
 
   private $acterId;
   private $acterName;
-  private $acterConf;
+  private $acterInfo;
   private $acterImg;
+  private $opusId;
   private $timeId;
   private $groupId;
+  private $userId;
   private $version;
 
   public function getActerId() {
@@ -29,12 +31,12 @@ class Acter {
     $this->acterName = $acterName;
   }
 
-  public function getActerConf() {
-    return $this->acterConf;
+  public function getActerInfo() {
+    return $this->acterInfo;
   }
 
-  public function setActerConf($acterConf) {
-    $this->acterConf = $acterConf;
+  public function setActerInfo($acterInfo) {
+    $this->acterInfo = $acterInfo;
   }
 
   public function getActerImg() {
@@ -43,6 +45,16 @@ class Acter {
 
   public function setActerImg($acterImg) {
     $this->acterImg = $acterImg;
+  }
+
+  public function getOpusId()
+  {
+    return $this->opusId;
+  }
+
+  public function setOpusId($opusId)
+  {
+    $this->opusId = $opusId;
   }
 
   public function getTimeId() {
@@ -59,6 +71,16 @@ class Acter {
 
   public function setGroupId($groupId) {
     $this->groupId = $groupId;
+  }
+
+  public function getUserId()
+  {
+    return $this->userId;
+  }
+
+  public function setUserId($userId)
+  {
+    $this->userId = $userId;
   }
 
   public function getVersion() {

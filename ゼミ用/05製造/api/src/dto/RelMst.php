@@ -3,42 +3,62 @@
 /**
  * 関係マスタを格納するクラス
  */
-class RelMst {
+class RelMst
+{
 
   private $relMstId;
   private $relMstName;
-  private $groupId;
+  private $opusId;
+  private $userId;
   private $version;
 
-  public function getRelMstId() {
+  public function getRelMstId()
+  {
     return $this->relMstId;
   }
 
-  public function setRelMstId($relMstId) {
+  public function setRelMstId($relMstId)
+  {
     $this->relMstId = $relMstId;
   }
 
-  public function getRelMstName() {
+  public function getRelMstName()
+  {
     return $this->relMstName;
   }
 
-  public function setRelMstName($relMstName) {
+  public function setRelMstName($relMstName)
+  {
     $this->relMstName = $relMstName;
   }
 
-  public function getGroupId() {
-    return $this->groupId;
+  public function getOpusId()
+  {
+    return $this->opusId;
   }
 
-  public function setGroupId($groupId) {
-    $this->groupId = $groupId;
+  public function setOpusId($opusId)
+  {
+    $this->opusId = $opusId;
   }
 
-  public function getVersion() {
+  public function getUserId()
+  {
+    return $this->userId;
+  }
+
+  public function setUserId($userId)
+  {
+    $this->userId = $userId;
+  }
+
+  public function getVersion()
+  {
     return $this->version;
   }
 
-  public function setVersion($version) {
+  public function setVersion($version)
+  {
     $this->version = $version;
   }
 }
