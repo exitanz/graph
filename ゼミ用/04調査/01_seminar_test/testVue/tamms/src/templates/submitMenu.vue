@@ -9,7 +9,7 @@
       </b-button>
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
         <template #button-content>
-          <font-awesome-icon icon="user" />
+          <font-awesome-icon icon="cog" />
         </template>
         <b-dropdown-item v-b-modal="'submit_set_modal'"
           >投稿管理</b-dropdown-item
