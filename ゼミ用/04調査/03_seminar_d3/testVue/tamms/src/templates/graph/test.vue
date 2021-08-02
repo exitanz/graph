@@ -21,11 +21,19 @@
           <b-form-select-option>時系列３</b-form-select-option>
         </b-form-select>
         <div class="mt-3">グループ</div>
-        <b-form-select v-model="selected" :options="options">
-          <b-form-select-option>グループA</b-form-select-option>
-          <b-form-select-option>グループB</b-form-select-option>
-          <b-form-select-option>グループC</b-form-select-option>
-        </b-form-select>
+        <select
+          class="form-control"
+          v-model="form.groupId"
+          v-bind:class="[valid.groupIdValid]"
+        >
+          <option
+            v-for="(row, key) in items"
+            :key="key"
+            v-bind:value="row.groupId"
+          >
+            {{ row.groupName }}
+          </option>
+        </select>
         <div class="mt-3">アイコン</div>
         <b-form-file v-model="file1" placeholder="ファイルを選択"></b-form-file>
         <div class="mt-3">詳細情報</div>
@@ -233,7 +241,6 @@
         <b-tab title="時系列３"></b-tab>
       </b-tabs>
     </div>
-
     <aside class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
       <div id="view"></div>
       <!-- カーソルを合わせたときに表示する情報領域-->
@@ -384,8 +391,7 @@
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
 import { VueFaileName } from "../../constants/VueFaileName.js";
-import * as d3 from "d3";
-// import { D3ServiceTest } from "../../scripts/D3ServiceTest.js";
+import { Test } from "../../scripts/Test.js";
 
 //Jsonfileのデータを保持
 // let jsondata;
@@ -400,25 +406,36 @@ import * as d3 from "d3";
 export default {
   data() {
     return {
+      form: {
+        groupId: ""
+      },
+      valid: {
+        groupIdValid: ""
+      },
+      items: [
+        {
+          groupId: "group01",
+          groupName: "グループA1"
+        },
+        {
+          groupId: "group02",
+          groupName: "グループB2"
+        },
+        {
+          groupId: "group03",
+          groupName: "グループC3"
+        },
+      ],
       times: [],
-      group: [],
+      // group: [],
       login: VueFaileName.login,
+      test: null
     };
   },
   methods: {
     createSvg() {
-      const svg = d3
-        .select("#view")
-        .append("svg")
-        .attr("width", 500)
-        .attr("height", 400);
-      svg
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 500)
-        .attr("height", 400)
-        .style("fill", "red");
+      this.test = new Test();
+      // this.test.test();
     },
   },
   mounted() {
