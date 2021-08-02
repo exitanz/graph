@@ -5,9 +5,11 @@ CREATE DATABASE correlation;
 /* データベース選択 */
 use correlation;
 /* 既存ユーザが存在する場合は削除 */
-DROP USER IF EXISTS exit_v1;
+DROP USER IF EXISTS 'dkgraph_exit';
 /* ユーザ作成 */
-CREATE USER exit_v1 IDENTIFIED BY 'g20e38h41AAbf';
+CREATE USER dkgraph_exit IDENTIFIED BY 'g20e38h41AAbf';
+/* mmUにデータベース捜査全ての権限を与える */
+GRANT ALL ON correlation.* TO 'dkgraph_exit';
 
 DROP TABLE IF EXISTS rel;
 DROP TABLE IF EXISTS acter;
@@ -112,3 +114,12 @@ PRIMARY KEY(rel_id)
 ,FOREIGN KEY(time_id) REFERENCES time_mst(time_id)
 ,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
 );
+
+INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
+('user000001', 'test1', 'test', 0);
+
+INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
+('user000002', 'test2', 'test', 0);
+
+INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
+('user000003', 'test3', 'test', 0);
