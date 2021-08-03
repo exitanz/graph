@@ -11,15 +11,23 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <div class="form-group">
         <div class="mt-3">名前</div>
         <b-form-input id="actor_name-input"></b-form-input>
         <div class="mt-3">時系列</div>
-        <b-form-select v-model="selected" :options="options">
-          <b-form-select-option>時系列１</b-form-select-option>
-          <b-form-select-option>時系列２</b-form-select-option>
-          <b-form-select-option>時系列３</b-form-select-option>
-        </b-form-select>
+        <select
+          class="form-control"
+          v-model="form.timeId"
+          v-bind:class="[valid.timeIdValid]"
+        >
+          <option
+            v-for="(row, key) in items"
+            :key="key"
+            v-bind:value="row.timeId"
+          >
+            {{ row.timeName }}
+          </option>
+        </select>
         <div class="mt-3">グループ</div>
         <select
           class="form-control"
@@ -43,7 +51,7 @@
           rows="3"
           max-rows="10"
         ></b-form-textarea>
-      </form>
+      </div>
       <template #modal-footer="{ cancel, ok }">
         <b-button @click="cancel()"> Cancel </b-button>
         <b-button variant="primary" @click="ok()"> OK </b-button>
@@ -58,7 +66,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <div class="form-group">
         <div class="mt-3">関係性名</div>
         <b-form-input id="link_name_input"></b-form-input>
         <div class="mt-3">From</div>
@@ -74,11 +82,19 @@
           <b-form-select-option>C</b-form-select-option>
         </b-form-select>
         <div class="mt-3">時系列</div>
-        <b-form-select v-model="selected" :options="options">
-          <b-form-select-option>時系列１</b-form-select-option>
-          <b-form-select-option>時系列２</b-form-select-option>
-          <b-form-select-option>時系列３</b-form-select-option>
-        </b-form-select>
+        <select
+          class="form-control"
+          v-model="form.timeId"
+          v-bind:class="[valid.timeIdValid]"
+        >
+          <option
+            v-for="(row, key) in items"
+            :key="key"
+            v-bind:value="row.timeId"
+          >
+            {{ row.timeName }}
+          </option>
+        </select>
         <div class="mt-3">詳細情報</div>
         <b-form-textarea
           id="link_info"
@@ -86,7 +102,7 @@
           rows="3"
           max-rows="10"
         ></b-form-textarea>
-      </form>
+      </div>
       <template #modal-footer="{ cancel, ok }">
         <b-button @click="cancel()"> Cancel </b-button>
         <b-button variant="primary" @click="ok()"> OK </b-button>
@@ -224,10 +240,10 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <div class="form-group">
         <div class="mt-3">名前</div>
         <b-form-input id="edit_name-input"></b-form-input>
-      </form>
+      </div>
       <template #modal-footer="{ cancel, ok }">
         <b-button @click="cancel()"> Cancel </b-button>
         <b-button variant="primary" @click="ok()"> OK </b-button>
@@ -279,21 +295,37 @@
                       @hidden="resetModal"
                       @ok="handleOk"
                     >
-                      <form ref="form" @submit.stop.prevent="handleSubmit">
+                      <div class="form-group">
                         <div class="mt-3">名前</div>
                         <b-form-input id="edit_name-input"></b-form-input>
                         <div class="mt-3">時系列</div>
-                        <b-form-select v-model="selected">
-                          <b-form-select-option>時系列１</b-form-select-option>
-                          <b-form-select-option>時系列２</b-form-select-option>
-                          <b-form-select-option>時系列３</b-form-select-option>
-                        </b-form-select>
+                        <select
+                          class="form-control"
+                          v-model="form.timeId"
+                          v-bind:class="[valid.timeIdValid]"
+                        >
+                          <option
+                            v-for="(row, key) in items"
+                            :key="key"
+                            v-bind:value="row.timeId"
+                          >
+                            {{ row.timeName }}
+                          </option>
+                        </select>
                         <div class="mt-3">グループ</div>
-                        <b-form-select v-model="selected">
-                          <b-form-select-option>グループA</b-form-select-option>
-                          <b-form-select-option>グループB</b-form-select-option>
-                          <b-form-select-option>グループC</b-form-select-option>
-                        </b-form-select>
+                        <select
+                          class="form-control"
+                          v-model="form.groupId"
+                          v-bind:class="[valid.groupIdValid]"
+                        >
+                          <option
+                            v-for="(row, key) in items"
+                            :key="key"
+                            v-bind:value="row.groupId"
+                          >
+                            {{ row.groupName }}
+                          </option>
+                        </select>
                         <div class="mt-3">アイコン</div>
                         <b-form-file
                           v-model="file1"
@@ -306,7 +338,7 @@
                           rows="3"
                           max-rows="10"
                         ></b-form-textarea>
-                      </form>
+                      </div>
                       <template #modal-footer="{ cancel, ok }">
                         <b-button @click="cancel()"> Cancel </b-button>
                         <b-button variant="primary" @click="ok()">
@@ -407,23 +439,31 @@ export default {
   data() {
     return {
       form: {
-        groupId: ""
+        timeId: "",
+        groupId: "",
       },
       valid: {
-        groupIdValid: ""
+        timeIdValid: "",
+        groupIdValid: "",
       },
       items: [
         {
+          timeId: "time01",
+          timeName: "時系列A1",
           groupId: "group01",
-          groupName: "グループA1"
+          groupName: "グループA1",
         },
         {
+          timeId: "time02",
+          timeName: "時系列B2",
           groupId: "group02",
-          groupName: "グループB2"
+          groupName: "グループB2",
         },
         {
+          timeId: "time03",
+          timeName: "時系列C3",
           groupId: "group03",
-          groupName: "グループC3"
+          groupName: "グループC3",
         },
       ],
       times: [],

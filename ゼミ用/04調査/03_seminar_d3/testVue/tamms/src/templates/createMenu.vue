@@ -15,9 +15,19 @@
         >Link
         <font-awesome-icon icon="arrows-alt-h" />
       </b-button>
+      <b-dropdown right toggle-class="text-decoration-none" variant="warning">
+        <template #button-content>
+          Edit
+          <font-awesome-icon icon="edit" />
+        </template>
+        <b-dropdown-item v-b-modal="'time_modal'">時系列名編集</b-dropdown-item>
+        <b-dropdown-item v-b-modal="'group_modal'"
+          >グループ名編集</b-dropdown-item
+        >
+      </b-dropdown>
       <b-dropdown right toggle-class="text-decoration-none" no-caret>
         <template #button-content>
-          <font-awesome-icon icon="upload" />
+          <font-awesome-icon icon="cog" />
         </template>
         <b-dropdown-item v-b-modal="'upload_modal'"
           >相関図を投稿する</b-dropdown-item
@@ -26,15 +36,6 @@
           <router-link v-bind:to="{ name: graphSubmit }"
             >投稿画面へ
           </router-link></b-dropdown-item
-        >
-      </b-dropdown>
-      <b-dropdown right toggle-class="text-decoration-none" no-caret>
-        <template #button-content>
-          <font-awesome-icon icon="cog" />
-        </template>
-        <b-dropdown-item v-b-modal="'time_modal'">時系列名編集</b-dropdown-item>
-        <b-dropdown-item v-b-modal="'group_modal'"
-          >グループ名編集</b-dropdown-item
         >
         <b-dropdown-item variant="danger" v-b-modal="'delete_modal'"
           >図を削除する</b-dropdown-item
