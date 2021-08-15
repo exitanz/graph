@@ -70,6 +70,14 @@ export default new Router({
       },
     },
     {
+      path: '/test2',
+      name: 'test2',
+      components: {
+        default: loadView('/graph/test2'),
+        menu: loadView('/' + VueFaileName.createMenu),
+      },
+    },
+    {
       path: '*',
       name: VueFaileName.NotFound,
       components: {

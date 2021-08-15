@@ -99,7 +99,8 @@ export default {
       password: "",
       userIdValid: "",
       passwordValid: "",
-      graphList: VueFaileName.graphList,
+      // graphList: VueFaileName.graphList,
+      graphList: 'test2',
       userCreate: VueFaileName.userCreate,
       question: VueFaileName.question,
     };

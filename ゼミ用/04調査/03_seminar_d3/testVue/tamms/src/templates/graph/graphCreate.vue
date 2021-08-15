@@ -11,23 +11,15 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <div class="form-group">
+      <div>
         <div class="mt-3">名前</div>
         <b-form-input id="actor_name-input"></b-form-input>
         <div class="mt-3">時系列</div>
-        <select
-          class="form-control"
-          v-model="form.timeId"
-          v-bind:class="[valid.timeIdValid]"
-        >
-          <option
-            v-for="(row, key) in items"
-            :key="key"
-            v-bind:value="row.timeId"
-          >
-            {{ row.timeName }}
-          </option>
-        </select>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>時系列１</b-form-select-option>
+          <b-form-select-option>時系列２</b-form-select-option>
+          <b-form-select-option>時系列３</b-form-select-option>
+        </b-form-select>
         <div class="mt-3">グループ</div>
         <select
           class="form-control"
@@ -66,7 +58,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <div class="form-group">
+      <div>
         <div class="mt-3">関係性名</div>
         <b-form-input id="link_name_input"></b-form-input>
         <div class="mt-3">From</div>
@@ -82,19 +74,11 @@
           <b-form-select-option>C</b-form-select-option>
         </b-form-select>
         <div class="mt-3">時系列</div>
-        <select
-          class="form-control"
-          v-model="form.timeId"
-          v-bind:class="[valid.timeIdValid]"
-        >
-          <option
-            v-for="(row, key) in items"
-            :key="key"
-            v-bind:value="row.timeId"
-          >
-            {{ row.timeName }}
-          </option>
-        </select>
+        <b-form-select v-model="selected" :options="options">
+          <b-form-select-option>時系列１</b-form-select-option>
+          <b-form-select-option>時系列２</b-form-select-option>
+          <b-form-select-option>時系列３</b-form-select-option>
+        </b-form-select>
         <div class="mt-3">詳細情報</div>
         <b-form-textarea
           id="link_info"
@@ -240,7 +224,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <div class="form-group">
+      <div>
         <div class="mt-3">名前</div>
         <b-form-input id="edit_name-input"></b-form-input>
       </div>
@@ -250,7 +234,7 @@
       </template>
     </b-modal>
     <!-----------時系列タブ-------------->
-    <div>
+    <div class="card">
       <b-tabs pills vertical nav-wrapper-class="w-40">
         <b-tab title="時系列１" active></b-tab>
         <b-tab title="時系列２"></b-tab>
@@ -258,7 +242,9 @@
       </b-tabs>
     </div>
     <aside class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-      <div id="view"></div>
+      <div class="card" id="view">
+      </div>
+      <br />
       <!-- カーソルを合わせたときに表示する情報領域-->
       <div id="datatip">
         <h2></h2>
@@ -268,12 +254,9 @@
       <div class="card-group row">
         <div class="card col-8">
           <!-----------人物情報-------------->
-          <div class="card-body" id="side_data">
+          <div class="card-body">
             <div class="row">
-              <aside
-                class="col-sm-4 col-md-4 col-lg-2 col-xl-2"
-                id="side_data_img"
-              ></aside>
+              <aside class="col-sm-4 col-md-4 col-lg-2 col-xl-2"></aside>
               <aside class="col-sm-8 col-md-8 col-lg-10 col-xl-10">
                 <div class="row">
                   <aside class="col">
@@ -295,37 +278,21 @@
                       @hidden="resetModal"
                       @ok="handleOk"
                     >
-                      <div class="form-group">
+                      <div>
                         <div class="mt-3">名前</div>
                         <b-form-input id="edit_name-input"></b-form-input>
                         <div class="mt-3">時系列</div>
-                        <select
-                          class="form-control"
-                          v-model="form.timeId"
-                          v-bind:class="[valid.timeIdValid]"
-                        >
-                          <option
-                            v-for="(row, key) in items"
-                            :key="key"
-                            v-bind:value="row.timeId"
-                          >
-                            {{ row.timeName }}
-                          </option>
-                        </select>
+                        <b-form-select v-model="selected">
+                          <b-form-select-option>時系列１</b-form-select-option>
+                          <b-form-select-option>時系列２</b-form-select-option>
+                          <b-form-select-option>時系列３</b-form-select-option>
+                        </b-form-select>
                         <div class="mt-3">グループ</div>
-                        <select
-                          class="form-control"
-                          v-model="form.groupId"
-                          v-bind:class="[valid.groupIdValid]"
-                        >
-                          <option
-                            v-for="(row, key) in items"
-                            :key="key"
-                            v-bind:value="row.groupId"
-                          >
-                            {{ row.groupName }}
-                          </option>
-                        </select>
+                        <b-form-select v-model="selected">
+                          <b-form-select-option>グループA</b-form-select-option>
+                          <b-form-select-option>グループB</b-form-select-option>
+                          <b-form-select-option>グループC</b-form-select-option>
+                        </b-form-select>
                         <div class="mt-3">アイコン</div>
                         <b-form-file
                           v-model="file1"
@@ -389,18 +356,18 @@
         </div>
         <!-----------検索-------------->
         <div class="card col-4">
-          <div class="card-body" id="side_bar">
+          <div class="card-body">
             <div class="row h-50 w-100">
-              <aside class="col-12" id="side_search">
+              <aside class="col-12">
                 <b-form inline>
-                  <label class="mr-sm-2">検索</label>
-                  <b-form-input
-                    class="mb-2 mr-sm-2 mb-sm-0"
-                    placeholder="Search"
-                  ></b-form-input>
-                  <b-button variant="info">
-                    <font-awesome-icon icon="search" />
-                  </b-button>
+                  <div class="input-group mb-2 mr-sm-2">
+                    <b-form-input placeholder="検索文字列を入力してください"></b-form-input>
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-info">
+                        <font-awesome-icon icon="search" />
+                      </button>
+                    </div>
+                  </div>
                 </b-form>
               </aside>
               <!-----------検索タブ-------------->
@@ -423,45 +390,27 @@
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
 import { VueFaileName } from "../../constants/VueFaileName.js";
-import { Test } from "../../scripts/Test.js";
-
-//Jsonfileのデータを保持
-// let jsondata;
-
-// let sidedata = this.$d3.select("#side_data");
-
-//カーソルを合わせたときに表示する情報領域
-// let datatip = this.$d3.select("#datatip");
-
-// const this.$d3 = require("this.$d3");
+import { D3Service } from "../../scripts/D3Service.js";
 
 export default {
   data() {
     return {
       form: {
-        timeId: "",
         groupId: "",
       },
       valid: {
-        timeIdValid: "",
         groupIdValid: "",
       },
       items: [
         {
-          timeId: "time01",
-          timeName: "時系列A1",
           groupId: "group01",
           groupName: "グループA1",
         },
         {
-          timeId: "time02",
-          timeName: "時系列B2",
           groupId: "group02",
           groupName: "グループB2",
         },
         {
-          timeId: "time03",
-          timeName: "時系列C3",
           groupId: "group03",
           groupName: "グループC3",
         },
@@ -473,8 +422,21 @@ export default {
   },
   methods: {
     createSvg() {
-      let test = new Test();
-      test.test();
+      let json = {};
+
+      this.$http
+        .get("/test2/test01.php")
+        // .get("/project/test/d3/test01.php")
+        .then((res) => {
+          console.log(res.data);
+          console.log(res.data.links);
+          console.log(res.data.nodes);
+          json = res.data;
+          D3Service.init(json);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {
@@ -484,4 +446,5 @@ export default {
 </script>
 
 <style>
+@import "../../style/d3.css";
 </style>

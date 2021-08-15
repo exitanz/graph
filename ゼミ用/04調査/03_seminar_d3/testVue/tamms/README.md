@@ -59,3 +59,8 @@ npm install vuex
 npm install d3
 ```
 
+### vue-loading-template
+```
+npm install vue-loading-template
+```
+

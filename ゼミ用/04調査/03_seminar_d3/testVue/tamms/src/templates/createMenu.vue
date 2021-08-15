@@ -1,11 +1,9 @@
 <template>
   <!-----------------------------------メニューバー--------------------------------------->
   <b-navbar toggleable type="dark" variant="dark">
-    <router-link v-bind:to="{ name: graphList }">
-      <b-button variant="secondary">
-        <font-awesome-icon icon="arrow-circle-left" />
-      </b-button>
-    </router-link>
+    <b-button variant="secondary" @click="returnBtn()">
+      <font-awesome-icon icon="arrow-circle-left" />
+    </b-button>
     <b-navbar-brand> 作品名A</b-navbar-brand>
     <b-navbar-brand>
       <b-button v-b-modal="'actor_modal'" variant="info"
@@ -59,6 +57,11 @@ export default {
       graphList: VueFaileName.graphList,
       graphSubmit: VueFaileName.graphSubmit,
     };
+  },
+  methods: {
+    returnBtn() {
+      this.$router.go(-1);
+    },
   },
 };
 </script>

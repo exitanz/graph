@@ -23,7 +23,8 @@ axios.defaults.jar = new tough.CookieJar();
 axios.defaults.withCredentials = true;
 
 let client = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost',
+  // baseURL: 'http://dkgraph.php.xdomain.jp',
   headers: {
     'content-type': 'application/json; charset=utf-8',
   },
