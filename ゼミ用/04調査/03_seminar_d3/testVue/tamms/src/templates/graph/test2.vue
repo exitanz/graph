@@ -107,7 +107,7 @@ export default {
 
       // 相関図json取得
       this.$http
-        .get("/test2/test01.php")
+        .get("/response/jsontmp.php")
         // .get("/project/test/d3/test01.php")
         .then((res) => {
           json = res.data;
