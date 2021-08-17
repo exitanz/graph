@@ -67,10 +67,10 @@ export class D3Service {
             spHexagon = figHexagon.node().getPointAtLength(0);
 
         //"svg"にZoomイベントを設定
-        // var zoom = d3.zoom()
-        //     .scaleExtent([1 / 4, 4])
-        //     .on('zoom', SVGzoomed);
-        // svg.call(zoom);
+        var zoom = d3.zoom()
+            .scaleExtent([1 / 4, 4])
+            .on('zoom', SVGzoomed);
+        svg.call(zoom);
 
         //"svg"上に"g"をappend
         var g = svg.append("g");
@@ -259,13 +259,13 @@ export class D3Service {
         }
 
 
-        // function SVGzoomed() {
-        //     g.attr("transform", d3.event.transform);
-        //     //倍率表示
-        //     d3.select("#r_zoom_text")
-        //         .text((d3.event.transform.k * 100).toFixed(0));  //スライダーの横にある表示を更新
-        //     // document.getElementById('rng_zoom').value = Math.log2(d3.event.transform.k).toFixed(1)
-        // }
+        function SVGzoomed() {
+            g.attr("transform", d3.event.transform);
+            //倍率表示
+            d3.select("#r_zoom_text")
+                .text((d3.event.transform.k * 100).toFixed(0));  //スライダーの横にある表示を更新
+            // document.getElementById('rng_zoom').value = Math.log2(d3.event.transform.k).toFixed(1)
+        }
 
         //Sidedataに情報をセット
         function set_sidedata(d) {

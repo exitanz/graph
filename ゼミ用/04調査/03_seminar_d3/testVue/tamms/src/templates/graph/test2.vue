@@ -1,23 +1,24 @@
 <template>
   <div class="row">
-    <aside class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+    <aside class="col-sm-3 col-md-3 col-lg-3 col-xl-2">
       <!-----------時系列タブ-------------->
-      <b-card no-body>
-        <b-tabs pills card vertical>
-          <!-- v-bind:class="{ active: currentId === index }" -->
-          <b-tab
+      <div class="card">
+        <div class="card-body row">
+          <button
+            type="button"
+            class="btn btn-outline-primary col-12"
             v-for="(row, index) in times"
             :key="index"
-            v-bind:title="row.timeName"
-            @click="isSelectSvg(row.json)"
+            :disabled="loading"
+            v-bind:class="{ active: currentId === index }"
+            @click="isSelectSvg(row.json, index)"
           >
-          </b-tab>
-        </b-tabs>
-        <!-- <b-button @click="createSvg()"> test </b-button> -->
-        {{ currentId }}
-      </b-card>
+            {{ row.timeName }}
+          </button>
+        </div>
+      </div>
     </aside>
-    <aside class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+    <aside class="col-sm-9 col-md-9 col-lg-9 col-xl-10">
       <vue-loading
         v-show="loading"
         type="spin"
@@ -90,6 +91,7 @@ export default {
     return {
       times: [],
       loading: false,
+      currentId: 0,
       /* モーダルウィンドウ変数 */
       isActorCreateModal: false,
     };
@@ -103,54 +105,50 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
-      let json = {};
-
-      // 相関図json取得
+      
+      // 時系列順相関図json取得
       this.$http
         .get("/response/jsontmp.php")
         // .get("/project/test/d3/test01.php")
         .then((res) => {
-          json = res.data;
-
-          this.times = [
-            {
-              timeId: "1",
-              timeName: "時系列A",
-              version: 0,
-              json: json,
-            },
-            {
-              timeId: "2",
-              timeName: "時系列2",
-              version: 0,
-              json: json,
-            },
-            {
-              timeId: "3",
-              timeName: "時系列B",
-              version: 0,
-              json: json,
-            },
-          ];
-
+          this.times = res.data;
+          // 相関図作成
           this.createSvg(this.times[0].json);
         })
         .catch((error) => {
           console.log(error);
         });
-      // this.times = ["時系列1", "時系列2", "時系列3"];
     },
     /* 相関図表示処理 */
-    isSelectSvg(json) {
+    isSelectSvg(json, currentId) {
       // 画面変更
-      this.clearSvg();
-      this.createSvg(json);
+      try {
+        if (this.loading) {
+          throw "ローディング中に時系列の変更を検知した";
+        }
+        this.currentId = currentId;
+        this.clearSvg();
+        this.createSvg(json);
+      } catch (e) {
+        console.log(e);
+        alert("ローディング中は時系列が変更できません");
+      }
     },
     createSvg(json) {
       // 相関図作成
-      this.loading = true;
-      D3Service.init(json);
-      this.loading = false;
+      this.loading = true; // ローディング表示
+      D3Service.init(json); // 相関図作成処理
+
+      // ローディング表示時間
+      let stopTime = 4000;
+      if (!!json && !!json.nodes && json.nodes.length > 0) {
+        stopTime = json.nodes.length * 100;
+      }
+
+      setTimeout(() => {
+        // ローディング非表示
+        this.loading = false;
+      }, stopTime);
     },
     clearSvg() {
       // 相関図クリア
