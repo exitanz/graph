@@ -1,12 +1,15 @@
 <template>
+<span></span>
   <!-----------------------------------メニューバー--------------------------------------->
-  <b-navbar toggleable type="dark" variant="dark">
+  <!-- <b-navbar toggleable type="dark" variant="dark">
     <b-button variant="secondary" @click="returnBtn()">
       <font-awesome-icon icon="arrow-circle-left" />
     </b-button>
     <b-navbar-brand> 作品名A</b-navbar-brand>
     <b-navbar-brand>
-      <b-button v-b-modal="'actor_modal'" variant="info"
+      <b-button
+        variant="info"
+        @click="isActorCreateModal = true"
         >Actor<font-awesome-icon icon="user-plus" />
       </b-button>
       <b-button v-b-modal="'link_modal'" variant="success"
@@ -43,26 +46,15 @@
         >
       </b-dropdown>
     </b-navbar-brand>
-  </b-navbar>
+  </b-navbar> -->
 </template>
 
 <script>
 //import { CommonUtils } from "../common/CommonUtils.js";
 //import { ApiURL } from "../constants/ApiURL.js";
-import { VueFaileName } from "../constants/VueFaileName.js";
+// import { VueFaileName } from "../constants/VueFaileName.js";
 
 export default {
-  data() {
-    return {
-      graphList: VueFaileName.graphList,
-      graphSubmit: VueFaileName.graphSubmit,
-    };
-  },
-  methods: {
-    returnBtn() {
-      this.$router.go(-1);
-    },
-  },
 };
 </script>
 

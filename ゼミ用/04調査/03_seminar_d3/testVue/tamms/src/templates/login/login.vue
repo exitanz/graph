@@ -100,7 +100,7 @@ export default {
       userIdValid: "",
       passwordValid: "",
       // graphList: VueFaileName.graphList,
-      graphList: 'test2',
+      graphList: 'r',
       userCreate: VueFaileName.userCreate,
       question: VueFaileName.question,
     };

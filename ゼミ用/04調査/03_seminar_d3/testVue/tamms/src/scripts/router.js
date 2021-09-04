@@ -74,6 +74,13 @@ export default new Router({
       name: 'test2',
       components: {
         default: loadView('/graph/test2'),
+      },
+    },
+    {
+      path: '/r',
+      name: 'r',
+      components: {
+        default: loadView('/graph/r'),
         menu: loadView('/' + VueFaileName.createMenu),
       },
     },

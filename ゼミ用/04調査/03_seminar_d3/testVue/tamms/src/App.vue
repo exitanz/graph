@@ -1,10 +1,9 @@
 <template>
   <div id="app">
     <router-view name="menu" />
-    <br />
 
     <!-- メイン画面 -->
-    <div class="container-fluid">
+    <div>
       <router-view />
     </div>
 
