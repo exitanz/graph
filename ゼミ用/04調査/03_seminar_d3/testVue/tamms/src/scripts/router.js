@@ -50,7 +50,6 @@ export default new Router({
       name: 'graphCreate',
       components: {
         default: loadView('/graph/graphCreate'),
-        menu: loadView('/' + VueFaileName.createMenu),
       },
     },
     {
@@ -66,7 +65,6 @@ export default new Router({
       name: 'test',
       components: {
         default: loadView('/graph/test'),
-        menu: loadView('/' + VueFaileName.createMenu),
       },
     },
     {
@@ -81,7 +79,6 @@ export default new Router({
       name: 'r',
       components: {
         default: loadView('/graph/r'),
-        menu: loadView('/' + VueFaileName.createMenu),
       },
     },
     {

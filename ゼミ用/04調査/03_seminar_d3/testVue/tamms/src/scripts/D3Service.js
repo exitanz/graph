@@ -4,10 +4,12 @@ export class D3Service {
     // static init(graph) {
     //     D3Service.init(graph, "view");
     // }
-    
+
     static init(graph, selectName = "view") {
 
         var sidedata = d3.select("#side_data");
+
+        var sidedataform = d3.select("#side_data_form");
 
         //カーソルを合わせたときに表示する情報領域
         var datatip = d3.select("#datatip");
@@ -270,8 +272,11 @@ export class D3Service {
         //Sidedataに情報をセット
         function set_sidedata(d) {
             //画像表示
-            sidedata.style("z-index", 0)
-                .style("opacity", 1)
+            sidedata
+                .style("z-index", 0)
+            // .style("opacity", 1)
+
+            sidedata
                 .style('background-image', function () { if (typeof d.image === "undefined") { return 'url("image/unknown.png")' } else { return 'url("' + d.image + '")' } });
 
             //node名表示
@@ -303,6 +308,15 @@ export class D3Service {
                     }
                     return "<p style='font-size: 11px'>" + r_value + "</p>"
                 });
+
+            sidedataform.select("#side_img")
+                .style('background-image', function () { if (typeof d.acter_img === "undefined") { return 'url("image/unknown.png")' } else { return 'url("' + d.acter_img + '")' } })
+                .style('background-size', 'cover');
+
+            d3.select("#acter_id").property("value", d.acter_id);
+            d3.select("#acter_name").property("value", d.acter_name);
+            d3.select("#acter_info").text(d.acter_info);
+
         }
 
         // function InputZoom() {
@@ -473,44 +487,44 @@ export class D3Service {
                 pos3,
                 rate,
                 dpos;
-                try {
-                    switch (nodeID) {
-                        case "rect":
-                            pos1 = { x: d1.x + spRect.x, y: d1.y + spRect.y };
-                            pos2 = { x: d1.x, y: d1.y };
-                            pos3 = { x: d2.x, y: d2.y };
-                            rate = calcLoengthRate(pos1, pos2, pos3);
-                            dpos = figRect.node().getPointAtLength(lenRect * rate);
-        
-                            break;
-                        case "ellipse":
-                            pos1 = { x: d1.x + spEllipse.x, y: d1.y + spEllipse.y };
-                            pos2 = { x: d1.x, y: d1.y };
-                            pos3 = { x: d2.x, y: d2.y };
-                            rate = calcLoengthRate(pos1, pos2, pos3);
-                            dpos = figEllipse.node().getPointAtLength(lenEllipse * rate);
-        
-                            break;
-                        case "hexagon":
-                            pos1 = { x: d1.x + spHexagon.x, y: d1.y + spHexagon.y };
-                            pos2 = { x: d1.x, y: d1.y };
-                            pos3 = { x: d2.x, y: d2.y };
-                            rate = calcLoengthRate(pos1, pos2, pos3);
-                            dpos = figHexagon.node().getPointAtLength(lenHexagon * rate);
-        
-                            break;
-                        default:
-                            pos1 = { x: d1.x + spCircle.x, y: d1.y + spCircle.y };
-                            pos2 = { x: d1.x, y: d1.y };
-                            pos3 = { x: d2.x, y: d2.y };
-                            rate = calcLoengthRate(pos1, pos2, pos3);
-                            dpos = figCircle.node().getPointAtLength(lenCircle * rate);
-        
-                            break;
-                    }
-                  } catch (error) {
-                    console.error(error);
-                  }
+            try {
+                switch (nodeID) {
+                    case "rect":
+                        pos1 = { x: d1.x + spRect.x, y: d1.y + spRect.y };
+                        pos2 = { x: d1.x, y: d1.y };
+                        pos3 = { x: d2.x, y: d2.y };
+                        rate = calcLoengthRate(pos1, pos2, pos3);
+                        dpos = figRect.node().getPointAtLength(lenRect * rate);
+
+                        break;
+                    case "ellipse":
+                        pos1 = { x: d1.x + spEllipse.x, y: d1.y + spEllipse.y };
+                        pos2 = { x: d1.x, y: d1.y };
+                        pos3 = { x: d2.x, y: d2.y };
+                        rate = calcLoengthRate(pos1, pos2, pos3);
+                        dpos = figEllipse.node().getPointAtLength(lenEllipse * rate);
+
+                        break;
+                    case "hexagon":
+                        pos1 = { x: d1.x + spHexagon.x, y: d1.y + spHexagon.y };
+                        pos2 = { x: d1.x, y: d1.y };
+                        pos3 = { x: d2.x, y: d2.y };
+                        rate = calcLoengthRate(pos1, pos2, pos3);
+                        dpos = figHexagon.node().getPointAtLength(lenHexagon * rate);
+
+                        break;
+                    default:
+                        pos1 = { x: d1.x + spCircle.x, y: d1.y + spCircle.y };
+                        pos2 = { x: d1.x, y: d1.y };
+                        pos3 = { x: d2.x, y: d2.y };
+                        rate = calcLoengthRate(pos1, pos2, pos3);
+                        dpos = figCircle.node().getPointAtLength(lenCircle * rate);
+
+                        break;
+                }
+            } catch (error) {
+                console.error(error);
+            }
             return { x: d1.x + dpos.x, y: d1.y + dpos.y }
         }
 

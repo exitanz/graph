@@ -1,53 +1,57 @@
 <template>
   <div class="row">
     <aside class="col-12">
-    <!-----------------------------------メニューバー--------------------------------------->
-    <b-navbar toggleable type="dark" variant="dark">
-      <b-button variant="secondary" @click="returnBtn()">
-        <font-awesome-icon icon="arrow-circle-left" />
-      </b-button>
-      <b-navbar-brand> 作品名A</b-navbar-brand>
-      <b-navbar-brand>
-        <b-button variant="info" @click="isActorCreateModal = true"
-          >Actor<font-awesome-icon icon="user-plus" />
+      <!-----------------------------------メニューバー--------------------------------------->
+      <b-navbar toggleable type="dark" variant="dark">
+        <b-button variant="secondary" @click="returnBtn()">
+          <font-awesome-icon icon="arrow-circle-left" />
         </b-button>
-        <b-button v-b-modal="'link_modal'" variant="success"
-          >Link
-          <font-awesome-icon icon="arrows-alt-h" />
-        </b-button>
-        <b-dropdown right toggle-class="text-decoration-none" variant="warning">
-          <template #button-content>
-            Edit
-            <font-awesome-icon icon="edit" />
-          </template>
-          <b-dropdown-item v-b-modal="'time_modal'"
-            >時系列名編集</b-dropdown-item
+        <b-navbar-brand> 作品名A</b-navbar-brand>
+        <b-navbar-brand>
+          <b-button variant="info" @click="isActorCreateModal = true"
+            >Actor<font-awesome-icon icon="user-plus" />
+          </b-button>
+          <b-button v-b-modal="'link_modal'" variant="success"
+            >Link
+            <font-awesome-icon icon="arrows-alt-h" />
+          </b-button>
+          <b-dropdown
+            right
+            toggle-class="text-decoration-none"
+            variant="warning"
           >
-          <b-dropdown-item v-b-modal="'group_modal'"
-            >グループ名編集</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-dropdown right toggle-class="text-decoration-none" no-caret>
-          <template #button-content>
-            <font-awesome-icon icon="cog" />
-          </template>
-          <b-dropdown-item v-b-modal="'upload_modal'"
-            >相関図を投稿する</b-dropdown-item
-          >
-          <b-dropdown-item>
-            <router-link v-bind:to="{ name: graphSubmit }"
-              >投稿画面へ
-            </router-link></b-dropdown-item
-          >
-          <b-dropdown-item variant="danger" v-b-modal="'delete_modal'"
-            >図を削除する</b-dropdown-item
-          >
-          <b-dropdown-item variant="danger" v-b-modal="'logout_modal'"
-            >ログアウトする</b-dropdown-item
-          >
-        </b-dropdown>
-      </b-navbar-brand>
-    </b-navbar>
+            <template #button-content>
+              Edit
+              <font-awesome-icon icon="edit" />
+            </template>
+            <b-dropdown-item v-b-modal="'time_modal'"
+              >時系列名編集</b-dropdown-item
+            >
+            <b-dropdown-item v-b-modal="'group_modal'"
+              >グループ名編集</b-dropdown-item
+            >
+          </b-dropdown>
+          <b-dropdown right toggle-class="text-decoration-none" no-caret>
+            <template #button-content>
+              <font-awesome-icon icon="cog" />
+            </template>
+            <b-dropdown-item v-b-modal="'upload_modal'"
+              >相関図を投稿する</b-dropdown-item
+            >
+            <b-dropdown-item>
+              <router-link v-bind:to="{ name: graphSubmit }"
+                >投稿画面へ
+              </router-link></b-dropdown-item
+            >
+            <b-dropdown-item variant="danger" v-b-modal="'delete_modal'"
+              >図を削除する</b-dropdown-item
+            >
+            <b-dropdown-item variant="danger" v-b-modal="'logout_modal'"
+              >ログアウトする</b-dropdown-item
+            >
+          </b-dropdown>
+        </b-navbar-brand>
+      </b-navbar>
     </aside>
     <aside class="col-sm-3 col-md-3 col-lg-3 col-xl-2">
       <!-----------時系列タブ-------------->
@@ -90,14 +94,45 @@
           <div class="card col-8">
             <!-----------人物情報-------------->
             <div class="card-body">
-              <div class="row">
-                <aside class="col-sm-4 col-md-4 col-lg-2 col-xl-2"></aside>
-                <aside class="col-sm-8 col-md-8 col-lg-10 col-xl-10">
+              <section id="side_data">
+                <h2>Data</h2>
+                <h3></h3>
+                <iframe
+                  id="data_memo"
+                  seamless
+                  height="300"
+                  width="220"
+                  sandbox="allow-same-origin"
+                ></iframe>
+                <iframe
+                  id="data_relation"
+                  seamless
+                  height="140"
+                  width="220"
+                  sandbox="allow-same-origin"
+                ></iframe>
+              </section>
+              <div class="row" id="side_data_form">
+                <aside
+                  class="col-sm-3 col-md-3 col-lg-3 col-xl-2"
+                  id="side_img"
+                ></aside>
+                <aside class="col-sm-9 col-md-9 col-lg-9 col-xl-10">
                   <div class="row">
+                    <input
+                      id="acter_id"
+                      type="hidden"
+                      v-model="createActer.acterId"
+                    />
                     <aside class="col">
                       <h3>
                         <!-----------名前表示欄-------------->
-                        <b-form-input v-model="text" disabled></b-form-input>
+                        <input
+                          id="acter_name"
+                          type="text"
+                          v-model="createActer.acterName"
+                          disabled
+                        />
                       </h3>
                     </aside>
                     <aside class="col text-right">
@@ -105,6 +140,7 @@
                       <b-button
                         v-b-modal="'actor_edit_modal'"
                         variant="success"
+                        @click="isActorEditModal = true"
                       >
                         編集
                       </b-button>
@@ -118,8 +154,8 @@
                     <aside class="col">
                       <!-----------詳細情報表示欄-------------->
                       <b-form-textarea
-                        id="textarea"
-                        v-model="text"
+                        id="acter_info"
+                        v-model="createActer.actorInfo"
                         rows="3"
                         max-rows="6"
                         disabled
@@ -179,7 +215,54 @@
                 class="form-control"
                 placeholder="口座名を入力してください。"
                 type="text"
-                name="_name"
+                name="create_actor_name"
+                v-model="createActer.actorName"
+                v-bind:class="[createActer.valid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isActorCreateModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="actorCreate()"
+        >
+          作成
+        </b-button>
+      </template>
+    </b-modal>
+    <b-modal v-model="isActorEditModal">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="editActer.acterId" />
+          <input type="hidden" v-model="editActer.version" />
+          <b-col cols="3">アクター名</b-col>
+          <b-col>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <font-awesome-icon icon="wallet" />
+                </span>
+              </div>
+              <input
+                class="form-control"
+                placeholder="口座名を入力してください。"
+                type="text"
+                name="create_actor_name"
+                v-model="createActer.actorName"
+                v-bind:class="[createActer.valid]"
               />
             </div>
           </b-col>
@@ -218,6 +301,21 @@ import { D3Service } from "../../scripts/D3Service.js";
 export default {
   data() {
     return {
+      createActer: {
+        acterId: "",
+        actorName: "",
+        acterInfo: "",
+        acterImg: "",
+        valid: "",
+      },
+      editActer: {
+        acterId: "",
+        actorName: "",
+        acterInfo: "",
+        acterImg: "",
+        version: 0,
+        valid: "",
+      },
       times: [],
       loading: false,
       currentId: 0,
@@ -225,6 +323,7 @@ export default {
       graphSubmit: VueFaileName.graphSubmit,
       /* モーダルウィンドウ変数 */
       isActorCreateModal: false,
+      isActorEditModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -281,6 +380,25 @@ export default {
         this.loading = false;
       }, stopTime);
     },
+    loadSvg() {
+      // 相関図更新
+
+      // 相関図クリア
+      this.clearSvg();
+
+      // 時系列順相関図json取得
+      this.$http
+        .get("/response/jsontmp.php")
+        // .get("/project/test/d3/test01.php")
+        .then((res) => {
+          this.times = res.data;
+          // 相関図作成
+          this.createSvg(this.times[this.currentId].json);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     clearSvg() {
       // 相関図クリア
       D3Service.clear();
@@ -290,6 +408,17 @@ export default {
     },
     /* モーダルウィンドウ処理 */
     actorCreate() {
+      // アクター登録処理
+
+      console.log(this.createActer.acterId);
+      // 相関図再読み込み
+      this.loadSvg();
+      // モーダルウィンドウを閉じる
+      this.isActorCreateModal = false;
+    },
+    actorEdit() {
+      // アクター更新処理
+      // モーダルウィンドウを閉じる
       this.isActorCreateModal = false;
     },
   },
