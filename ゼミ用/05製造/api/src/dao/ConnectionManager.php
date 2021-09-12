@@ -6,10 +6,10 @@
 class ConnectionManager {
 
     private $db;
-    // private $host = 'mysql:dbname=correlation;host=localhost:3306'; // ローカル
-    // private $username = 'exit';// ローカル
-    private $host = 'mysql:dbname=dkgraph_correlation;host=mysql1.php.xdomain.ne.jp'; // 本番
-    private $username = 'dkgraph_exit'; // 本番
+    private $host = 'mysql:dbname=dkgraph_correlation;host=localhost:3306'; // ローカル
+    private $username = 'dkgraph_exit';// ローカル
+    // private $host = 'mysql:dbname=dkgraph_correlation;host=mysql1.php.xdomain.ne.jp'; // 本番
+    // private $username = 'dkgraph_exit'; // 本番
     private $password = 'g20e38h41AAbf';
 
     public function __construct() {

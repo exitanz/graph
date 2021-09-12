@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/../dao/CorUserDao.php';
 /**
  * 新規登録処理をするクラス
  */
-class CreateAccountService {
+class AccountService {
 
     /**
      * 新規登録をします
@@ -14,7 +14,7 @@ class CreateAccountService {
     public function createAccount($userName, $password) {
         // ユーザIDの最大値を取得
         $corUserDao = new CorUserDao();
-        $max_id = $corUserDao->selectMax();
+        $max_id = $corUserDao->selectMaxId();
 
         // ユーザIDの最大値に1加算する
         $max = Common::start_truncate($max_id, strlen(Constant::USER_ID_STR)) + 1;
@@ -28,6 +28,6 @@ class CreateAccountService {
         // ユーザID, ユーザ名, パスワードを登録する
         $corUserDao->insert($userId, $userName, $passwordSha256);
 
-        return '<div class="alert alert-success">アカウント登録が完了しました（ユーザID：'.$userId.'）<br /></div>';
+        return 'アカウント登録が完了しました（ユーザID：'.$userId.'）';
     }
 }

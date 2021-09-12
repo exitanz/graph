@@ -108,6 +108,10 @@
     width: 1000px;
   }
   
+  #timetab {
+    height:500px;
+  }
+  
   /*
   .links line {
     stroke: #999;

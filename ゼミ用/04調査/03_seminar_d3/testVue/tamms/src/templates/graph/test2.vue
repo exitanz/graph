@@ -55,11 +55,12 @@
     </aside>
     <aside class="col-sm-3 col-md-3 col-lg-3 col-xl-2">
       <!-----------時系列タブ-------------->
-      <div class="card">
-        <div class="card-body row">
+      <div class="card overflow-auto" id="timetab">
+        <div class="row">
           <button
             type="button"
             class="btn btn-outline-primary col-12"
+            style="height: 40px"
             v-for="(row, index) in times"
             :key="index"
             :disabled="loading"
@@ -73,6 +74,7 @@
     </aside>
     <aside class="col-sm-9 col-md-9 col-lg-9 col-xl-10">
       <div class="row">
+        <!-----------ローディング画面-------------->
         <div class="card" id="view2" v-show="loading">
           <vue-loading
             v-show="loading"
@@ -81,13 +83,15 @@
             :size="{ width: '50px', height: '50px' }"
           ></vue-loading>
         </div>
-        <div class="card" id="view" v-show="!loading"></div>
-        <br />
-        <!-- カーソルを合わせたときに表示する情報領域-->
-        <div id="datatip">
-          <h2></h2>
-          <p></p>
+        <!-----------相関図画面-------------->
+        <div class="card" id="view" v-show="!loading">
+          <!-- カーソルを合わせたときに表示する情報領域-->
+          <div id="datatip">
+            <h2></h2>
+            <p></p>
+          </div>
         </div>
+        <br />
 
         <!-----------アンダーメニュー-------------->
         <div class="card-group row">
@@ -122,7 +126,6 @@
                     <input
                       id="acter_id"
                       type="hidden"
-                      v-model="createActer.acterId"
                     />
                     <aside class="col">
                       <h3>
@@ -130,7 +133,6 @@
                         <input
                           id="acter_name"
                           type="text"
-                          v-model="createActer.acterName"
                           disabled
                         />
                       </h3>
@@ -155,7 +157,6 @@
                       <!-----------詳細情報表示欄-------------->
                       <b-form-textarea
                         id="acter_info"
-                        v-model="createActer.actorInfo"
                         rows="3"
                         max-rows="6"
                         disabled
@@ -201,6 +202,7 @@
 
     <!-----------モーダルウィンドウ-------------->
     <b-modal v-model="isActorCreateModal">
+      <!-----------アクター登録-------------->
       <b-container fluid>
         <b-row class="mb-1">
           <b-col cols="3">口座名</b-col>
@@ -216,7 +218,7 @@
                 placeholder="口座名を入力してください。"
                 type="text"
                 name="create_actor_name"
-                v-model="createActer.actorName"
+                v-model="actorName"
                 v-bind:class="[createActer.valid]"
               />
             </div>
@@ -244,6 +246,7 @@
       </template>
     </b-modal>
     <b-modal v-model="isActorEditModal">
+      <!-----------アクター編集-------------->
       <b-container fluid>
         <b-row class="mb-1">
           <input type="hidden" v-model="editActer.acterId" />
@@ -258,11 +261,11 @@
               </div>
               <input
                 class="form-control"
-                placeholder="口座名を入力してください。"
+                placeholder="アクター名を入力してください。"
                 type="text"
-                name="create_actor_name"
-                v-model="createActer.actorName"
-                v-bind:class="[createActer.valid]"
+                name="edit_actor_name"
+                v-model="editActer.actorName"
+                v-bind:class="[editActer.valid]"
               />
             </div>
           </b-col>
@@ -274,7 +277,7 @@
           variant="secondary"
           size="sm"
           class="float-right"
-          @click="isActorCreateModal = false"
+          @click="isActorEditModal = false"
         >
           閉じる
         </b-button>
@@ -282,7 +285,7 @@
           variant="primary"
           size="sm"
           class="float-right"
-          @click="actorCreate()"
+          @click="actorEdit()"
         >
           作成
         </b-button>
@@ -302,9 +305,9 @@ export default {
   data() {
     return {
       createActer: {
-        acterId: "",
-        actorName: "",
-        acterInfo: "",
+        acterId: "1",
+        actorName: "2",
+        acterInfo: "3",
         acterImg: "",
         valid: "",
       },
@@ -410,7 +413,6 @@ export default {
     actorCreate() {
       // アクター登録処理
 
-      console.log(this.createActer.acterId);
       // 相関図再読み込み
       this.loadSvg();
       // モーダルウィンドウを閉じる
@@ -418,8 +420,11 @@ export default {
     },
     actorEdit() {
       // アクター更新処理
+
+      // 選択中のアクターID取得
+      this.createEdit.acterId = document.getElementById('acter_id').getAttribute('value');
       // モーダルウィンドウを閉じる
-      this.isActorCreateModal = false;
+      this.isActorEditModal = false;
     },
   },
   components: {

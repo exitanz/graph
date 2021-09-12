@@ -174,6 +174,7 @@ export class D3Service {
 
         // node 図形の定義
         node.append("use")
+            .attr("v-on:click", function (d) { return "clickcircle(" + d.acter_name + ")" })
             .attr("xlink:href", function (d) { return "#" + nodeTypeID(d.group) })        //図形判定
             .attr('stroke', '#ccc')
             .attr('fill', function (d) { return color(d.group); })
@@ -313,8 +314,8 @@ export class D3Service {
                 .style('background-image', function () { if (typeof d.acter_img === "undefined") { return 'url("image/unknown.png")' } else { return 'url("' + d.acter_img + '")' } })
                 .style('background-size', 'cover');
 
-            d3.select("#acter_id").property("value", d.acter_id);
-            d3.select("#acter_name").property("value", d.acter_name);
+            d3.select("#acter_id").attr("value", d.acter_id);
+            d3.select("#acter_name").attr("value", d.acter_name);
             d3.select("#acter_info").text(d.acter_info);
 
         }

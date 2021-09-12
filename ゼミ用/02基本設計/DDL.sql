@@ -1,15 +1,15 @@
 /* 既存データベースがある場合は削除 */
-DROP DATABASE IF EXISTS correlation;
+DROP DATABASE IF EXISTS dkgraph_correlation;
 /* データベース作成 */
-CREATE DATABASE correlation;
+CREATE DATABASE dkgraph_correlation;
 /* データベース選択 */
-use correlation;
+use dkgraph_correlation;
 /* 既存ユーザが存在する場合は削除 */
 DROP USER IF EXISTS 'dkgraph_exit';
 /* ユーザ作成 */
 CREATE USER dkgraph_exit IDENTIFIED BY 'g20e38h41AAbf';
-/* mmUにデータベース捜査全ての権限を与える */
-GRANT ALL ON correlation.* TO 'dkgraph_exit';
+/* dkgraph_exitにデータベース捜査全ての権限を与える */
+GRANT ALL ON dkgraph_exit.* TO 'dkgraph_exit';
 
 DROP TABLE IF EXISTS rel;
 DROP TABLE IF EXISTS acter;
@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS cor_user;
 
 /* ユーザテーブル */
 CREATE TABLE cor_user(
-user_id VARCHAR(10) NOT NULL ,
+user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID' ,
 user_name VARCHAR(100) ,
 password VARCHAR(100) NOT NULL ,
 version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
