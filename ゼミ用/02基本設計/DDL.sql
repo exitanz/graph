@@ -116,10 +116,10 @@ PRIMARY KEY(rel_id)
 );
 
 INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000001', 'test1', 'test', 0);
+('user000001', 'test1', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);
 
 INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000002', 'test2', 'test', 0);
+('user000002', 'test2', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);
 
 INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000003', 'test3', 'test', 0);
+('user000003', 'test3', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);

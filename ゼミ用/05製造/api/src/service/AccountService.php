@@ -14,10 +14,10 @@ class AccountService {
     public function createAccount($userName, $password) {
         // ユーザIDの最大値を取得
         $corUserDao = new CorUserDao();
-        $max_id = $corUserDao->selectMaxId();
+        $maxId = $corUserDao->selectMaxId();
 
         // ユーザIDの最大値に1加算する
-        $max = Common::start_truncate($max_id, strlen(Constant::USER_ID_STR)) + 1;
+        $max = Common::start_truncate($maxId, strlen(Constant::USER_ID_STR)) + 1;
 
         // ユーザID作成
         $userId = Constant::USER_ID_STR.Common::countup_id($max, Constant::USER_ID_DIGIT);

@@ -1,9 +1,11 @@
 <?php
 require_once dirname(__FILE__) . '/../request/CreateAccountRequest.php';
 require_once dirname(__FILE__) . '/../service/AccountService.php';
+require_once dirname(__FILE__) . '/../common/ResultCode.php';
 
 // 変数
-$msg = '';
+$resultCode = ResultCode::CODE000;
+$msg = array();
 
 // リクエストの値を格納
 $createAccountRequest = new CreateAccountRequest($_POST['user_name'], $_POST['password']);
@@ -12,13 +14,19 @@ $createAccountRequest = new CreateAccountRequest($_POST['user_name'], $_POST['pa
 if (!$createAccountRequest->validation()) {
     // 新規登録
     $accountService = new AccountService();
-    $msg = $accountService->createAccount($createAccountRequest->getUserName(), $createAccountRequest->getPassword());
+    array_push($msg, $accountService->createAccount($createAccountRequest->getUserName(), $createAccountRequest->getPassword()));
 } else {
-    $msg = $createAccountRequest->getErrorMsg();
+    // バリデーション違反
+    http_response_code(400);
+    $resultCode = ResultCode::CODE101;
+    array_push($msg, $createAccountRequest->getErrorMsg());
 }
 
 // レスポンスに値を格納
-$_SESSION['create_account_msg'] = $createAccountRequest->getErrorMsg() . $msg;
+$response = array(
+    "resultCode" => $resultCode,
+    "msg" => $msg
+);
 
-// リダイレクトを実行
-header("Location: ../../../web/create.php");
+// レスポンス表示
+echo json_encode($response, JSON_PRETTY_PRINT);

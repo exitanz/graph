@@ -6,7 +6,7 @@
 class CreateAccountRequest {
     private $userName;
     private $password;
-    private $errorMsg = '';
+    private $errorMsg = array();
 
     /**
      * アカウント登録処理の値を格納します
@@ -36,19 +36,19 @@ class CreateAccountRequest {
 
         // ユーザ名の文字数チェック
         if (20 < strlen($this->userName)) {
-            $this->errorMsg .= '<div class="alert alert-danger"><strong>エラー ：</strong> ユーザ名は20文字以内で入力してください<br /></div>';
+            array_push($this->errorMsg, 'エラー ：ユーザ名は20文字以内で入力してください');
             $validationFlg = true;
         }
 
         // パスワードの文字数チェック
         if (20 < strlen($this->password)) {
-            $this->errorMsg .= '<div class="alert alert-danger"><strong>エラー ：</strong> パスワードは20文字以内で入力してください<br /></div>';
+            array_push($this->errorMsg, 'エラー ：パスワードは20文字以内で入力してください');
             $validationFlg = true;
         }
 
         // 入力項目チェック
         if (empty($this->userName) || empty($this->password)) {
-            $this->errorMsg .= '<div class="alert alert-danger"><strong>エラー ：</strong> 必須項目が入力されていません<br /></div>';
+            array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
             $validationFlg = true;
         }
 
