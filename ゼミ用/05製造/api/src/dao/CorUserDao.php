@@ -13,7 +13,7 @@ class CorUserDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT Max(user_id) FROM cor_user;";
+        $sql = "SELECT Max(user_id) AS user_id FROM cor_user;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -27,7 +27,7 @@ class CorUserDao {
         // sql結果を配列に格納
         $result = $stmt->fetchAll();
 
-        return $result['user_id'];
+        return $result[0]['user_id'];
     }
 
     /**
@@ -87,13 +87,17 @@ class CorUserDao {
 
         // sql結果を配列に格納
         $result = $stmt->fetchAll();
-
-        // 実行結果を
+        
+        // ユーザ情報
         $corUser = new CorUser();
-        $corUser->setUserId($result['user_id']);
-        $corUser->setUserName($result['user_name']);
-        $corUser->setPassword($result['password']);
-        $corUser->setVersion($result['version']);
+
+        if(!empty($result)){
+            // 実行結果を格納
+            $corUser->setUserId($result[0]['user_id']);
+            $corUser->setUserName($result[0]['user_name']);
+            $corUser->setPassword($result[0]['password']);
+            $corUser->setVersion($result[0]['version']);
+        }
 
         return $corUser;
     }

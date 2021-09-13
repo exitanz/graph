@@ -4,14 +4,14 @@
  * 結果コードクラス
  */
 class ResultCode {
-    public static const CODE000 = '000';
-    public static const CODE101 = '101';
-    public static const CODE102 = '102';
-    public static const CODE103 = '103';
-    public static const CODE104 = '104';
-    public static const CODE105 = '105';
-    public static const CODE106 = '106';
-    public static const CODE107 = '107';
-    public static const CODE108 = '108';
-    public static const CODE109 = '109';
+    const CODE000 = '000'; // 正常
+    const CODE101 = '101'; // リクエストパラメータ不正
+    const CODE102 = '102'; // ユーザIDまたはパスワードが不正
+    const CODE103 = '103'; // 認証情報不正（ユーザ権限がない）
+    const CODE104 = '104'; // 確認用パスワード不正
+    const CODE105 = '105'; // 取得、更新対象のデータが存在しない
+    const CODE106 = '106'; // 既に同一キーが存在するデータを作成しようとした
+    const CODE107 = '107'; // 排他制御が行われた
+    const CODE108 = '108'; // 外部との通信に失敗した
+    const CODE109 = '109'; // 不正なDB処理を検知した
 }
