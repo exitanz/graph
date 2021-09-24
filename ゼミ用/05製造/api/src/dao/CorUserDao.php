@@ -1,6 +1,5 @@
 <?php
 require_once dirname(__FILE__) . '/ConnectionManager.php';
-require_once dirname(__FILE__) . '/../dto/CorUser.php';
 
 class CorUserDao {
 
@@ -50,19 +49,18 @@ class CorUserDao {
         //  sql実行
         $stmt->execute();
 
-        $corUserList = array();
+        $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
-            $corUser = new CorUser();
-
-            $corUser->setUserId($row['user_id']);
-            $corUser->setUserName($row['user_name']);
-            $corUser->setPassword($row['password']);
-            $corUser->setVersion($row['version']);
-
-            array_push($corUserList, $corUser);
+            $dto = array(
+                "user_id" => $row['user_id'],
+                "user_name" => $row['user_name'],
+                "password" => $row['password'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
         }
 
-        return $corUserList;
+        return $dtoList;
     }
 
     /**
@@ -89,17 +87,19 @@ class CorUserDao {
         $result = $stmt->fetchAll();
         
         // ユーザ情報
-        $corUser = new CorUser();
+        $dto = array();
 
         if(!empty($result)){
             // 実行結果を格納
-            $corUser->setUserId($result[0]['user_id']);
-            $corUser->setUserName($result[0]['user_name']);
-            $corUser->setPassword($result[0]['password']);
-            $corUser->setVersion($result[0]['version']);
+            $dto = array(
+                "user_id" => $result[0]['user_id'],
+                "user_name" => $result[0]['user_name'],
+                "password" => $result[0]['password'],
+                "version" => $result[0]['version']
+            );
         }
 
-        return $corUser;
+        return $dto;
     }
 
     /**

@@ -8,37 +8,20 @@ header("Content-Type: application/json; charset=utf-8");
 // 変数
 $resultCode = ResultCode::CODE000;
 $msg = array();
-$optional = array();
 
 try {
-    // リクエスト取得
-    $REQUEST = json_decode(file_get_contents("php://input"), true);
-
     // リクエストの値を確認、バリデーションチェック
-    if (empty($REQUEST['user_id']) || empty($REQUEST['token'])) {
+    if (empty($_GET["userId"])) {
         // リクエストエラー
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
         throw new Exception('リクエストの値が不正です。');
     }
-
-    // ログイン確認
-    try {
-        $loginService = new LoginService();
-        if (!$loginService->confirmation($REQUEST['user_id'], $REQUEST['token'])) {
-            throw new Exception('ログイン状態を確認できませんでした。');
-        }
-        array_push($msg, "ログイン状態が確認できました。");
-    } catch (Exception $e) {
-        // ログイン未確認エラー
-        http_response_code(404);
-        $resultCode = ResultCode::CODE102;
-        throw $e;
-    }
+    // ログアウト
+    setcookie("token[" . $_GET["userId"] . "]", "", time() - 60);
+    array_push($msg, "認証解除に成功しました。");
 } catch (Exception $e) {
-    if (!empty($e->getMessage())) {
-        array_push($msg, $e->getMessage());
-    }
+    array_push($msg, '認証解除に失敗しました');
 }
 
 // レスポンスに値を格納

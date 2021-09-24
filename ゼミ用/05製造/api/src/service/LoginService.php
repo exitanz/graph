@@ -2,7 +2,6 @@
 require_once dirname(__FILE__) . '/../common/Common.php';
 require_once dirname(__FILE__) . '/../common/Constant.php';
 require_once dirname(__FILE__) . '/../dao/CorUserDao.php';
-require_once dirname(__FILE__) . '/../dto/CorUser.php';
 
 // セッション開始
 if (!isset($_SESSION)) {
@@ -22,47 +21,51 @@ class LoginService {
         $corUserDao = new CorUserDao();
         $corUser = $corUserDao->selectByUserId($userId);
 
-        if(empty($corUser)){
-            throw new Exception('ユーザIDまたはパスワードが一致しません。');
+        if (empty($corUser)) {
+            throw new Exception('ユーザIDまたはパスワードが一致しません1。');
         }
 
         // パスワードの暗号化
-        $passwordSha256 = crypt($password, '$5$rounds=5000$usesomesillystringforsalt$');
+        $passwordSha256 = hash("sha256", $password);
 
         // パスワードの比較
-        if (strcmp($passwordSha256, $corUser->getPassword()) != 0) {
-            throw new Exception('ユーザIDまたはパスワードが一致しません。');
+        if (strcmp($passwordSha256, $corUser['password']) != 0) {
+            throw new Exception('ユーザIDまたはパスワードが一致しません2。');
         }
 
-        $optional = array(
-            "user_id" => $corUser->getUserId(),
-            "user_name" => $corUser->getUserName(),
-            "password" => $corUser->getPassword(),
-            "version" => $corUser->getVersion()
+        // トークン生成
+        $token = hash("sha256", $corUser['user_id'] . date('Y-m-d H:i:s'));
+
+        // トークンをクッキーに保存
+        setcookie("token[" . $corUser['user_id'] . "]", $token, time() + 86400);
+
+        // ユーザIDとトークンを返却
+        $result = array(
+            "user_id" => $corUser['user_id'],
+            "token" => $token
         );
 
-        return $optional;
+        return $result;
     }
 
     /**
      * ログイン状況の確認を行います
      */
-    public function confirmation($userId, $password) {
-        // ユーザIDをキーにユーザ情報取得
-        $corUserDao = new CorUserDao();
-        $corUser = $corUserDao->selectByUserId($userId);
+    public function confirmation($userId, $token) {
 
-        if(empty($corUser)){
-            throw new Exception('ユーザIDまたはパスワードが一致しません。');
+        $tokenFlg = false;
+
+        // トークンの存在チェック
+        if (empty($token)) {
+            throw new Exception('認証確認ができません。');
         }
 
-        // パスワードの暗号化
-        $passwordSha256 = crypt($password, '$5$rounds=5000$usesomesillystringforsalt$');
-
-        // パスワードの比較
-        if (strcmp($passwordSha256, $corUser->getPassword()) == 0) {
-            return true;
+        if (isset($_COOKIE["token"][$userId])) {
+            if (strcmp($_COOKIE["token"][$userId], $token) == 0) {
+                // 認証されている
+                $tokenFlg = true;
+            }
         }
-        return false;
+        return $tokenFlg;
     }
 }

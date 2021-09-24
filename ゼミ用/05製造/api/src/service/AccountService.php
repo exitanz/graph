@@ -23,7 +23,7 @@ class AccountService {
         $userId = Constant::USER_ID_STR.Common::countup_id($max, Constant::USER_ID_DIGIT);
 
         // パスワードの暗号化（sha256）
-        $passwordSha256 = crypt($password, '$5$rounds=5000$usesomesillystringforsalt$');
+        $passwordSha256 = hash("sha256", $password);
 
         // ユーザID, ユーザ名, パスワードを登録する
         $corUserDao->insert($userId, $userName, $passwordSha256);
