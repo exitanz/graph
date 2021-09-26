@@ -20,10 +20,16 @@
               <label class="mb-4 mt-1">作品名：</label>
             </b-col>
             <b-col sm="8">
-              <b-form-input id="work-input"></b-form-input>
+              <input
+                class="form-control"
+                placeholder="アクター名を入力してください。"
+                type="text"
+                name="edit_actor_name"
+                v-model="createOpus.opusName"
+              />
             </b-col>
             <b-col sm="2">
-              <b-button variant="info"> 追加 </b-button>
+              <b-button variant="info" @click="opusCreate()"> 追加 </b-button>
             </b-col>
           </b-row>
         </b-container>
@@ -39,8 +45,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, key) in works" :key="key">
-              <td>{{ row.workName }}</td>
+            <tr v-for="(row, key) in opusList" :key="key">
+              <td>{{ row.opusName }}</td>
               <td>
                 <button
                   type="button"
@@ -101,11 +107,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(row, key) in works" :key="key">
+              <tr v-for="(row, key) in opusList" :key="key">
                 <td>
                   <b-form-checkbox size="lg"></b-form-checkbox>
                 </td>
-                <td>{{ row.workName }}</td>
+                <td>{{ row.opusName }}</td>
               </tr>
             </tbody>
           </table>
@@ -146,10 +152,56 @@ import { VueFaileName } from "../../constants/VueFaileName.js";
 export default {
   data() {
     return {
-      works: [],
+      opusList: [],
+      createOpus: {
+        opusName: "",
+      },
+      opusName: "",
       graphCreate: VueFaileName.graphCreate,
       login: VueFaileName.login,
     };
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.initialize(); // 初期化処理
+      next();
+    });
+  },
+  methods: {
+    initialize() {
+      // 初期化処理
+
+      // 作品一覧取得
+      this.opusList = [
+        {
+          opusId: "opus0001",
+          opusName: "あああ",
+        },
+        {
+          opusId: "opus0002",
+          opusName: "aaaa",
+        },
+        {
+          opusId: "opus0003",
+          opusName: "123445",
+        },
+        {
+          opusId: "opus0004",
+          opusName: "test",
+        },
+      ];
+      
+    },
+    opusCreate() {
+      let params = {
+        opusId: "opus0004",
+        opusName: this.createOpus.opusName,
+      };
+      // 作品追加処理
+
+      // 再読み込み
+      this.$router.go({name: 'graphList'});
+    },
   },
 };
 </script>
