@@ -9,7 +9,7 @@ npm install
 ```
 npm install -g @vue/cli
 npm install vue-router
-vue create tamms
+vue create graph
 ```
 
 ### 起動

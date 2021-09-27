@@ -29,9 +29,8 @@ class Common {
      * @param $num 文字数
      */
     public static function start_truncate($str, $num) {
-        if ($num < 0 || strlen($str) <= $num) {
-            return $str;
-        }
+        if (empty($str)) return 0;
+        if ($num < 0 || strlen($str) <= $num) return 0;
         return mb_substr($str, $num, strlen($str));
     }
 

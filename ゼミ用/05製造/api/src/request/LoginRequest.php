@@ -35,21 +35,25 @@ class LoginRequest {
     public function validation() {
         $validationFlg = false;
 
-        // ユーザ名の文字数チェック
-        if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
-            array_push($this->errorMsg, 'エラー ：ユーザIDは8文字で入力してください');
-            $validationFlg = true;
-        }
+        try {
+            // 入力項目チェック
+            if (empty($this->userId) || empty($this->password)) {
+                array_push($this->errorMsg, 'エラー ：ユーザIDまたはパスワードが入力されていません');
+                $validationFlg = true;
+            }
 
-        // パスワードの文字数チェック
-        if (20 < strlen($this->password)) {
-            array_push($this->errorMsg, 'エラー ：パスワードは20文字以内で入力してください');
-            $validationFlg = true;
-        }
+            // ユーザIDの文字数チェック
+            if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：ユーザIDは8文字で入力してください');
+                $validationFlg = true;
+            }
 
-        // 入力項目チェック
-        if (empty($this->userId) || empty($this->password)) {
-            array_push($this->errorMsg, 'エラー ：ユーザIDまたはパスワードが入力されていません');
+            // パスワードの文字数チェック
+            if (20 < strlen($this->password)) {
+                array_push($this->errorMsg, 'エラー ：パスワードは20文字以内で入力してください');
+                $validationFlg = true;
+            }
+        } catch (Exception $e) {
             $validationFlg = true;
         }
 

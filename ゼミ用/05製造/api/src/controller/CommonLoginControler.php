@@ -11,6 +11,13 @@ $msg = array();
 $optional = array();
 
 try {
+    if(strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+        // メソッドエラー
+        http_response_code(404);
+        $resultCode = ResultCode::CODE104;
+        throw new Exception('メソッドが存在しません。');
+    }
+
     // リクエスト取得
     $REQUEST = json_decode(file_get_contents("php://input"), true);
 

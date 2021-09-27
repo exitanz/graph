@@ -29,4 +29,8 @@ class Constant {
     const GROUP_ID_STR = "group";
     // グループマスタID 桁数
     const GROUP_ID_DIGIT = 4;
+    // 作品ID 先頭文字列
+    const OPUS_ID_STR = "opus";
+    // 作品ID 桁数
+    const OPUS_ID_DIGIT = 4;
 }
