@@ -11,7 +11,7 @@
           <b-button variant="info" @click="isActorCreateModal = true"
             >Actor<font-awesome-icon icon="user-plus" />
           </b-button>
-          <b-button v-b-modal="'link_modal'" variant="success"
+          <b-button variant="success" @click="isLinkCreateModal = true"
             >Link
             <font-awesome-icon icon="arrows-alt-h" />
           </b-button>
@@ -24,30 +24,30 @@
               Edit
               <font-awesome-icon icon="edit" />
             </template>
-            <b-dropdown-item v-b-modal="'time_modal'"
-              >時系列名編集</b-dropdown-item
+            <b-dropdown-item @click="isTimeEditModal = true"
+              >時系列名を編集</b-dropdown-item
             >
-            <b-dropdown-item v-b-modal="'group_modal'"
-              >グループ名編集</b-dropdown-item
+            <b-dropdown-item @click="isGroupEditModal = true"
+              >グループ名を編集</b-dropdown-item
             >
           </b-dropdown>
           <b-dropdown right toggle-class="text-decoration-none" no-caret>
             <template #button-content>
               <font-awesome-icon icon="cog" />
             </template>
-            <b-dropdown-item v-b-modal="'upload_modal'"
-              >相関図を投稿する</b-dropdown-item
+            <b-dropdown-item @click="isSubmitCheckModal = true"
+              >投稿する</b-dropdown-item
             >
             <b-dropdown-item>
               <router-link v-bind:to="{ name: graphSubmit }"
-                >投稿画面へ
+                >相関図投稿画面へ
               </router-link></b-dropdown-item
             >
-            <b-dropdown-item variant="danger" v-b-modal="'delete_modal'"
-              >図を削除する</b-dropdown-item
+            <b-dropdown-item variant="danger" @click="isGraphDeleteModal = true"
+              >相関図を削除</b-dropdown-item
             >
-            <b-dropdown-item variant="danger" v-b-modal="'logout_modal'"
-              >ログアウトする</b-dropdown-item
+            <b-dropdown-item variant="danger" @click="isLogoutCheckModal = true"
+              >ログアウト</b-dropdown-item
             >
           </b-dropdown>
         </b-navbar-brand>
@@ -123,31 +123,26 @@
                 ></aside>
                 <aside class="col-sm-9 col-md-9 col-lg-9 col-xl-10">
                   <div class="row">
-                    <input
-                      id="acter_id"
-                      type="hidden"
-                    />
+                    <input id="acter_id" type="hidden" />
                     <aside class="col">
                       <h3>
                         <!-----------名前表示欄-------------->
-                        <input
-                          id="acter_name"
-                          type="text"
-                          disabled
-                        />
+                        <input id="acter_name" type="text" disabled />
                       </h3>
                     </aside>
                     <aside class="col text-right">
                       <!-----------人物情報編集ボタン-------------->
                       <b-button
-                        v-b-modal="'actor_edit_modal'"
                         variant="success"
                         @click="isActorEditModal = true"
                       >
                         編集
                       </b-button>
                       <!-----------削除ボタン-------------->
-                      <b-button variant="danger" v-b-modal.delete_modal>
+                      <b-button
+                        variant="danger"
+                        @click="isActorDeleteModal = true"
+                      >
                         削除
                       </b-button>
                     </aside>
@@ -199,28 +194,78 @@
         </div>
       </div>
     </aside>
-
     <!-----------モーダルウィンドウ-------------->
-    <b-modal v-model="isActorCreateModal">
-      <!-----------アクター登録-------------->
+    <!-----------Actorボタン モーダル-------------->
+    <b-modal v-model="isActorCreateModal" title="入力画面">
       <b-container fluid>
         <b-row class="mb-1">
-          <b-col cols="3">口座名</b-col>
+          <b-col cols="3">名前</b-col>
           <b-col>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <font-awesome-icon icon="wallet" />
-                </span>
-              </div>
               <input
                 class="form-control"
-                placeholder="口座名を入力してください。"
+                placeholder="名前を入力してください。"
                 type="text"
                 name="create_actor_name"
                 v-model="actorName"
-                v-bind:class="[createActer.valid]"
+                v-bind:class="[acterCreate.valid]"
               />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">時系列</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-select v-model="selected" :options="options">
+                <b-form-select-option>時系列１</b-form-select-option>
+                <b-form-select-option>時系列２</b-form-select-option>
+                <b-form-select-option>時系列３</b-form-select-option>
+              </b-form-select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">グループ</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="form.groupId"
+                v-bind:class="[valid.groupIdValid]"
+              >
+                <option
+                  v-for="(row, key) in items"
+                  :key="key"
+                  v-bind:value="row.groupId"
+                >
+                  {{ row.groupName }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">アイコン</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-file
+                v-model="file1"
+                placeholder="ファイルを選択"
+              ></b-form-file>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">詳細情報</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-textarea
+                id="actor_info"
+                v-model="text"
+                rows="3"
+                max-rows="10"
+              ></b-form-textarea>
             </div>
           </b-col>
         </b-row>
@@ -241,32 +286,524 @@
           class="float-right"
           @click="actorCreate()"
         >
-          作成
+          登録
         </b-button>
       </template>
     </b-modal>
-    <b-modal v-model="isActorEditModal">
-      <!-----------アクター編集-------------->
+    <!-----------Linkボタン モーダル-------------->
+    <b-modal v-model="isLinkCreateModal" title="入力画面">
       <b-container fluid>
         <b-row class="mb-1">
-          <input type="hidden" v-model="editActer.acterId" />
-          <input type="hidden" v-model="editActer.version" />
-          <b-col cols="3">アクター名</b-col>
+          <b-col cols="3">関係性名</b-col>
           <b-col>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <font-awesome-icon icon="wallet" />
-                </span>
-              </div>
               <input
                 class="form-control"
-                placeholder="アクター名を入力してください。"
+                placeholder="関係を入力してください。"
+                type="text"
+                name="create_link_name"
+                v-model="linkName"
+                v-bind:class="[linkCreate.valid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">From</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-select v-model="selected" :options="options">
+                <b-form-select-option>A</b-form-select-option>
+                <b-form-select-option>B</b-form-select-option>
+                <b-form-select-option>C</b-form-select-option>
+              </b-form-select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">to</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-select v-model="selected" :options="options">
+                <b-form-select-option>A</b-form-select-option>
+                <b-form-select-option>B</b-form-select-option>
+                <b-form-select-option>C</b-form-select-option>
+              </b-form-select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">時系列</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-select v-model="selected" :options="options">
+                <b-form-select-option>時系列１</b-form-select-option>
+                <b-form-select-option>時系列２</b-form-select-option>
+                <b-form-select-option>時系列３</b-form-select-option>
+              </b-form-select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">詳細情報</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-textarea
+                id="link_info"
+                v-model="text"
+                rows="3"
+                max-rows="10"
+              ></b-form-textarea>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isLinkCreateModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="linkCreate()"
+        >
+          登録
+        </b-button>
+      </template>
+    </b-modal>
+
+    <!-----------時系列名を編集 モーダル-------------->
+    <b-modal v-model="isTimeEditModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="timeEdit.TimeId" />
+          <input type="hidden" v-model="timeEdit.version" />
+          <b-col cols="3">時系列名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="時系列名を入力してください。"
+                type="text"
+                name="edit_time_name"
+                v-model="timeEdit.timeName"
+                v-bind:class="[timeEdit.valid]"
+              />
+              <b-button variant="info" @click="timeCreate()"> 追加 </b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>時系列名</th>
+                <th>編集</th>
+                <th>削除</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, key) in timeList" :key="key">
+                <td>{{ row.timeName }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    @click="isTimeNameEditModal = true"
+                  >
+                    <font-awesome-icon icon="pencil-alt" />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    @click="isTimeDeleteModal = true"
+                  >
+                    <font-awesome-icon icon="times" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isTimeEditModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="timeEdit()"
+        >
+          登録
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------編集 モーダル-------------->
+    <b-modal v-model="isTimeNameEditModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="timeEdit.TimeId" />
+          <input type="hidden" v-model="timeEdit.version" />
+          <b-col cols="3">時系列名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="時系列名を入力してください。"
+                type="text"
+                name="edit_time_name"
+                v-model="timeEdit.timeName"
+                v-bind:class="[timeEdit.valid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isTimeNameEditModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="timeNameEdit()"
+        >
+          登録
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------削除 モーダル-------------->
+    <b-modal v-model="isTimeDeleteModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">時系列を削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isTimeDeleteModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="timeDelete()"
+        >
+          削除
+        </b-button>
+      </template>
+    </b-modal>
+
+    <!-----------グループ名を編集 モーダル-------------->
+    <b-modal v-model="isGroupEditModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="groupEdit.GroupId" />
+          <input type="hidden" v-model="groupEdit.version" />
+          <b-col cols="3">グループ名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="グループ名を入力してください。"
+                type="text"
+                name="edit_group_name"
+                v-model="groupEdit.groupName"
+                v-bind:class="[groupEdit.valid]"
+              />
+              <b-button variant="info" @click="groupCreate()"> 追加 </b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>グループ名</th>
+                <th>編集</th>
+                <th>削除</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, key) in groupList" :key="key">
+                <td>{{ row.groupName }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    @click="isGroupNameEditModal = true"
+                  >
+                    <font-awesome-icon icon="pencil-alt" />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    @click="isGroupDeleteModal = true"
+                  >
+                    <font-awesome-icon icon="times" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isGroupEditModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="groupEdit()"
+        >
+          登録
+        </b-button>
+        <!-----------編集 モーダル-------------->
+        <b-modal v-model="isGroupNameEditModal" title="編集画面">
+          <b-container fluid>
+            <b-row class="mb-1">
+              <input type="hidden" v-model="groupEdit.GroupId" />
+              <input type="hidden" v-model="groupEdit.version" />
+              <b-col cols="3">グループ名</b-col>
+              <b-col>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="グループ名を入力してください。"
+                    type="text"
+                    name="edit_group_name"
+                    v-model="groupEdit.groupName"
+                    v-bind:class="[groupEdit.valid]"
+                  />
+                </div>
+              </b-col>
+            </b-row>
+          </b-container>
+
+          <template #modal-footer>
+            <b-button
+              variant="secondary"
+              size="sm"
+              class="float-right"
+              @click="isGroupNameEditModal = false"
+            >
+              閉じる
+            </b-button>
+            <b-button
+              variant="primary"
+              size="sm"
+              class="float-right"
+              @click="groupNameEdit()"
+            >
+              登録
+            </b-button>
+          </template>
+        </b-modal>
+        <!-----------削除 モーダル-------------->
+        <b-modal v-model="isGroupDeleteModal" title="確認画面">
+          <b-container fluid>
+            <p class="my-4">グループを削除しますか？</p>
+          </b-container>
+
+          <template #modal-footer>
+            <b-button
+              variant="secondary"
+              size="sm"
+              class="float-right"
+              @click="isGroupDeleteModal = false"
+            >
+              閉じる
+            </b-button>
+            <b-button
+              variant="danger"
+              size="sm"
+              class="float-right"
+              @click="groupDelete()"
+            >
+              削除
+            </b-button>
+          </template>
+        </b-modal>
+      </template>
+    </b-modal>
+    <!-----------投稿するボタン モーダル-------------->
+    <b-modal v-model="isSubmitCheckModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">相関図が投稿されました。</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isSubmitCheckModal = false"
+        >
+          閉じる
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------相関図を削除 モーダル-------------->
+    <b-modal v-model="isGraphDeleteModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">相関図を削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isGraphDeleteModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="graphDelete()"
+        >
+          削除
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------ログアウト モーダル-------------->
+    <b-modal v-model="isLogoutCheckModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">ログアウトしますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isLogoutCheckModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="logoutCheck()"
+        >
+          ログアウト
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------Actor編集 モーダル-------------->
+    <b-modal v-model="isActorEditModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="acterEdit.acterId" />
+          <input type="hidden" v-model="acterEdit.version" />
+          <b-col cols="3">名前</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="名前を入力してください。"
                 type="text"
                 name="edit_actor_name"
-                v-model="editActer.actorName"
-                v-bind:class="[editActer.valid]"
+                v-model="acterEdit.actorName"
+                v-bind:class="[acterEdit.valid]"
               />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">時系列</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-select v-model="selected" :options="options">
+                <b-form-select-option>時系列１</b-form-select-option>
+                <b-form-select-option>時系列２</b-form-select-option>
+                <b-form-select-option>時系列３</b-form-select-option>
+              </b-form-select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">グループ</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="form.groupId"
+                v-bind:class="[valid.groupIdValid]"
+              >
+                <option
+                  v-for="(row, key) in items"
+                  :key="key"
+                  v-bind:value="row.groupId"
+                >
+                  {{ row.groupName }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">アイコン</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-file
+                v-model="file1"
+                placeholder="ファイルを選択"
+              ></b-form-file>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">詳細情報</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-textarea
+                id="actor_info"
+                v-model="text"
+                rows="3"
+                max-rows="10"
+              ></b-form-textarea>
             </div>
           </b-col>
         </b-row>
@@ -287,7 +824,32 @@
           class="float-right"
           @click="actorEdit()"
         >
-          作成
+          登録
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------Actor削除ボタン モーダル-------------->
+    <b-modal v-model="isActorDeleteModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">データを削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isActorDeleteModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="actorDelete()"
+        >
+          削除
         </b-button>
       </template>
     </b-modal>
@@ -304,14 +866,74 @@ import { D3Service } from "../../scripts/D3Service.js";
 export default {
   data() {
     return {
-      createActer: {
+      timeList: [],
+      createTime: {
+        timeName: "",
+      },
+      groupList: [],
+      createGroup: {
+        groupName: "",
+      },
+      acterCreate: {
         acterId: "1",
         actorName: "2",
         acterInfo: "3",
         acterImg: "",
         valid: "",
       },
-      editActer: {
+      linkCreate: {
+        linkId: "1",
+        linkName: "2",
+        linkInfo: "3",
+        valid: "",
+      },
+      timeEdit: {
+        timeId: "",
+        timeName: "",
+        version: 0,
+        valid: "",
+      },
+      timeNameEdit: {
+        timeId: "",
+        timeName: "",
+        version: 0,
+        valid: "",
+      },
+      timeDelete: {
+        version: 0,
+        valid: "",
+      },
+      groupEdit: {
+        groupId: "",
+        groupName: "",
+        version: 0,
+        valid: "",
+      },
+      groupNameEdit: {
+        groupId: "",
+        groupName: "",
+        version: 0,
+        valid: "",
+      },
+      groupDelete: {
+        groupId: "",
+        groupName: "",
+        version: 0,
+        valid: "",
+      },
+      submitCheck: {
+        version: 0,
+        valid: "",
+      },
+      graphEdit: {
+        version: 0,
+        valid: "",
+      },
+      logoutCheck: {
+        version: 0,
+        valid: "",
+      },
+      acterEdit: {
         acterId: "",
         actorName: "",
         acterInfo: "",
@@ -319,14 +941,50 @@ export default {
         version: 0,
         valid: "",
       },
-      times: [],
+      actorDelete: {
+        version: 0,
+        valid: "",
+      },
+      form: {
+        groupId: "",
+      },
+      valid: {
+        groupIdValid: "",
+      },
+      items: [
+        {
+          groupId: "group01",
+          groupName: "グループA1",
+        },
+        {
+          groupId: "group02",
+          groupName: "グループB2",
+        },
+        {
+          groupId: "group03",
+          groupName: "グループC3",
+        },
+      ],
       loading: false,
       currentId: 0,
+      timeName: "",
+      groupName: "",
       graphList: VueFaileName.graphList,
       graphSubmit: VueFaileName.graphSubmit,
       /* モーダルウィンドウ変数 */
       isActorCreateModal: false,
+      isLinkCreateModal: false,
+      isSubmitCheckModal: false,
+      isTimeEditModal: false,
+      isTimeNameEditModal: false,
+      isTimeDeleteModal: false,
+      isGroupEditModal: false,
+      isGroupNameEditModal: false,
+      isGroupDeleteModal: false,
+      isGraphDeleteModal: false,
+      isLogoutCheckModal: false,
       isActorEditModal: false,
+      isActorDeleteModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -338,6 +996,42 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
+      this.timeList = [
+        {
+          timeId: "time0001",
+          timeName: "あああ",
+        },
+        {
+          timeId: "time0002",
+          timeName: "aaaa",
+        },
+        {
+          timeId: "time0003",
+          timeName: "123445",
+        },
+        {
+          timeId: "time0004",
+          timeName: "test",
+        },
+      ];
+      this.groupList = [
+        {
+          groupId: "groups0001",
+          groupName: "あああ",
+        },
+        {
+          groupId: "groups0002",
+          groupName: "aaaa",
+        },
+        {
+          groupId: "groups0003",
+          groupName: "123445",
+        },
+        {
+          groupId: "groups0004",
+          groupName: "test",
+        },
+      ];
 
       // 時系列順相関図json取得
       this.$http
@@ -352,6 +1046,29 @@ export default {
           console.log(error);
         });
     },
+
+    /* テーブル */
+    timeCreate() {
+      let params = {
+        timeId: "time0004",
+        timeName: this.createTime.timeName,
+      };
+      // 追加処理
+      console.log(params);
+      // 再読み込み
+      this.$router.go({ name: "timeList" });
+    },
+    groupCreate() {
+      let params = {
+        groupId: "group0004",
+        groupName: this.createGroup.groupName,
+      };
+      // 追加処理
+      console.log(params);
+      // 再読み込み
+      this.$router.go({ name: "groupList" });
+    },
+
     /* 相関図表示処理 */
     isSelectSvg(json, currentId) {
       // 画面変更
@@ -422,7 +1139,9 @@ export default {
       // アクター更新処理
 
       // 選択中のアクターID取得
-      this.createEdit.acterId = document.getElementById('acter_id').getAttribute('value');
+      this.createEdit.acterId = document
+        .getElementById("acter_id")
+        .getAttribute("value");
       // モーダルウィンドウを閉じる
       this.isActorEditModal = false;
     },

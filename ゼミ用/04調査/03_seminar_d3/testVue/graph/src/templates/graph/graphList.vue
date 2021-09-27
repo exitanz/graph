@@ -1,5 +1,30 @@
 <template>
   <div class="row">
+    <aside class="col-12">
+      <!-----------------------------------メニューバー--------------------------------------->
+      <b-navbar toggleable type="dark" variant="dark">
+        <b-navbar-brand> 相関図制作システム </b-navbar-brand>
+        <b-navbar-brand>
+          <b-button variant="success" @click="isListUploadModal = true"
+            >投稿する
+            <font-awesome-icon icon="upload" />
+          </b-button>
+          <b-dropdown right toggle-class="text-decoration-none" no-caret>
+            <template #button-content>
+              <font-awesome-icon icon="cog" />
+            </template>
+            <b-dropdown-item>
+              <router-link v-bind:to="{ name: graphSubmit }"
+                >投稿画面へ
+              </router-link></b-dropdown-item
+            >
+            <b-dropdown-item variant="danger" @click="isLogoutCheckModal = true"
+              >ログアウト</b-dropdown-item
+            >
+          </b-dropdown>
+        </b-navbar-brand>
+      </b-navbar>
+    </aside>
     <!--------------------------相関図一覧画面-------------------------------->
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
@@ -22,7 +47,7 @@
             <b-col sm="8">
               <input
                 class="form-control"
-                placeholder="アクター名を入力してください。"
+                placeholder="作品名を入力してください。"
                 type="text"
                 name="edit_actor_name"
                 v-model="createOpus.opusName"
@@ -33,8 +58,6 @@
             </b-col>
           </b-row>
         </b-container>
-        <br />
-        <br />
         <table class="table">
           <thead class="thead-light">
             <tr>
@@ -51,7 +74,7 @@
                 <button
                   type="button"
                   class="btn btn-success"
-                  v-b-modal="'edit_modal'"
+                  @click="isListEditModal = true"
                 >
                   <font-awesome-icon icon="pencil-alt" />
                 </button>
@@ -60,18 +83,14 @@
                 <button
                   type="button"
                   class="btn btn-danger"
-                  v-b-modal="'delete_modal'"
+                  @click="isListDeleteModal = true"
                 >
                   <font-awesome-icon icon="times" />
                 </button>
               </td>
               <td>
                 <router-link v-bind:to="{ name: graphCreate }">
-                  <button
-                    type="button"
-                    class="btn btn-info"
-                    @click="read_graph"
-                  >
+                  <button type="button" class="btn btn-info">
                     <font-awesome-icon icon="eye" />
                   </button>
                 </router-link>
@@ -79,72 +98,145 @@
             </tr>
           </tbody>
         </table>
-        <!-----------編集モーダルウィンドウ-------------->
-        <b-modal id="edit_modal" title="編集画面">
-          <div class="mt-3">作品名</div>
-          <b-form-input id="work_name-input"></b-form-input>
-          <template #modal-footer="{ cancel, ok }">
-            <b-button @click="cancel()"> Cancel </b-button>
-            <b-button variant="primary" @click="ok()"> OK </b-button>
-          </template>
-        </b-modal>
-        <!-----------削除モーダルウィンドウ-------------->
-        <b-modal id="delete_modal" title="削除確認画面">
-          <p class="my-4">データを削除しますか？</p>
-          <template #modal-footer="{ cancel, ok }">
-            <b-button @click="cancel()"> Cancel </b-button>
-            <b-button variant="primary" @click="ok()"> OK </b-button>
-          </template>
-        </b-modal>
-        <!-----------アップロードモーダルウィンドウ-------------->
-        <b-modal id="upload_set_modal" title="確認画面">
-          <p class="my-4">投稿する相関図を選択してください。</p>
-          <table class="table">
-            <thead class="thead-light">
-              <tr>
-                <th>選択</th>
-                <th>作品名</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(row, key) in opusList" :key="key">
-                <td>
-                  <b-form-checkbox size="lg"></b-form-checkbox>
-                </td>
-                <td>{{ row.opusName }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <template #modal-footer="{ ok }">
-            <b-button v-b-modal="'check_modal'" variant="primary" @click="ok()">
-              OK
-            </b-button>
-          </template>
-        </b-modal>
-        <!-----------確認モーダルウィンドウ-------------->
-        <b-modal id="check_modal" title="確認画面">
-          <p class="my-4">相関図が投稿されました。</p>
-          <template #modal-footer="{ cancel, ok }">
-            <b-button @click="cancel()"> Cancel </b-button>
-            <b-button variant="primary" @click="ok()"> OK </b-button>
-          </template>
-        </b-modal>
-        <!-----------ログアウトモーダルウィンドウ-------------->
-        <b-modal id="logout_modal" title="確認画面">
-          <p class="my-4">ログアウトしますか？</p>
-          <template #modal-footer="{ cancel }">
-            <b-button @click="cancel()"> Cancel </b-button>
-            <router-link v-bind:to="{ name: login }">
-              <b-button variant="primary"> OK </b-button>
-            </router-link>
-          </template>
-        </b-modal>
       </div>
     </aside>
+    <!-----------モーダルウィンドウ-------------->
+    <!-----------投稿するボタン モーダルウィンドウ-------------->
+    <b-modal v-model="isListUploadModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">投稿する相関図を選択してください。</p>
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th>選択</th>
+              <th>作品名</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, key) in opusList" :key="key">
+              <td>
+                <b-form-checkbox size="lg"></b-form-checkbox>
+              </td>
+              <td>{{ row.opusName }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isListUploadModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="listUpload()"
+        >
+          投稿する
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------ログアウト モーダル-------------->
+    <b-modal v-model="isLogoutCheckModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">ログアウトしますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isLogoutCheckModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="logoutCheck()"
+        >
+          ログアウト
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------編集 モーダル-------------->
+    <b-modal v-model="isListEditModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="listEdit.listId" />
+          <input type="hidden" v-model="listEdit.version" />
+          <b-col cols="3">作品名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="作品名を入力してください。"
+                type="text"
+                name="edit_list_name"
+                v-model="listEdit.listName"
+                v-bind:class="[listEdit.valid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isListEditModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="primary"
+          size="sm"
+          class="float-right"
+          @click="listEdit()"
+        >
+          登録
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------削除ボタン モーダル-------------->
+    <b-modal v-model="isListDeleteModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">データを削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isListDeleteModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="listDelete()"
+        >
+          削除
+        </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
-<script>
+<script type="module">
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
 import { VueFaileName } from "../../constants/VueFaileName.js";
@@ -156,9 +248,33 @@ export default {
       createOpus: {
         opusName: "",
       },
+      Upload: {
+        version: 0,
+        valid: "",
+      },
+      logoutCheck: {
+        version: 0,
+        valid: "",
+      },
+      listEdit: {
+        listId: "",
+        listName: "",
+        version: 0,
+        valid: "",
+      },
+      listDelete: {
+        version: 0,
+        valid: "",
+      },
       opusName: "",
+      graphSubmit: VueFaileName.graphSubmit,
       graphCreate: VueFaileName.graphCreate,
       login: VueFaileName.login,
+      /* モーダルウィンドウ変数 */
+      isUploadModal: false,
+      isLogoutCheckModal: false,
+      isListEditModal: false,
+      isListDeleteModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -170,6 +286,24 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
+      this.opusList = [
+        {
+          opusId: "opus0001",
+          opusName: "あああ",
+        },
+        {
+          opusId: "opus0002",
+          opusName: "aaaa",
+        },
+        {
+          opusId: "opus0003",
+          opusName: "123445",
+        },
+        {
+          opusId: "opus0004",
+          opusName: "test",
+        },
+      ];
 
       // 作品一覧取得
       this.opusList = [
@@ -190,7 +324,6 @@ export default {
           opusName: "test",
         },
       ];
-      
     },
     opusCreate() {
       let params = {
@@ -198,10 +331,13 @@ export default {
         opusName: this.createOpus.opusName,
       };
       // 作品追加処理
+      console.log(params);
 
       // 再読み込み
-      this.$router.go({name: 'graphList'});
+      this.$router.go({ name: "graphList" });
     },
+    /* モーダルウィンドウ処理 */
+    
   },
 };
 </script>

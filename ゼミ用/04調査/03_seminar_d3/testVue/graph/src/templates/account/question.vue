@@ -1,23 +1,24 @@
 <template>
   <div class="row">
+    <aside class="col-12">
+      <!-----------------------------------メニューバー--------------------------------------->
+      <b-navbar toggleable type="dark" variant="dark">
+        <b-navbar-brand> 相関図制作システム </b-navbar-brand>
+      </b-navbar>
+    </aside>
+    <!-----------------------------------パスワード変更画面--------------------------------------->
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <div class="card">
         <article class="card-body">
           <h4 class="card-title text-center mb-4 mt-1">パスワード変更</h4>
-          <hr>
+          <hr />
           <div class="form-group">
             <br />
-            <div
-              v-for="(error, key) in errors"
-              :key="key"
-            >
-              <div class="alert alert-danger">{{error}}<br /></div>
+            <div v-for="(error, key) in errors" :key="key">
+              <div class="alert alert-danger">{{ error }}<br /></div>
             </div>
-            <div
-              v-if="complete"
-              class="alert alert-success"
-            >
+            <div v-if="complete" class="alert alert-success">
               パスワード変更が完了しました。<br />
             </div>
             <br />
@@ -54,7 +55,7 @@
                 type="password"
                 name="newPassword"
                 v-model="newPassword"
-              >
+              />
             </div>
           </div>
           <br />
@@ -102,7 +103,7 @@
                 name="secretAnswer"
                 v-model="secretAnswer"
                 v-bind:class="[secretAnswerValid]"
-              >
+              />
             </div>
           </div>
           <br />

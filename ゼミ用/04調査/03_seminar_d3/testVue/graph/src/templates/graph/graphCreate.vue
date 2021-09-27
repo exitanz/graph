@@ -242,8 +242,7 @@
       </b-tabs>
     </div>
     <aside class="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-      <div class="card" id="view">
-      </div>
+      <div class="card" id="view"></div>
       <br />
       <!-- カーソルを合わせたときに表示する情報領域-->
       <div id="datatip">
@@ -361,7 +360,9 @@
               <aside class="col-12">
                 <b-form inline>
                   <div class="input-group mb-2 mr-sm-2">
-                    <b-form-input placeholder="検索文字列を入力してください"></b-form-input>
+                    <b-form-input
+                      placeholder="検索文字列を入力してください"
+                    ></b-form-input>
                     <div class="input-group-prepend">
                       <button class="btn btn-outline-info">
                         <font-awesome-icon icon="search" />

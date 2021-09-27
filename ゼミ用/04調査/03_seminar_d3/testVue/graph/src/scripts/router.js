@@ -18,7 +18,6 @@ export default new Router({
       name: 'login',
       components: {
         default: loadView('/login/login'),
-        menu: loadView('/' + VueFaileName.loginMenu),
       },
     },
     {
@@ -26,7 +25,6 @@ export default new Router({
       name: 'question',
       components: {
         default: loadView('/account/question'),
-        menu: loadView('/' + VueFaileName.loginMenu),
       },
     },
     {
@@ -34,15 +32,13 @@ export default new Router({
       name: 'userCreate',
       components: {
         default: loadView('/account/userCreate'),
-        menu: loadView('/' + VueFaileName.loginMenu),
       },
     },
     {
       path: '/graphList',
       name: 'graphList',
       components: {
-        default: loadView('/graph/graphList'),
-        menu: loadView('/' + VueFaileName.listMenu),
+        default: loadView('/graph/graphList')
       },
     },
     {
@@ -57,7 +53,6 @@ export default new Router({
       name: 'graphSubmit',
       components: {
         default: loadView('/graph/graphSubmit'),
-        menu: loadView('/' + VueFaileName.submitMenu),
       },
     },
     {

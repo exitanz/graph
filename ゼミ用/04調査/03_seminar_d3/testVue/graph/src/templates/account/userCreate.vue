@@ -1,5 +1,12 @@
 <template>
   <div class="row">
+    <aside class="col-12">
+      <!-----------------------------------メニューバー--------------------------------------->
+      <b-navbar toggleable type="dark" variant="dark">
+        <b-navbar-brand> 相関図制作システム </b-navbar-brand>
+      </b-navbar>
+    </aside>
+    <!-----------------------------------新規登録画面--------------------------------------->
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <div class="card">
