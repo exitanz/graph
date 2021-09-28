@@ -70,6 +70,13 @@ export default new Router({
       },
     },
     {
+      path: '/test3',
+      name: 'test3',
+      components: {
+        default: loadView('/graph/test3'),
+      },
+    },
+    {
       path: '/r',
       name: 'r',
       components: {

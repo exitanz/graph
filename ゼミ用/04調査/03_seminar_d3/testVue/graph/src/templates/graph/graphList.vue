@@ -273,6 +273,7 @@ export default {
       /* モーダルウィンドウ変数 */
       isUploadModal: false,
       isLogoutCheckModal: false,
+      isListUploadModal:false,
       isListEditModal: false,
       isListDeleteModal: false,
     };
@@ -286,24 +287,6 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
-      this.opusList = [
-        {
-          opusId: "opus0001",
-          opusName: "あああ",
-        },
-        {
-          opusId: "opus0002",
-          opusName: "aaaa",
-        },
-        {
-          opusId: "opus0003",
-          opusName: "123445",
-        },
-        {
-          opusId: "opus0004",
-          opusName: "test",
-        },
-      ];
 
       // 作品一覧取得
       this.opusList = [
@@ -330,11 +313,9 @@ export default {
         opusId: "opus0004",
         opusName: this.createOpus.opusName,
       };
-      // 作品追加処理
-      console.log(params);
-
-      // 再読み込み
-      this.$router.go({ name: "graphList" });
+      // 作品登録処理
+      // 作品画面反映処理
+      this.opusList.push(params);
     },
     /* モーダルウィンドウ処理 */
     

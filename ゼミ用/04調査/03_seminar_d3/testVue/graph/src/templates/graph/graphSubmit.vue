@@ -283,6 +283,7 @@ import { VueFaileName } from "../../constants/VueFaileName.js";
 export default {
   data() {
     return {
+      opusList:[],
       submitList: [],
       works: [],
       submitUpload: {
