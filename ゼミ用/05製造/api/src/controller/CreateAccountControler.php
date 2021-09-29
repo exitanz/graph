@@ -8,9 +8,10 @@ header("Content-Type: application/json; charset=utf-8");
 // 変数
 $resultCode = ResultCode::CODE000;
 $msg = array();
+$optional = array();
 
 try {
-    if(strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
@@ -42,9 +43,12 @@ try {
 
     // 新規登録
     $accountService = new AccountService();
-    array_push($msg, $accountService->createAccount($createAccountRequest->getUserName(), $createAccountRequest->getPassword()));
+    $optional = array(
+        "user_id" => $accountService->createAccount($createAccountRequest->getUserName(), $createAccountRequest->getPassword())
+    );
+    array_push($msg, '正常');
 } catch (Exception $e) {
-    if(!empty($e->getMessage())){
+    if (!empty($e->getMessage())) {
         array_push($msg, $e->getMessage());
     }
 }
@@ -52,7 +56,8 @@ try {
 // レスポンスに値を格納
 $response = array(
     "resultCode" => $resultCode,
-    "msg" => $msg
+    "msg" => $msg,
+    "optional" => $optional
 );
 
 // レスポンス表示

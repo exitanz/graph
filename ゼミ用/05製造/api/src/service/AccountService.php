@@ -28,6 +28,6 @@ class AccountService {
         // ユーザID, ユーザ名, パスワードを登録する
         $corUserDao->insert($userId, $userName, $passwordSha256);
 
-        return 'アカウント登録が完了しました（ユーザID：'.$userId.'）';
+        return $userId;
     }
 }

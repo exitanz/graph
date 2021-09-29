@@ -7,6 +7,21 @@ require_once dirname(__FILE__) . '/../dao/OpusDao.php';
  * 作品処理をするクラス
  */
 class OpusService {
+    /**
+     * 作品検索をします
+     */
+    public function searchOpus($opusId, $opusName, $userId) {
+        // 検索処理
+        return (new OpusDao())->selectById($opusId, $opusName, $userId);
+    }
+
+    /**
+     * 作品全検索をします
+     */
+    public function searchAllOpus() {
+        // 検索処理
+        return (new OpusDao())->selectAll();
+    }
 
     /**
      * 作品登録をします
@@ -33,18 +48,19 @@ class OpusService {
     }
 
     /**
-     * 作品検索をします
+     * 作品更新をします
      */
-    public function searchOpus($opusId, $opusName, $userId) {
-        // 検索処理
-        return (new OpusDao())->selectById($opusId, $opusName, $userId);
-    }
+    public function editOpus($opusId, $opusName, $userId, $version) {
+        // 作品情報取得
+        $opusDao = new OpusDao();
+        $target = $opusDao->selectByIdAndVersion($opusId, null, $userId, $version);
 
-    /**
-     * 作品全検索をします
-     */
-    public function searchAllOpus() {
-        // 検索処理
-        return (new OpusDao())->selectAll();
+        // 存在確認
+        if (empty($target)) {
+            throw new Exception('作品が存在しません。');
+        }
+
+        // 更新処理
+        $opusDao->update($opusId, $opusName, $userId, $version);
     }
 }

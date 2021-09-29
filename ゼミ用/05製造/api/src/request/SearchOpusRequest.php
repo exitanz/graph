@@ -50,12 +50,6 @@ class SearchOpusRequest {
 
         try {
 
-            // 入力項目チェック
-            if (empty($this->userId)) {
-                array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
-                $validationFlg = true;
-            }
-
             // 作品名の文字数チェック
             if (100 < strlen($this->opusName)) {
                 array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
