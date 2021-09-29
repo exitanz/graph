@@ -68,8 +68,8 @@
           </thead>
           <tbody>
             <tr v-for="(row, key) in submitList" :key="key">
-              <td>{{ row.userName }}</td>
-              <td>{{ row.workName }}</td>
+              <td class="col-sm-2">{{ row.userName }}</td>
+              <td class="col-sm-2">{{ row.workName }}</td>
               <td>
                 <router-link v-bind:to="{ name: graphCreate }">
                   <button type="button" class="btn btn-info">
@@ -80,6 +80,24 @@
             </tr>
           </tbody>
         </table>
+        <!-----------ページ切り替え-------------->
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </article>
     </aside>
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
@@ -97,9 +115,11 @@
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
               <td>
-                <b-form-checkbox size="lg"></b-form-checkbox>
+                <b-col sm="2">
+                  <b-form-checkbox size="lg"></b-form-checkbox>
+                </b-col>
               </td>
-              <td>{{ row.opusName }}</td>
+              <td class="col-sm-1">{{ row.opusName }}</td>
             </tr>
           </tbody>
         </table>
@@ -283,7 +303,7 @@ import { VueFaileName } from "../../constants/VueFaileName.js";
 export default {
   data() {
     return {
-      opusList:[],
+      opusList: [],
       submitList: [],
       works: [],
       submitUpload: {

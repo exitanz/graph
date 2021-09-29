@@ -69,7 +69,7 @@
           </thead>
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
-              <td>{{ row.opusName }}</td>
+              <td class="col-sm-1">{{ row.opusName }}</td>
               <td>
                 <button
                   type="button"
@@ -115,9 +115,11 @@
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
               <td>
-                <b-form-checkbox size="lg"></b-form-checkbox>
+                <b-col sm="2">
+                  <b-form-checkbox size="lg"></b-form-checkbox>
+                </b-col>
               </td>
-              <td>{{ row.opusName }}</td>
+              <td class="col-sm-1">{{ row.opusName }}</td>
             </tr>
           </tbody>
         </table>
@@ -273,7 +275,7 @@ export default {
       /* モーダルウィンドウ変数 */
       isUploadModal: false,
       isLogoutCheckModal: false,
-      isListUploadModal:false,
+      isListUploadModal: false,
       isListEditModal: false,
       isListDeleteModal: false,
     };
@@ -292,7 +294,7 @@ export default {
       this.opusList = [
         {
           opusId: "opus0001",
-          opusName: "あああ",
+          opusName: "ああああ",
         },
         {
           opusId: "opus0002",
@@ -318,7 +320,6 @@ export default {
       this.opusList.push(params);
     },
     /* モーダルウィンドウ処理 */
-    
   },
 };
 </script>
