@@ -179,6 +179,6 @@ class CorUserDao {
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
-        $stmt->execute();
+        return $stmt->execute();
     }
 }

@@ -30,4 +30,20 @@ class AccountService {
 
         return $userId;
     }
+
+    /**
+     * ユーザ情報を削除します
+     */
+    public function deleteAccount($userId) {
+        // ユーザ情報を取得
+        $corUserDao = new CorUserDao();
+        $corUser = $corUserDao->selectByUserId($userId);
+
+        if(empty($corUser)){
+            throw new Exception('ユーザが存在しません。');
+        }
+
+        // ユーザ情報を削除する
+        $corUserDao->delete($userId);
+    }
 }

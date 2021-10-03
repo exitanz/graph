@@ -1,125 +1,149 @@
-/* ä˘ë∂ÉfÅ[É^ÉxÅ[ÉXÇ™Ç†ÇÈèÍçáÇÕçÌèú */
+/* Êó¢Â≠ò„Éá„Éº„Çø„Éô„Éº„Çπ„Åå„ÅÇ„ÇãÂ†¥Âêà„ÅØÂâäÈô§ */
 DROP DATABASE IF EXISTS dkgraph_correlation;
-/* ÉfÅ[É^ÉxÅ[ÉXçÏê¨ */
+
+/* „Éá„Éº„Çø„Éô„Éº„Çπ‰ΩúÊàê */
 CREATE DATABASE dkgraph_correlation;
-/* ÉfÅ[É^ÉxÅ[ÉXëIë */
+
+/* „Éá„Éº„Çø„Éô„Éº„ÇπÈÅ∏Êäû */
 use dkgraph_correlation;
-/* ä˘ë∂ÉÜÅ[ÉUÇ™ë∂ç›Ç∑ÇÈèÍçáÇÕçÌèú */
+
+/* Êó¢Â≠ò„É¶„Éº„Ç∂„ÅåÂ≠òÂú®„Åô„ÇãÂ†¥Âêà„ÅØÂâäÈô§ */
 DROP USER IF EXISTS 'dkgraph_exit';
-/* ÉÜÅ[ÉUçÏê¨ */
+
+/* „É¶„Éº„Ç∂‰ΩúÊàê */
 CREATE USER dkgraph_exit IDENTIFIED BY 'g20e38h41AAbf';
-/* dkgraph_exitÇ…ÉfÅ[É^ÉxÅ[ÉXë{ç∏ëSÇƒÇÃå†å¿Çó^Ç¶ÇÈ */
+
+/* dkgraph_exit„Å´„Éá„Éº„Çø„Éô„Éº„ÇπÊçúÊüªÂÖ®„Å¶„ÅÆÊ®©Èôê„Çí‰∏é„Åà„Çã */
 GRANT ALL ON dkgraph_exit.* TO 'dkgraph_exit';
 
 DROP TABLE IF EXISTS rel;
+
 DROP TABLE IF EXISTS acter;
+
 DROP TABLE IF EXISTS group_mst;
+
 DROP TABLE IF EXISTS time_mst;
+
 DROP TABLE IF EXISTS rel_mst;
+
 DROP TABLE IF EXISTS opus;
+
 DROP TABLE IF EXISTS cor_user;
 
-/* ÉÜÅ[ÉUÉeÅ[ÉuÉã */
+/* „É¶„Éº„Ç∂„ÉÜ„Éº„Éñ„É´ */
 CREATE TABLE cor_user(
-user_id VARCHAR(10) NOT NULL COMMENT 'ÉÜÅ[ÉUID' ,
-user_name VARCHAR(100) ,
-password VARCHAR(100) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(user_id)
+    user_id VARCHAR(10) NOT NULL COMMENT '„É¶„Éº„Ç∂ID',
+    user_name VARCHAR(100),
+    password VARCHAR(100) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(user_id)
 );
 
-/* çÏïiÉ}ÉXÉ^ */
+/* ‰ΩúÂìÅ„Éû„Çπ„Çø */
 CREATE TABLE opus(
-opus_id VARCHAR(8) NOT NULL ,
-opus_name VARCHAR(100) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(opus_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    opus_id VARCHAR(8) NOT NULL,
+    opus_name VARCHAR(100) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(opus_id),
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/* ä÷åWê´É}ÉXÉ^ */
+/* Èñ¢‰øÇÊÄß„Éû„Çπ„Çø */
 CREATE TABLE rel_mst(
-rel_mst_id VARCHAR(10) NOT NULL ,
-rel_mst_name VARCHAR(100) ,
-opus_id VARCHAR(8) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED DEFAULT 0 ,
-PRIMARY KEY(rel_mst_id)
-,FOREIGN KEY(opus_id) REFERENCES opus(opus_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    rel_mst_id VARCHAR(10) NOT NULL,
+    rel_mst_name VARCHAR(100),
+    opus_id VARCHAR(8) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED DEFAULT 0,
+    PRIMARY KEY(rel_mst_id),
+    FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/* éûånóÒÉ}ÉXÉ^ */
+/* ÊôÇÁ≥ªÂàó„Éû„Çπ„Çø */
 CREATE TABLE time_mst(
-time_id VARCHAR(8) NOT NULL ,
-time_name VARCHAR(100) NOT NULL ,
-opus_id VARCHAR(8) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(time_id)
-,FOREIGN KEY(opus_id) REFERENCES opus(opus_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    time_id VARCHAR(8) NOT NULL,
+    time_name VARCHAR(100) NOT NULL,
+    opus_id VARCHAR(8) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(time_id),
+    FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/* ÉOÉãÅ[ÉvÉ}ÉXÉ^ */
+/* „Ç∞„É´„Éº„Éó„Éû„Çπ„Çø */
 CREATE TABLE group_mst(
-group_id VARCHAR(9) NOT NULL ,
-group_name VARCHAR(100) NOT NULL ,
-group_info VARCHAR(1200) ,
-opus_id VARCHAR(8) NOT NULL ,
-time_id VARCHAR(8) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(group_id)
-,FOREIGN KEY(opus_id) REFERENCES opus(opus_id)
-,FOREIGN KEY(time_id) REFERENCES time_mst(time_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    group_id VARCHAR(9) NOT NULL,
+    group_name VARCHAR(100) NOT NULL,
+    group_info VARCHAR(1200),
+    opus_id VARCHAR(8) NOT NULL,
+    time_id VARCHAR(8) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(group_id),
+    FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/* ìoèÍêlï®É}ÉXÉ^ */
+/* ÁôªÂ†¥‰∫∫Áâ©„Éû„Çπ„Çø */
 CREATE TABLE acter(
-acter_id VARCHAR(8) NOT NULL ,
-acter_name VARCHAR(100) NOT NULL ,
-acter_info VARCHAR(1200) ,
-acter_img VARCHAR(2000) ,
-opus_id VARCHAR(8) NOT NULL ,
-time_id VARCHAR(8) NOT NULL ,
-group_id VARCHAR(9) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(acter_id)
-,FOREIGN KEY(opus_id) REFERENCES opus(opus_id)
-,FOREIGN KEY(time_id) REFERENCES time_mst(time_id)
-,FOREIGN KEY(group_id) REFERENCES group_mst(group_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    acter_id VARCHAR(8) NOT NULL,
+    acter_name VARCHAR(100) NOT NULL,
+    acter_info VARCHAR(1200),
+    acter_img VARCHAR(2000),
+    opus_id VARCHAR(8) NOT NULL,
+    time_id VARCHAR(8) NOT NULL,
+    group_id VARCHAR(9) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(acter_id),
+    FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(group_id) REFERENCES group_mst(group_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/* ä÷åW */
+/* Èñ¢‰øÇ */
 CREATE TABLE rel(
-rel_id VARCHAR(9) NOT NULL UNIQUE  ,
-rel_mst_id VARCHAR(10) NOT NULL ,
-rel_mst_info VARCHAR(1200) ,
-acter_id VARCHAR(8) NOT NULL ,
-target_id VARCHAR(8) NOT NULL ,
-opus_id VARCHAR(8) NOT NULL ,
-time_id VARCHAR(8) NOT NULL ,
-user_id VARCHAR(10) NOT NULL ,
-version SMALLINT UNSIGNED NOT NULL DEFAULT 0 ,
-PRIMARY KEY(rel_id)
-,FOREIGN KEY(rel_mst_id) REFERENCES rel_mst(rel_mst_id)
-,FOREIGN KEY(acter_id) REFERENCES acter(acter_id)
-,FOREIGN KEY(target_id) REFERENCES acter(acter_id)
-,FOREIGN KEY(opus_id) REFERENCES opus(opus_id)
-,FOREIGN KEY(time_id) REFERENCES time_mst(time_id)
-,FOREIGN KEY(user_id) REFERENCES cor_user(user_id)
+    rel_id VARCHAR(9) NOT NULL UNIQUE,
+    rel_mst_id VARCHAR(10) NOT NULL,
+    rel_mst_info VARCHAR(1200),
+    acter_id VARCHAR(8) NOT NULL,
+    target_id VARCHAR(8) NOT NULL,
+    opus_id VARCHAR(8) NOT NULL,
+    time_id VARCHAR(8) NOT NULL,
+    user_id VARCHAR(10) NOT NULL,
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(rel_id),
+    FOREIGN KEY(rel_mst_id) REFERENCES rel_mst(rel_mst_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(acter_id) REFERENCES acter(acter_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(target_id) REFERENCES acter(acter_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000001', 'test1', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);
-
-INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000002', 'test2', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);
-
-INSERT INTO `cor_user` (`user_id`, `user_name`, `password`, `version`) VALUES
-('user000003', 'test3', '$5$rounds=5000$usesomesillystri$NiHLsMQsOUSx.Yuhrc2x/yweqSXOCBEOqmTYEjEiAU8', 0);
+INSERT INTO
+    `cor_user` (`user_id`, `user_name`, `password`, `version`)
+VALUES
+    (
+        'user000001',
+        'test',
+        '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+        0
+    ),
+    (
+        'user000002',
+        'test',
+        '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+        0
+    ),
+    (
+        'user000003',
+        'test',
+        '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+        0
+    );
