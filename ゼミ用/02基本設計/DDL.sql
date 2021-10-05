@@ -33,90 +33,90 @@ DROP TABLE IF EXISTS cor_user;
 /* ユーザテーブル */
 CREATE TABLE cor_user(
     user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
-    user_name VARCHAR(100),
-    password VARCHAR(100) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    user_name VARCHAR(100) COMMENT 'ユーザ名',
+    password VARCHAR(100) NOT NULL COMMENT 'パスワード',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(user_id)
-);
+) COMMENT 'ユーザテーブル';
 
 /* 作品マスタ */
 CREATE TABLE opus(
-    opus_id VARCHAR(8) NOT NULL,
-    opus_name VARCHAR(100) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    opus_name VARCHAR(100) NOT NULL COMMENT '作品名',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(opus_id),
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT '作品マスタ';
 
 /* 関係性マスタ */
 CREATE TABLE rel_mst(
-    rel_mst_id VARCHAR(10) NOT NULL,
-    rel_mst_name VARCHAR(100),
-    opus_id VARCHAR(8) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED DEFAULT 0,
+    rel_mst_id VARCHAR(10) NOT NULL COMMENT '関係性ID',
+    rel_mst_name VARCHAR(100) COMMENT '関係性名',
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(rel_mst_id),
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT '関係性マスタ';
 
 /* 時系列マスタ */
 CREATE TABLE time_mst(
-    time_id VARCHAR(8) NOT NULL,
-    time_name VARCHAR(100) NOT NULL,
-    opus_id VARCHAR(8) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
+    time_name VARCHAR(100) NOT NULL COMMENT '時系列名',
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(time_id),
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT '時系列マスタ';
 
 /* グループマスタ */
 CREATE TABLE group_mst(
-    group_id VARCHAR(9) NOT NULL,
-    group_name VARCHAR(100) NOT NULL,
-    group_info VARCHAR(1200),
-    opus_id VARCHAR(8) NOT NULL,
-    time_id VARCHAR(8) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    group_id VARCHAR(9) NOT NULL COMMENT 'グループID',
+    group_name VARCHAR(100) NOT NULL COMMENT 'グループ名',
+    group_info VARCHAR(1200) COMMENT '詳細',
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(group_id),
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT 'グループマスタ';
 
 /* 登場人物マスタ */
 CREATE TABLE acter(
-    acter_id VARCHAR(8) NOT NULL,
-    acter_name VARCHAR(100) NOT NULL,
-    acter_info VARCHAR(1200),
-    acter_img VARCHAR(2000),
-    opus_id VARCHAR(8) NOT NULL,
-    time_id VARCHAR(8) NOT NULL,
-    group_id VARCHAR(9) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    acter_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
+    acter_name VARCHAR(100) NOT NULL COMMENT '登場人物名',
+    acter_info VARCHAR(1200) COMMENT '説明',
+    acter_img VARCHAR(2000) COMMENT '画像',
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
+    group_id VARCHAR(9) NOT NULL COMMENT 'グループID',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(acter_id),
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(group_id) REFERENCES group_mst(group_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT '登場人物マスタ';
 
-/* 関係 */
+/* 関係テーブル */
 CREATE TABLE rel(
-    rel_id VARCHAR(9) NOT NULL UNIQUE,
-    rel_mst_id VARCHAR(10) NOT NULL,
-    rel_mst_info VARCHAR(1200),
-    acter_id VARCHAR(8) NOT NULL,
-    target_id VARCHAR(8) NOT NULL,
-    opus_id VARCHAR(8) NOT NULL,
-    time_id VARCHAR(8) NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
-    version SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    rel_id VARCHAR(9) NOT NULL UNIQUE COMMENT '関係ID',
+    rel_mst_id VARCHAR(10) NOT NULL COMMENT '関係性ID',
+    rel_mst_info VARCHAR(1200) COMMENT '関係詳細',
+    acter_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
+    target_id VARCHAR(8) NOT NULL COMMENT '対象ID',
+    opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
+    time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
+    user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
+    version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(rel_id),
     FOREIGN KEY(rel_mst_id) REFERENCES rel_mst(rel_mst_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(acter_id) REFERENCES acter(acter_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -124,7 +124,7 @@ CREATE TABLE rel(
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) COMMENT '関係テーブル';
 
 INSERT INTO
     `cor_user` (`user_id`, `user_name`, `password`, `version`)
