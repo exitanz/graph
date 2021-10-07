@@ -77,6 +77,13 @@ export default new Router({
       },
     },
     {
+      path: '/test4',
+      name: 'test4',
+      components: {
+        default: loadView('/graph/test4'),
+      },
+    },
+    {
       path: '/r',
       name: 'r',
       components: {

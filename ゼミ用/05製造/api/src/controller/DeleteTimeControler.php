@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../request/DeleteAccountRequest.php';
+require_once dirname(__FILE__) . '/../request/DeleteTimeRequest.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
-require_once dirname(__FILE__) . '/../service/AccountService.php';
+require_once dirname(__FILE__) . '/../service/TimeService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
 header("Content-Type: application/json; charset=utf-8");
@@ -30,21 +30,21 @@ try {
     }
 
     // リクエストの値を格納
-    $deleteAccountRequest = new DeleteAccountRequest($REQUEST['user_id']);
+    $deleteTimeRequest = new DeleteTimeRequest($REQUEST['time_id'], $REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($deleteAccountRequest->validation()) {
+    if ($deleteTimeRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $deleteAccountRequest->getErrorMsg();
+        $msg = $deleteTimeRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
         // ユーザ削除
-        $accountService = new AccountService();
-        $accountService->deleteAccount($deleteAccountRequest->getUserId());
+        $timeService = new TimeService();
+        $timeService->deleteTime($deleteTimeRequest->getTimeId(), $deleteTimeRequest->getUserId());
         
         // ログアウト処理
         setcookie("token[" . $REQUEST['user_id'] . "]", "", time() - 60);

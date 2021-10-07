@@ -2,10 +2,17 @@
  * 非同期通信クラス
  */
 export class ApiURL {
+
+  // 共通部分
+  static CONTROLLER = '/graph/controller';
   /** ログイン */
-  static LOGIN = '/user/login';
+  static LOGIN = ApiURL.CONTROLLER + '/LoginControler.php';
   /** ログアウト */
   static LOGOUT = '/user/logout';
+
+  /** 作品 */
+  static SEARCH_OPUS = ApiURL.CONTROLLER + '/SearchOpusControler.php';
+  static DELETE_ACCOUNT = ApiURL.CONTROLLER + '/DeleteAccountControler.php';
 
   /** ユーザ管理機能 */
   static SIGNUP = '/signup';

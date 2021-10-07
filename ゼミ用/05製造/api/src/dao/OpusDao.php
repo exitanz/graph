@@ -66,6 +66,59 @@ class OpusDao {
     /**
      * 作品情報を取得します
      */
+    public function select($opusId, $opusName, $userId, $offset, $limit) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM opus WHERE ";
+        if ($opusId != null) {
+            $sql .= "opus_id=:opus_id AND ";
+        }
+        if ($opusName != null) {
+            $sql .= 'opus_name LIKE :opus_name AND ';
+        }
+        $sql .= "user_id=:user_id LIMIT :offset, :limit;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        if ($opusId != null) {
+            $stmt->bindParam(':opus_id', $opusId);
+        }
+        if ($opusName != null) {
+            $opusNameStr = '%' . $opusName . '%';
+            $stmt->bindParam(':opus_name', $opusNameStr);
+        }
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "opus_id" => $row['opus_id'],
+                "opus_name" => $row['opus_name'],
+                "user_id" => $row['user_id'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
+     * 作品情報を取得します
+     */
     public function selectById($opusId, $opusName, $userId) {
 
         // db接続
@@ -124,9 +177,7 @@ class OpusDao {
 
         // sql作成
         $sql = "SELECT * FROM opus WHERE ";
-        if ($opusId != null) {
-            $sql .= "opus_id=:opus_id AND ";
-        }
+        $sql .= "opus_id=:opus_id AND ";
         if ($opusName != null) {
             $sql .= 'opus_name LIKE :opus_name AND ';
         }
@@ -139,9 +190,7 @@ class OpusDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($opusId != null) {
-            $stmt->bindParam(':opus_id', $opusId);
-        }
+        $stmt->bindParam(':opus_id', $opusId);
         if ($opusName != null) {
             $opusNameStr = '%' . $opusName . '%';
             $stmt->bindParam(':opus_name', $opusNameStr);

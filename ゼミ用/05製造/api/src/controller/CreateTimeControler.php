@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/SearchOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/CreateTimeRequest.php';
+require_once dirname(__FILE__) . '/../service/TimeService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -12,16 +12,18 @@ $msg = array();
 $optional = array();
 
 try {
-    // メソッド確認
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'GET') != 0) {
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
         throw new Exception('メソッドが存在しません。');
     }
 
+    // リクエスト取得
+    $REQUEST = json_decode(file_get_contents("php://input"), true);
+
     // 認証確認
-    if (empty($_REQUEST['user_id']) || empty($_REQUEST['token']) || !(new LoginService())->confirmation($_REQUEST['user_id'], $_REQUEST['token'])) {
+    if (empty($REQUEST['user_id']) || empty($REQUEST['token']) || !(new LoginService())->confirmation($REQUEST['user_id'], $REQUEST['token'])) {
         // 認証エラー
         http_response_code(403);
         $resultCode = ResultCode::CODE103;
@@ -29,35 +31,27 @@ try {
     }
 
     // リクエストの値を格納
-    $searchOpusRequest = new SearchOpusRequest();
-    if (!empty($_REQUEST['opus_id'])) $searchOpusRequest->setOpusId($_REQUEST['opus_id']);
-    if (!empty($_REQUEST['opus_name'])) $searchOpusRequest->setOpusName($_REQUEST['opus_name']);
-    if (!empty($_REQUEST['user_id'])) $searchOpusRequest->setUserId($_REQUEST['user_id']);
-    if (!empty($_REQUEST['offset'])) $searchOpusRequest->setOffset($_REQUEST['offset']);
-    if (!empty($_REQUEST['limit'])) $searchOpusRequest->setLimit($_REQUEST['limit']);
+    $createTimeRequest = new CreateTimeRequest();
+    if (!empty($REQUEST['time_name'])) $createTimeRequest->setTimeName($REQUEST['time_name']);
+    if (!empty($REQUEST['opus_id'])) $createTimeRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['user_id'])) $createTimeRequest->setUserId($REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($searchOpusRequest->validation()) {
+    if ($createTimeRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $searchOpusRequest->getErrorMsg();
+        $msg = $createTimeRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 検索
-        $opusService = new OpusService();
-        $optional = $opusService->searchOpus(
-            $searchOpusRequest->getOpusId(), 
-            $searchOpusRequest->getOpusName(), 
-            $searchOpusRequest->getUserId(),
-            $searchOpusRequest->getOffset(),
-            $searchOpusRequest->getLimit()
-        );
+        // 時系列登録
+        $TimeService = new TimeService();
+        $optional = $TimeService->createTime($createTimeRequest->getTimeName(), $createTimeRequest->getOpusId(), $createTimeRequest->getUserId());
         array_push($msg, "正常");
     } catch (Exception $e) {
-        // 検索エラー
+        // 時系列登録エラー
         http_response_code(400);
         $resultCode = ResultCode::CODE109;
         throw $e;

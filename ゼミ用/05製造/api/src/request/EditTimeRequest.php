@@ -1,35 +1,35 @@
 <?php
 
 /**
- * 作品編集処理の値を保持する
+ * 時系列編集処理の値を保持する
  */
-class EditOpusRequest {
-    private $opusId;
-    private $opusName;
+class EditTimeRequest {
+    private $timeId;
+    private $timeName;
     private $userId;
     private $version;
     private $errorMsg = array();
 
     /**
-     * 作品編集処理の値を格納します
+     * 時系列編集処理の値を格納します
      */
     public function __construct() {
     }
 
-    public function getOpusId() {
-        return $this->opusId;
+    public function getTimeId() {
+        return $this->timeId;
     }
 
-    public function setOpusId($opusId) {
-        $this->opusId = $opusId;
+    public function setTimeId($timeId) {
+        $this->timeId = $timeId;
     }
 
-    public function getOpusName() {
-        return $this->opusName;
+    public function getTimeName() {
+        return $this->timeName;
     }
 
-    public function setOpusName($opusName) {
-        $this->opusName = $opusName;
+    public function setTimeName($timeName) {
+        $this->timeName = $timeName;
     }
 
     public function getUserId() {
@@ -60,20 +60,20 @@ class EditOpusRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->opusName) || empty($this->opusId)) {
+            if (empty($this->timeName) || empty($this->timeId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }
 
-            // 作品IDの文字数チェック
-            if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：作品IDは8文字で入力してください');
+            // 時系列IDの文字数チェック
+            if (strlen($this->timeId) != Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：時系列IDは8文字で入力してください');
                 $validationFlg = true;
             }
 
-            // 作品名の文字数チェック
-            if (100 < strlen($this->opusName)) {
-                array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
+            // 時系列名の文字数チェック
+            if (100 < strlen($this->timeName)) {
+                array_push($this->errorMsg, 'エラー ：時系列名は100文字以内で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {

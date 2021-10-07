@@ -22,7 +22,7 @@ class LoginService {
         $corUser = $corUserDao->selectByUserId($userId);
 
         if (empty($corUser)) {
-            throw new Exception('ユーザIDまたはパスワードが一致しません1。');
+            throw new Exception('ユーザIDまたはパスワードが一致しません。');
         }
 
         // パスワードの暗号化
@@ -30,7 +30,7 @@ class LoginService {
 
         // パスワードの比較
         if (strcmp($passwordSha256, $corUser['password']) != 0) {
-            throw new Exception('ユーザIDまたはパスワードが一致しません2。');
+            throw new Exception('ユーザIDまたはパスワードが一致しません。');
         }
 
         // トークン生成

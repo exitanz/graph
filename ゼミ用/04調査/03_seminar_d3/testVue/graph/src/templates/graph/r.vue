@@ -1,5 +1,8 @@
 <template>
   <div class="row">
+    <router-link v-bind:to="{ name: 'test4' }">
+      <b-button variant="primary"> test4</b-button>
+    </router-link>
     <router-link v-bind:to="{ name: 'test3' }">
       <b-button variant="primary"> test3</b-button>
     </router-link>

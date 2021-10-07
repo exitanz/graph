@@ -5,16 +5,23 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    JsessionId: null,
+    token: null,
+    user_id: null,
   },
   getters: {
-    getJsessionId(state) {
-      return state.JsessionId;
+    getToken(state) {
+      return state.token;
+    },
+    getUserId(state) {
+      return state.user_id;
     },
   },
   mutations: {
-    setJsessionId(state, JsessionId) {
-      state.JsessionId = JsessionId;
+    setToken(state, token) {
+      state.token = token;
+    },
+    setUserId(state, user_id) {
+      state.user_id = user_id;
     },
   },
 });

@@ -34,7 +34,7 @@ try {
     if (!empty($REQUEST['opus_id'])) $editOpusRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['opus_name'])) $editOpusRequest->setOpusName($REQUEST['opus_name']);
     if (!empty($REQUEST['user_id'])) $editOpusRequest->setUserId($REQUEST['user_id']);
-    if (!empty($REQUEST['version'])) $editOpusRequest->setVersion($REQUEST['version']);
+    if (!empty($REQUEST['version']) || $REQUEST['version'] == 0) $editOpusRequest->setVersion($REQUEST['version']);
 
     // バリデーションチェック
     if ($editOpusRequest->validation()) {

@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/SearchOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/SearchTimeRequest.php';
+require_once dirname(__FILE__) . '/../service/TimeService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -29,31 +29,33 @@ try {
     }
 
     // リクエストの値を格納
-    $searchOpusRequest = new SearchOpusRequest();
-    if (!empty($_REQUEST['opus_id'])) $searchOpusRequest->setOpusId($_REQUEST['opus_id']);
-    if (!empty($_REQUEST['opus_name'])) $searchOpusRequest->setOpusName($_REQUEST['opus_name']);
-    if (!empty($_REQUEST['user_id'])) $searchOpusRequest->setUserId($_REQUEST['user_id']);
-    if (!empty($_REQUEST['offset'])) $searchOpusRequest->setOffset($_REQUEST['offset']);
-    if (!empty($_REQUEST['limit'])) $searchOpusRequest->setLimit($_REQUEST['limit']);
+    $searchTimeRequest = new SearchTimeRequest();
+    if (!empty($_REQUEST['time_id'])) $searchTimeRequest->setTimeId($_REQUEST['time_id']);
+    if (!empty($_REQUEST['time_name'])) $searchTimeRequest->setTimeName($_REQUEST['time_name']);
+    if (!empty($_REQUEST['opus_id'])) $searchTimeRequest->setOpusId($_REQUEST['opus_id']);
+    if (!empty($_REQUEST['user_id'])) $searchTimeRequest->setUserId($_REQUEST['user_id']);
+    if (!empty($_REQUEST['offset'])) $searchTimeRequest->setOffset($_REQUEST['offset']);
+    if (!empty($_REQUEST['limit'])) $searchTimeRequest->setLimit($_REQUEST['limit']);
 
     // バリデーションチェック
-    if ($searchOpusRequest->validation()) {
+    if ($searchTimeRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $searchOpusRequest->getErrorMsg();
+        $msg = $searchTimeRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
         // 検索
-        $opusService = new OpusService();
-        $optional = $opusService->searchOpus(
-            $searchOpusRequest->getOpusId(), 
-            $searchOpusRequest->getOpusName(), 
-            $searchOpusRequest->getUserId(),
-            $searchOpusRequest->getOffset(),
-            $searchOpusRequest->getLimit()
+        $timeService = new TimeService();
+        $optional = $timeService->searchTime(
+            $searchTimeRequest->getTimeId(),
+            $searchTimeRequest->getTimeName(),
+            $searchTimeRequest->getOpusId(),
+            $searchTimeRequest->getUserId(),
+            $searchTimeRequest->getOffset(),
+            $searchTimeRequest->getLimit()
         );
         array_push($msg, "正常");
     } catch (Exception $e) {

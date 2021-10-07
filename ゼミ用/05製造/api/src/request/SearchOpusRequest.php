@@ -7,6 +7,8 @@ class SearchOpusRequest {
     private $opusId;
     private $opusName;
     private $userId;
+    private $offset = 0;
+    private $limit = 100;
     private $errorMsg = array();
 
     /**
@@ -30,6 +32,22 @@ class SearchOpusRequest {
         $this->opusName = $opusName;
     }
 
+    public function getOffset() {
+        return $this->offset;
+    }
+
+    public function setOffset($offset) {
+        $this->offset = $offset;
+    }
+
+    public function getLimit() {
+        return $this->limit;
+    }
+
+    public function setLimit($limit) {
+        $this->limit = $limit;
+    }
+
     public function getUserId() {
         return $this->userId;
     }
@@ -49,12 +67,6 @@ class SearchOpusRequest {
         $validationFlg = false;
 
         try {
-
-            // 作品名の文字数チェック
-            if (100 < strlen($this->opusName)) {
-                array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
-                $validationFlg = true;
-            }
 
             // ユーザIDの文字数チェック
             if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {

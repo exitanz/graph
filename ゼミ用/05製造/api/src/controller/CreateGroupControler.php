@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/SearchOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/CreateGroupRequest.php';
+require_once dirname(__FILE__) . '/../service/GroupService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -12,16 +12,18 @@ $msg = array();
 $optional = array();
 
 try {
-    // メソッド確認
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'GET') != 0) {
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
         throw new Exception('メソッドが存在しません。');
     }
 
+    // リクエスト取得
+    $REQUEST = json_decode(file_get_contents("php://input"), true);
+
     // 認証確認
-    if (empty($_REQUEST['user_id']) || empty($_REQUEST['token']) || !(new LoginService())->confirmation($_REQUEST['user_id'], $_REQUEST['token'])) {
+    if (empty($REQUEST['user_id']) || empty($REQUEST['token']) || !(new LoginService())->confirmation($REQUEST['user_id'], $REQUEST['token'])) {
         // 認証エラー
         http_response_code(403);
         $resultCode = ResultCode::CODE103;
@@ -29,35 +31,34 @@ try {
     }
 
     // リクエストの値を格納
-    $searchOpusRequest = new SearchOpusRequest();
-    if (!empty($_REQUEST['opus_id'])) $searchOpusRequest->setOpusId($_REQUEST['opus_id']);
-    if (!empty($_REQUEST['opus_name'])) $searchOpusRequest->setOpusName($_REQUEST['opus_name']);
-    if (!empty($_REQUEST['user_id'])) $searchOpusRequest->setUserId($_REQUEST['user_id']);
-    if (!empty($_REQUEST['offset'])) $searchOpusRequest->setOffset($_REQUEST['offset']);
-    if (!empty($_REQUEST['limit'])) $searchOpusRequest->setLimit($_REQUEST['limit']);
+    $createGroupRequest = new CreateGroupRequest();
+    if (!empty($REQUEST['group_name'])) $createGroupRequest->setGroupName($REQUEST['group_name']);
+    if (!empty($REQUEST['group_info'])) $createGroupRequest->setGroupInfo($REQUEST['group_info']);
+    if (!empty($REQUEST['opus_id'])) $createGroupRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['time_id'])) $createGroupRequest->setTimeId($REQUEST['time_id']);
+    if (!empty($REQUEST['user_id'])) $createGroupRequest->setUserId($REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($searchOpusRequest->validation()) {
+    if ($createGroupRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $searchOpusRequest->getErrorMsg();
+        $msg = $createGroupRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 検索
-        $opusService = new OpusService();
-        $optional = $opusService->searchOpus(
-            $searchOpusRequest->getOpusId(), 
-            $searchOpusRequest->getOpusName(), 
-            $searchOpusRequest->getUserId(),
-            $searchOpusRequest->getOffset(),
-            $searchOpusRequest->getLimit()
+        // 作品登録
+        $optional = (new GroupService())->createGroup(
+            $createGroupRequest->getGroupName(),
+            $createGroupRequest->getGroupInfo(),
+            $createGroupRequest->getOpusId(),
+            $createGroupRequest->getTimeId(),
+            $createGroupRequest->getUserId()
         );
         array_push($msg, "正常");
     } catch (Exception $e) {
-        // 検索エラー
+        // 作品登録エラー
         http_response_code(400);
         $resultCode = ResultCode::CODE109;
         throw $e;

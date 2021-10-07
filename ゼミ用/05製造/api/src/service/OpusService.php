@@ -10,9 +10,9 @@ class OpusService {
     /**
      * 作品検索をします
      */
-    public function searchOpus($opusId, $opusName, $userId) {
+    public function searchOpus($opusId, $opusName, $userId, $offset, $limit) {
         // 検索処理
-        return (new OpusDao())->selectById($opusId, $opusName, $userId);
+        return (new OpusDao())->select($opusId, $opusName, $userId, $offset, $limit);
     }
 
     /**
