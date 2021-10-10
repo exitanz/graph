@@ -46,8 +46,6 @@ try {
         $timeService = new TimeService();
         $timeService->deleteTime($deleteTimeRequest->getTimeId(), $deleteTimeRequest->getUserId());
         
-        // ログアウト処理
-        setcookie("token[" . $REQUEST['user_id'] . "]", "", time() - 60);
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー

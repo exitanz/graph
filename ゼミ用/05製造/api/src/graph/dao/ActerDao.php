@@ -32,13 +32,63 @@ class ActerDao {
     /**
      * 登場人物情報を取得します
      */
-    public function selectAll($acterId, $acterName, $acterInfo, $acterImg, $opusId, $timeId, $groupId, $userId) {
+    public function selectAll() {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM acter WHERE user_id=:user_id";
+        $sql = "SELECT * FROM acter;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "acter_id" => $row['acter_id'],
+                "acter_name" => $row['acter_name'],
+                "acter_info" => $row['acter_info'],
+                "acter_img" => $row['acter_img'],
+                "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
+                "group_id" => $row['group_id'],
+                "user_id" => $row['user_id'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
+     * 登場人物情報を取得します
+     */
+    public function select(
+        $acterId,
+        $acterName,
+        $acterInfo,
+        $acterImg,
+        $opusId,
+        $timeId,
+        $groupId,
+        $userId,
+        $offset,
+        $limit
+    ) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM acter WHERE ";
         if ($acterId != null) {
             $sql .= "AND acter_id=:acter_id ";
         }
@@ -60,7 +110,7 @@ class ActerDao {
         if ($groupId != null) {
             $sql .= "AND group_id=:group_id ";
         }
-        $sql .= ";";
+        $sql .= "user_id=:user_id LIMIT :offset, :limit;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -69,7 +119,6 @@ class ActerDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':user_id', $userId);
         if ($acterId != null) {
             $stmt->bindParam(':acter_id', $acterId);
         }
@@ -91,6 +140,9 @@ class ActerDao {
         if ($groupId != null) {
             $stmt->bindParam(':group_id', $groupId);
         }
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 
         //  sql実行
         $stmt->execute();
@@ -117,10 +169,10 @@ class ActerDao {
     /**
      * 登場人物IDをキーに登場人物情報を取得します
      */
-    public function selectById($selectId) {
+    public function selectById($selectId, $userId) {
 
         // sql作成
-        $sql = "SELECT * FROM acter WHERE acter_id = ?;";
+        $sql = "SELECT * FROM acter WHERE acter_id=:acter_id AND user_id=:user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -129,7 +181,8 @@ class ActerDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(1, $selectId);
+        $stmt->bindParam(':acter_id', $selectId);
+        $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
         $stmt->execute();
@@ -159,12 +212,56 @@ class ActerDao {
     }
 
     /**
+     * 登場人物情報を取得します
+     */
+    public function selectByIdAndVersion($selectId, $userId, $version) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM acter WHERE acter_id=:acter_id AND version=:version AND user_id=:user_id;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':acter_id', $selectId);
+        $stmt->bindParam(':version', $version);
+        $stmt->bindParam(':user_id', $userId);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "acter_id" => $row['acter_id'],
+                "acter_name" => $row['acter_name'],
+                "acter_info" => $row['acter_info'],
+                "acter_img" => $row['acter_img'],
+                "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
+                "group_id" => $row['group_id'],
+                "user_id" => $row['user_id'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
      * 登場人物情報を登録します
      */
     public function insert($acterId, $acterName, $acterInfo, $acterImg, $opusId, $timeId, $groupId, $userId, $version = 0) {
 
         // sql作成
-        $sql = "INSERT INTO acter ( acter_id, acter_name, acter_info, acter_img, opus_id, time_id, group_id, user_id, version ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? );";
+        $sql = "INSERT INTO acter(acter_id, acter_name, acter_info, acter_img, opus_id, time_id, group_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -181,7 +278,6 @@ class ActerDao {
         $stmt->bindParam(6, $timeId);
         $stmt->bindParam(7, $groupId);
         $stmt->bindParam(8, $userId);
-        $stmt->bindParam(9, $version);
 
         //  sql実行
         $stmt->execute();
@@ -190,7 +286,17 @@ class ActerDao {
     /**
      * 登場人物情報を更新します
      */
-    public function update($acterId, $acterName, $acterInfo, $acterImg, $opusId, $timeId, $groupId, $version = 0) {
+    public function update(
+        $acterId,
+        $acterName,
+        $acterInfo,
+        $acterImg,
+        $opusId,
+        $timeId,
+        $groupId,
+        $userId, 
+        $version
+    ) {
 
         // sql作成
         $sql = "UPDATE acter SET ";
@@ -212,7 +318,7 @@ class ActerDao {
         if ($groupId != null) {
             $sql .= "group_id=:group_id, ";
         }
-        $sql .= "version=:version WHERE acter_id=:acter_id;";
+        $sql .= "version=:version WHERE acter_id=:acter_id AND user_id=:user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -241,6 +347,7 @@ class ActerDao {
         }
         $stmt->bindParam(':version', $version + 1);
         $stmt->bindParam(':acter_id', $acterId);
+        $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
         $stmt->execute();
@@ -249,10 +356,10 @@ class ActerDao {
     /**
      * 登場人物情報を削除します
      */
-    public function delete($deleteId) {
+    public function delete($deleteId, $userId) {
 
         // sql作成
-        $sql = "DELETE FROM acter WHERE acter_id = :acter_id;";
+        $sql = "DELETE FROM acter WHERE acter_id = :acter_id AND user_id = :user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -262,6 +369,7 @@ class ActerDao {
 
         // プレースホルダと変数をバインド
         $stmt->bindParam(':acter_id', $deleteId);
+        $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
         $stmt->execute();

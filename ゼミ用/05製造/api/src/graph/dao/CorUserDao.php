@@ -103,6 +103,44 @@ class CorUserDao {
     }
 
     /**
+     * 関係性情報を取得します
+     */
+    public function selectByIdAndVersion($userId, $version) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM cor_user WHERE user_id=:user_id AND version=:version;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':version', $version);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "user_id" => $row['user_id'],
+                "user_name" => $row['user_name'],
+                "password" => $row['password'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
      * ユーザ情報を登録します
      */
     public function insert($userId, $userName, $password, $version = 0) {
