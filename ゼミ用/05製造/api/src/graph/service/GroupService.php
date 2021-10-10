@@ -56,11 +56,11 @@ class GroupService {
     /**
      * グループ更新をします
      */
-    public function editTime($timeId, $timeName, $userId, $version) {
+    public function editGroup($groupId, $groupName, $groupInfo, $userId, $version) {
 
         // グループ情報取得
         $groupMstDao = new GroupMstDao();
-        $target = $groupMstDao->selectByIdAndVersion($timeId, null, $userId, $version);
+        $target = $groupMstDao->selectByIdAndVersion($groupId, $userId, $version);
 
         // 存在確認
         if (empty($target)) {
@@ -68,7 +68,7 @@ class GroupService {
         }
 
         // 更新処理
-        $groupMstDao->update($timeId, $timeName, $userId, $version);
+        $groupMstDao->update($groupId, $groupName, $groupInfo, $userId, $version);
     }
 
     /**

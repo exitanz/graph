@@ -76,6 +76,12 @@ class EditOpusRequest {
                 array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
                 $validationFlg = true;
             }
+            
+            // ユーザIDの文字数チェック
+            if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：ユーザIDは' . Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR) . '文字で入力してください');
+                $validationFlg = true;
+            }
         } catch (Exception $e) {
             $validationFlg = true;
         }

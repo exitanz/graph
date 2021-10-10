@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/ConnectionManager.php';
 class TimeMstDao {
 
     /**
-     * 最大値の作品IDを取得します
+     * 最大値の時系列IDを取得します
      */
     public function selectMaxId() {
 
@@ -280,7 +280,7 @@ class TimeMstDao {
     }
 
     /**
-     * ユーザ情報を削除します
+     * 時系列情報を削除します
      */
     public function delete($timeId, $userId) {
 

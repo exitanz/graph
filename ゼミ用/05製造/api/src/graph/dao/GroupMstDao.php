@@ -176,20 +176,15 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を取得します
+     * グループ情報を取得します
      */
-    public function selectByIdAndVersion($timeId, $timeName, $userId, $version) {
+    public function selectByIdAndVersion($groupId, $userId, $version) {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst WHERE ";
-        $sql .= "time_id=:time_id AND ";
-        if ($timeName != null) {
-            $sql .= 'time_name LIKE :time_name AND ';
-        }
-        $sql .= "version=:version AND user_id=:user_id;";
+        $sql = "SELECT * FROM group_mst WHERE group_id=:group_id AND version=:version AND user_id=:user_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -198,11 +193,7 @@ class GroupMstDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':time_id', $timeId);
-        if ($timeName != null) {
-            $timeNameStr = '%' . $timeName . '%';
-            $stmt->bindParam(':time_name', $timeNameStr);
-        }
+        $stmt->bindParam(':group_id', $groupId);
         $stmt->bindParam(':version', $version);
         $stmt->bindParam(':user_id', $userId);
 
@@ -212,9 +203,11 @@ class GroupMstDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "time_id" => $row['time_id'],
-                "time_name" => $row['time_name'],
+                "group_id" => $row['group_id'],
+                "group_name" => $row['group_name'],
+                "group_info" => $row['group_info'],
                 "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
@@ -263,14 +256,17 @@ class GroupMstDao {
     /**
      * 時系列情報を更新します
      */
-    public function update($timeId, $timeName, $userId, $version) {
+    public function update($groupId, $groupName, $groupInfo, $userId, $version) {
 
         // sql作成
-        $sql = "UPDATE time_mst SET ";
-        if ($timeName != null) {
-            $sql .= "time_name=:time_name, ";
+        $sql = "UPDATE group_mst SET ";
+        if ($groupName != null) {
+            $sql .= "group_name=:group_name, ";
         }
-        $sql .= "version=:version WHERE time_id=:time_id AND user_id=:user_id;";
+        if ($groupInfo != null) {
+            $sql .= "group_info=:group_info, ";
+        }
+        $sql .= "version=:version WHERE group_id=:group_id AND user_id=:user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -279,12 +275,15 @@ class GroupMstDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($timeName != null) {
-            $stmt->bindParam(':time_name', $timeName);
+        if ($groupName != null) {
+            $stmt->bindParam(':group_name', $groupName);
+        }
+        if ($groupInfo != null) {
+            $stmt->bindParam(':group_info', $groupInfo);
         }
         $version++;
         $stmt->bindParam(':version', $version);
-        $stmt->bindParam(':time_id', $timeId);
+        $stmt->bindParam(':group_id', $groupId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
