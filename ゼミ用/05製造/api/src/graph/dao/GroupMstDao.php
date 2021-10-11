@@ -30,7 +30,7 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を取得します
+     * グループ情報を取得します
      */
     public function selectAll() {
 
@@ -38,7 +38,7 @@ class GroupMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst;";
+        $sql = "SELECT * FROM group_mst;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -52,8 +52,11 @@ class GroupMstDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
+                "group_id" => $row['group_id'],
+                "group_name" => $row['group_name'],
+                "group_info" => $row['group_info'],
+                "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
-                "time_name" => $row['time_name'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
@@ -64,23 +67,29 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を取得します
+     * グループ情報を取得します
      */
-    public function select($timeId, $timeName, $opusId, $userId, $offset, $limit) {
+    public function select($groupId, $groupName, $groupInfo, $opusId, $timeId, $userId, $offset, $limit) {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst WHERE ";
-        if ($timeId != null) {
-            $sql .= "time_id=:time_id AND ";
+        $sql = "SELECT * FROM group_mst WHERE ";
+        if ($groupId != null) {
+            $sql .= "group_id=:group_id AND ";
         }
-        if ($timeName != null) {
-            $sql .= 'time_name LIKE :time_name AND ';
+        if ($groupName != null) {
+            $sql .= 'group_name LIKE :group_name AND ';
+        }
+        if ($groupInfo != null) {
+            $sql .= 'group_info LIKE :group_info AND ';
         }
         if ($opusId != null) {
             $sql .= 'opus_id=:opus_id AND ';
+        }
+        if ($timeId != null) {
+            $sql .= 'time_id=:time_id AND ';
         }
         $sql .= "user_id=:user_id LIMIT :offset, :limit;";
 
@@ -91,15 +100,20 @@ class GroupMstDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($timeId != null) {
-            $stmt->bindParam(':time_id', $timeId);
+        if ($groupId != null) {
+            $stmt->bindParam(':group_id', $groupId);
         }
-        if ($timeName != null) {
-            $timeNameStr = '%' . $timeName . '%';
-            $stmt->bindParam(':time_name', $timeNameStr);
+        if ($groupName != null) {
+            $stmt->bindParam(':group_name', $groupName);
+        }
+        if ($groupInfo != null) {
+            $stmt->bindParam(':group_info', $groupInfo);
         }
         if ($opusId != null) {
             $stmt->bindParam(':opus_id', $opusId);
+        }
+        if ($timeId != null) {
+            $stmt->bindParam(':time_id', $timeId);
         }
         $stmt->bindParam(':user_id', $userId);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -111,9 +125,11 @@ class GroupMstDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "time_id" => $row['time_id'],
-                "time_name" => $row['time_name'],
+                "group_id" => $row['group_id'],
+                "group_name" => $row['group_name'],
+                "group_info" => $row['group_info'],
                 "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
@@ -124,22 +140,15 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を取得します
+     * グループ情報を取得します
      */
-    public function selectById($timeId, $timeName, $userId) {
+    public function selectById($groupId, $userId) {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst WHERE ";
-        if ($timeId != null) {
-            $sql .= "time_id=:time_id AND ";
-        }
-        if ($timeName != null) {
-            $sql .= 'time_name LIKE :time_name AND ';
-        }
-        $sql .= "user_id=:user_id;";
+        $sql = "SELECT * FROM group_mst WHERE group_id=:group_id AND user_id=:user_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -148,13 +157,7 @@ class GroupMstDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($timeId != null) {
-            $stmt->bindParam(':time_id', $timeId);
-        }
-        if ($timeName != null) {
-            $timeNameStr = '%' . $timeName . '%';
-            $stmt->bindParam(':time_name', $timeNameStr);
-        }
+        $stmt->bindParam(':group_id', $groupId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
@@ -163,9 +166,11 @@ class GroupMstDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "time_id" => $row['time_id'],
-                "time_name" => $row['time_name'],
+                "group_id" => $row['group_id'],
+                "group_name" => $row['group_name'],
+                "group_info" => $row['group_info'],
                 "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
@@ -218,7 +223,7 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を登録します
+     * グループ情報を登録します
      */
     public function insert($groupId, $groupName, $groupInfo, $opusId, $timeId, $userId) {
 
@@ -254,7 +259,7 @@ class GroupMstDao {
     }
 
     /**
-     * 時系列情報を更新します
+     * グループ情報を更新します
      */
     public function update($groupId, $groupName, $groupInfo, $userId, $version) {
 
@@ -291,12 +296,12 @@ class GroupMstDao {
     }
 
     /**
-     * ユーザ情報を削除します
+     * グループ情報を削除します
      */
-    public function delete($timeId, $userId) {
+    public function delete($groupId, $userId) {
 
         // sql作成
-        $sql = "DELETE FROM time_mst WHERE time_id = :time_id AND user_id = :user_id;";
+        $sql = "DELETE FROM group_mst WHERE group_id = :group_id AND user_id = :user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -305,7 +310,7 @@ class GroupMstDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':time_id', $timeId);
+        $stmt->bindParam(':group_id', $groupId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行

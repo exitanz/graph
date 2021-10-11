@@ -7,7 +7,7 @@ class EditTimeRequest {
     private $timeId;
     private $timeName;
     private $userId;
-    private $version;
+    private $version = 0;
     private $errorMsg = array();
 
     /**
@@ -67,7 +67,7 @@ class EditTimeRequest {
 
             // 時系列IDの文字数チェック
             if (strlen($this->timeId) != Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：時系列IDは8文字で入力してください');
+                array_push($this->errorMsg, 'エラー ：時系列IDは' . Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR) . '文字で入力してください');
                 $validationFlg = true;
             }
 
@@ -76,7 +76,7 @@ class EditTimeRequest {
                 array_push($this->errorMsg, 'エラー ：時系列名は100文字以内で入力してください');
                 $validationFlg = true;
             }
-            
+
             // ユーザIDの文字数チェック
             if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
                 array_push($this->errorMsg, 'エラー ：ユーザIDは' . Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR) . '文字で入力してください');

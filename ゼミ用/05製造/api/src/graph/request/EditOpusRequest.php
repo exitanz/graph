@@ -7,7 +7,7 @@ class EditOpusRequest {
     private $opusId;
     private $opusName;
     private $userId;
-    private $version;
+    private $version = 0;
     private $errorMsg = array();
 
     /**
@@ -65,15 +65,15 @@ class EditOpusRequest {
                 $validationFlg = true;
             }
 
-            // 作品IDの文字数チェック
-            if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：作品IDは8文字で入力してください');
-                $validationFlg = true;
-            }
-
             // 作品名の文字数チェック
             if (100 < strlen($this->opusName)) {
                 array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
+                $validationFlg = true;
+            }
+
+            // 作品IDの文字数チェック
+            if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：作品IDは'.Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR).'文字で入力してください');
                 $validationFlg = true;
             }
             

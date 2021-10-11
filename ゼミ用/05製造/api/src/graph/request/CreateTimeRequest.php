@@ -65,13 +65,13 @@ class CreateTimeRequest {
 
             // 作品IDの文字数チェック
             if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：作品IDは8文字で入力してください');
+                array_push($this->errorMsg, 'エラー ：作品IDは' . Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR) . '文字で入力してください');
                 $validationFlg = true;
             }
 
             // ユーザIDの文字数チェック
             if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：ユーザIDは10文字で入力してください');
+                array_push($this->errorMsg, 'エラー ：ユーザIDは' . Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR) . '文字で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {

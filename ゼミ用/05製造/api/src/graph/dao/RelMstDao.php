@@ -185,8 +185,7 @@ class RelMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM rel_mst WHERE ";
-        $sql .= "rel_mst_id=:rel_mst_id AND ";
+        $sql = "SELECT * FROM rel_mst WHERE rel_mst_id=:rel_mst_id AND ";
         if ($relMstName != null) {
             $sql .= 'rel_mst_name LIKE :rel_mst_name AND ';
         }

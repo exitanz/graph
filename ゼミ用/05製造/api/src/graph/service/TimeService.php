@@ -77,9 +77,9 @@ class TimeService {
     public function deleteTime($timeId, $userId) {
         // 時系列情報を取得
         $timeMstDao = new TimeMstDao();
-        $corUser = $timeMstDao->selectById($timeId, null, $userId);
+        $target = $timeMstDao->selectById($timeId, null, $userId);
 
-        if(empty($corUser)){
+        if(empty($target)){
             throw new Exception('時系列が存在しません。');
         }
 

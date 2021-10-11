@@ -2,23 +2,23 @@
 require_once dirname(__FILE__) . '/../common/Constant.php';
 
 /**
- * 時系列削除処理の値を保持する
+ * グループ削除処理の値を保持する
  */
-class DeleteTimeRequest {
-    private $timeId;
+class DeleteGroupRequest {
+    private $groupId;
     private $userId;
     private $errorMsg = array();
 
     /**
-     * 時系列削除処理の値を格納します
+     * グループ削除処理の値を格納します
      */
-    public function __construct($timeId, $userId) {
-        $this->timeId = $timeId;
+    public function __construct($groupId, $userId) {
+        $this->groupId = $groupId;
         $this->userId = $userId;
     }
 
-    public function getTimeId() {
-        return $this->timeId;
+    public function getGroupId() {
+        return $this->groupId;
     }
 
     public function getUserId() {
@@ -37,14 +37,14 @@ class DeleteTimeRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->timeId) || empty($this->userId)) {
+            if (empty($this->groupId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }
 
-            // 時系列IDの文字数チェック
-            if (strlen($this->timeId) != Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：時系列IDは' . Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR) . '文字で入力してください');
+            // グループIDの文字数チェック
+            if (strlen($this->groupId) != Constant::GROUP_ID_DIGIT + strlen(Constant::GROUP_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：グループIDは' . Constant::GROUP_ID_DIGIT + strlen(Constant::GROUP_ID_STR) . '文字で入力してください');
                 $validationFlg = true;
             }
 

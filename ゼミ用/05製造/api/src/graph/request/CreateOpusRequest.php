@@ -64,7 +64,7 @@ class CreateOpusRequest {
 
             // ユーザIDの文字数チェック
             if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：ユーザIDは10文字で入力してください');
+                array_push($this->errorMsg, 'エラー ：ユーザIDは' . Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR) . '文字で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {

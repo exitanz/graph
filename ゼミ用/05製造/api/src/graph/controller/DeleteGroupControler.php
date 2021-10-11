@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../request/DeleteTimeRequest.php';
+require_once dirname(__FILE__) . '/../request/DeleteGroupRequest.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
-require_once dirname(__FILE__) . '/../service/TimeService.php';
+require_once dirname(__FILE__) . '/../service/GroupService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
 header("Content-Type: application/json; charset=utf-8");
@@ -30,21 +30,20 @@ try {
     }
 
     // リクエストの値を格納
-    $deleteTimeRequest = new DeleteTimeRequest($REQUEST['time_id'], $REQUEST['user_id']);
+    $deleteGroupRequest = new DeleteGroupRequest($REQUEST['group_id'], $REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($deleteTimeRequest->validation()) {
+    if ($deleteGroupRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $deleteTimeRequest->getErrorMsg();
+        $msg = $deleteGroupRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 時系列削除
-        $timeService = new TimeService();
-        $timeService->deleteTime($deleteTimeRequest->getTimeId(), $deleteTimeRequest->getUserId());
+        // グループ削除
+        (new GroupService())->deleteGroup($deleteGroupRequest->getGroupId(), $deleteGroupRequest->getUserId());
         
         array_push($msg, "正常");
     } catch (Exception $e) {

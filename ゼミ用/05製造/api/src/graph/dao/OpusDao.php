@@ -268,4 +268,26 @@ class OpusDao {
         //  sql実行
         return $stmt->execute();
     }
+
+    /**
+     * 作品情報を削除します
+     */
+    public function delete($opusId, $userId) {
+
+        // sql作成
+        $sql = "DELETE FROM opus WHERE opus_id = :opus_id AND user_id = :user_id;";
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // プリペアドステートメントを作成
+        $stmt = $connectionManager->getDB()->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':opus_id', $opusId);
+        $stmt->bindParam(':user_id', $userId);
+
+        //  sql実行
+        return $stmt->execute();
+    }
 }
