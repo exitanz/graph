@@ -28,8 +28,8 @@ class OpusService {
      */
     public function createOpus($opusName, $user_id) {
         // IDの最大値を取得
-        $OpusDao = new OpusDao();
-        $maxId = $OpusDao->selectMaxId();
+        $opusDao = new OpusDao();
+        $maxId = $opusDao->selectMaxId();
 
         // IDの最大値に1加算する
         $max = Common::start_truncate($maxId, strlen(Constant::OPUS_ID_STR)) + 1;
@@ -38,7 +38,7 @@ class OpusService {
         $targetId = Constant::OPUS_ID_STR . Common::countup_id($max, Constant::OPUS_ID_DIGIT);
 
         // 登録処理
-        $OpusDao->insert($targetId, $opusName, $user_id);
+        $opusDao->insert($targetId, $opusName, $user_id);
 
         $result = array(
             "opus_id" => $targetId
@@ -52,8 +52,8 @@ class OpusService {
      */
     public function editOpus($opusId, $opusName, $userId, $version) {
         // 作品情報取得
-        $OpusDao = new OpusDao();
-        $target = $OpusDao->selectByIdAndVersion($opusId, null, $userId, $version);
+        $opusDao = new OpusDao();
+        $target = $opusDao->selectByIdAndVersion($opusId, null, $userId, $version);
 
         // 存在確認
         if (empty($target)) {
@@ -61,7 +61,7 @@ class OpusService {
         }
 
         // 更新処理
-        $OpusDao->update($opusId, $opusName, $userId, $version);
+        $opusDao->update($opusId, $opusName, $userId, $version);
     }
 
     /**
@@ -69,14 +69,14 @@ class OpusService {
      */
     public function deleteOpus($opusId, $userId) {
         // 作品情報を取得
-        $OpusDao = new OpusDao();
-        $corUser = $OpusDao->selectById($opusId, null, $userId);
+        $opusDao = new OpusDao();
+        $corUser = $opusDao->selectById($opusId, null, $userId);
 
         if(empty($corUser)){
             throw new Exception('作品が存在しません。');
         }
 
         // 作品情報を削除する
-        $OpusDao->delete($opusId, $userId);
+        $opusDao->delete($opusId, $userId);
     }
 }
