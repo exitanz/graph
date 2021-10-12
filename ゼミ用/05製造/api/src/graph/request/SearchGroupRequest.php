@@ -1,37 +1,46 @@
 <?php
 
 /**
- * 時系列検索処理の値を保持する
+ * グループ検索処理の値を保持する
  */
-class SearchTimeRequest {
-    private $timeId;
-    private $timeName;
+class SearchGroupRequest {
+    private $groupId;
+    private $groupName;
+    private $groupInfo;
     private $opusId;
+    private $timeId;
     private $userId;
     private $offset = 0;
     private $limit = 100;
     private $errorMsg = array();
 
     /**
-     * 時系列検索処理の値を格納します
+     * グループ検索処理の値を格納します
      */
-    public function __construct() {
+    public function __construct() {}
+
+    public function getGroupId() {
+        return $this->groupId;
     }
 
-    public function getTimeId() {
-        return $this->timeId;
+    public function setGroupId($groupId) {
+        $this->groupId = $groupId;
     }
 
-    public function setTimeId($timeId) {
-        $this->timeId = $timeId;
+    public function getGroupName() {
+        return $this->groupName;
     }
 
-    public function getTimeName() {
-        return $this->timeName;
+    public function setGroupName($groupName) {
+        $this->groupName = $groupName;
     }
 
-    public function setTimeName($timeName) {
-        $this->timeName = $timeName;
+    public function getGroupInfo() {
+        return $this->groupInfo;
+    }
+
+    public function setGroupInfo($groupInfo) {
+        $this->groupInfo = $groupInfo;
     }
 
     public function getOpusId() {
@@ -40,6 +49,14 @@ class SearchTimeRequest {
 
     public function setOpusId($opusId) {
         $this->opusId = $opusId;
+    }
+
+    public function getTimeId() {
+        return $this->timeId;
+    }
+
+    public function setTimeId($timeId) {
+        $this->timeId = $timeId;
     }
 
     public function getOffset() {

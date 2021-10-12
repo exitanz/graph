@@ -11,15 +11,15 @@ class GroupService {
     /**
      * グループ検索をします
      */
-    public function searchTime($groupName, $groupInfo, $opusId, $timeId, $userId, $offset, $limit) {
+    public function searchGroup($groupId, $groupName, $groupInfo, $opusId, $timeId, $userId, $offset, $limit) {
         // 検索処理
-        return (new GroupMstDao())->select($groupName, $groupInfo, $opusId, $timeId, $userId, $offset, $limit);
+        return (new GroupMstDao())->select($groupId, $groupName, $groupInfo, $opusId, $timeId, $userId, $offset, $limit);
     }
 
     /**
      * グループ全検索をします
      */
-    public function searchAllTime() {
+    public function searchAllGroup() {
         // 検索処理
         return (new GroupMstDao())->selectAll();
     }
@@ -27,7 +27,7 @@ class GroupService {
     /**
      * グループ登録をします
      */
-    public function createGroup($groupName, $groupInfo, $opusId, $timeId, $userId) {
+    public function createGroup($groupName, $groupInfo, $opusId, $groupId, $userId) {
 
         if(empty( (new OpusDao())->selectById($opusId, null, $userId))){
             throw new Exception('作品が存在しません。');
@@ -44,7 +44,7 @@ class GroupService {
         $targetId = Constant::GROUP_ID_STR . Common::countup_id($max, Constant::GROUP_ID_DIGIT);
 
         // 登録処理
-        $groupMstDao->insert($targetId, $groupName, $groupInfo, $opusId, $timeId, $userId);
+        $groupMstDao->insert($targetId, $groupName, $groupInfo, $opusId, $groupId, $userId);
 
         $result = array(
             "group_id" => $targetId
@@ -74,16 +74,16 @@ class GroupService {
     /**
      * グループ情報を削除します
      */
-    public function deleteTime($timeId, $userId) {
+    public function deleteGroup($groupId, $userId) {
         // グループ情報を取得
         $groupMstDao = new GroupMstDao();
-        $corUser = $groupMstDao->selectById($timeId, null, $userId);
+        $target = $groupMstDao->selectById($groupId, $userId);
 
-        if(empty($corUser)){
+        if(empty($target)){
             throw new Exception('グループが存在しません。');
         }
 
         // グループ情報を削除する
-        $groupMstDao->delete($timeId, $userId);
+        $groupMstDao->delete($groupId, $userId);
     }
 }

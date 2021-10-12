@@ -34,7 +34,7 @@ try {
     if (!empty($REQUEST['time_id'])) $editTimeRequest->setTimeId($REQUEST['time_id']);
     if (!empty($REQUEST['time_name'])) $editTimeRequest->setTimeName($REQUEST['time_name']);
     if (!empty($REQUEST['user_id'])) $editTimeRequest->setUserId($REQUEST['user_id']);
-    if (!empty($REQUEST['version']) || $REQUEST['version'] == 0) $editTimeRequest->setVersion($REQUEST['version']);
+    if (!empty($REQUEST['version'])) $editTimeRequest->setVersion($REQUEST['version']);
 
     // バリデーションチェック
     if ($editTimeRequest->validation()) {
