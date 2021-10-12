@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/EditRelMstRequest.php';
-require_once dirname(__FILE__) . '/../service/RelMstService.php';
+require_once dirname(__FILE__) . '/../request/EditAccountRequest.php';
+require_once dirname(__FILE__) . '/../service/AccountService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -30,28 +30,28 @@ try {
     }
 
     // リクエストの値を格納
-    $editRelMstRequest = new EditRelMstRequest();
-    if (!empty($REQUEST['rel_mst_id'])) $editRelMstRequest->setRelMstId($REQUEST['rel_mst_id']);
-    if (!empty($REQUEST['rel_mst_name'])) $editRelMstRequest->setRelMstName($REQUEST['rel_mst_name']);
-    if (!empty($REQUEST['user_id'])) $editRelMstRequest->setUserId($REQUEST['user_id']);
-    if (!empty($REQUEST['version'])) $editRelMstRequest->setVersion($REQUEST['version']); 
+    $editAccountRequest = new EditAccountRequest();
+    if (!empty($REQUEST['user_id'])) $editAccountRequest->setUserId($REQUEST['user_id']);
+    if (!empty($REQUEST['user_name'])) $editAccountRequest->setUserName($REQUEST['user_name']);
+    if (!empty($REQUEST['password'])) $editAccountRequest->setPassword($REQUEST['password']);
+    if (!empty($REQUEST['version']) || $REQUEST['version'] == 0) $editOpusRequest->setVersion($REQUEST['version']); 
 
     // バリデーションチェック
-    if ($editRelMstRequest->validation()) {
+    if ($editAccountRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $editRelMstRequest->getErrorMsg();
+        $msg = $editAccountRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
         // 作品更新
-        (new RelMstService())->editRelMst(
-            $editRelMstRequest->getRelMstId(),
-            $editRelMstRequest->getRelMstName(),
-            $editRelMstRequest->getUserId(),
-            $editRelMstRequest->getVersion()
+        (new AccountService())->editAccount(
+            $editAccountRequest->getUserId(),
+            $editAccountRequest->getUserName(),
+            $editAccountRequest->getPassword(),
+            $editAccountRequest->getVersion()
         );
         array_push($msg, "正常");
     } catch (Exception $e) {

@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../request/DeleteGroupRequest.php';
+require_once dirname(__FILE__) . '/../request/CreateRelMstRequest.php';
+require_once dirname(__FILE__) . '/../service/RelMstService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
-require_once dirname(__FILE__) . '/../service/GroupService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
 header("Content-Type: application/json; charset=utf-8");
@@ -9,6 +9,7 @@ header("Content-Type: application/json; charset=utf-8");
 // 変数
 $resultCode = ResultCode::CODE000;
 $msg = array();
+$optional = array();
 
 try {
     if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
@@ -17,7 +18,7 @@ try {
         $resultCode = ResultCode::CODE104;
         throw new Exception('メソッドが存在しません。');
     }
-    
+
     // リクエスト取得
     $REQUEST = json_decode(file_get_contents("php://input"), true);
 
@@ -30,24 +31,27 @@ try {
     }
 
     // リクエストの値を格納
-    $deleteGroupRequest = new DeleteGroupRequest($REQUEST['group_id'], $REQUEST['user_id']);
+    $createRelMstRequest = new CreateRelMstRequest();
+    if (!empty($REQUEST['rel_mst_name'])) $createRelMstRequest->setRelMstName($REQUEST['rel_mst_name']);
+    if (!empty($REQUEST['opus_id'])) $createRelMstRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['user_id'])) $createRelMstRequest->setUserId($REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($deleteGroupRequest->validation()) {
+    if ($createRelMstRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $deleteGroupRequest->getErrorMsg();
+        $msg = $createRelMstRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // グループ削除
-        (new GroupService())->deleteGroup($deleteGroupRequest->getGroupId(), $deleteGroupRequest->getUserId());
-        
+        // 関係性登録
+        $RelMstService = new RelMstService();
+        $optional = $RelMstService->createRelMst($createRelMstRequest->getRelMstName(), $createRelMstRequest->getOpusId(), $createRelMstRequest->getUserId());
         array_push($msg, "正常");
     } catch (Exception $e) {
-        // 作品登録エラー
+        // 関係性登録エラー
         http_response_code(400);
         $resultCode = ResultCode::CODE109;
         throw $e;
@@ -61,7 +65,8 @@ try {
 // レスポンスに値を格納
 $response = array(
     "resultCode" => $resultCode,
-    "msg" => $msg
+    "msg" => $msg,
+    "optional" => $optional
 );
 
 // レスポンス表示

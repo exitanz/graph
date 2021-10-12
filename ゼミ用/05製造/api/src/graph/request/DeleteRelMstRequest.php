@@ -6,9 +6,7 @@ require_once dirname(__FILE__) . '/../common/Constant.php';
  */
 class DeleteRelMstRequest {
     private $relMstId;
-    private $opusId;
     private $userId;
-    private $version;
     private $errorMsg = array();
 
     /**
@@ -39,10 +37,7 @@ class DeleteRelMstRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->relMstId) || 
-            empty($this->opusId) || 
-            empty($this->userId) || 
-            empty($this->version)) {
+            if (empty($this->relMstId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }

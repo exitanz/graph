@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../request/EditRelMstRequest.php';
-require_once dirname(__FILE__) . '/../service/RelMstService.php';
+require_once dirname(__FILE__) . '/../request/DeleteOpusRequest.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
+require_once dirname(__FILE__) . '/../service/OpusService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
 header("Content-Type: application/json; charset=utf-8");
@@ -11,13 +11,13 @@ $resultCode = ResultCode::CODE000;
 $msg = array();
 
 try {
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'PUT') != 0) {
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
         throw new Exception('メソッドが存在しません。');
     }
-
+    
     // リクエスト取得
     $REQUEST = json_decode(file_get_contents("php://input"), true);
 
@@ -30,29 +30,22 @@ try {
     }
 
     // リクエストの値を格納
-    $editRelMstRequest = new EditRelMstRequest();
-    if (!empty($REQUEST['rel_mst_id'])) $editRelMstRequest->setRelMstId($REQUEST['rel_mst_id']);
-    if (!empty($REQUEST['rel_mst_name'])) $editRelMstRequest->setRelMstName($REQUEST['rel_mst_name']);
-    if (!empty($REQUEST['user_id'])) $editRelMstRequest->setUserId($REQUEST['user_id']);
-    if (!empty($REQUEST['version'])) $editRelMstRequest->setVersion($REQUEST['version']); 
+    $deleteOpusRequest = new DeleteOpusRequest($REQUEST['opus_id'], $REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($editRelMstRequest->validation()) {
+    if ($deleteOpusRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $editRelMstRequest->getErrorMsg();
+        $msg = $deleteOpusRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 作品更新
-        (new RelMstService())->editRelMst(
-            $editRelMstRequest->getRelMstId(),
-            $editRelMstRequest->getRelMstName(),
-            $editRelMstRequest->getUserId(),
-            $editRelMstRequest->getVersion()
-        );
+        // ユーザ削除
+        $opusService = new OpusService();
+        $opusService->deleteOpus($deleteOpusRequest->getOpusId(), $deleteOpusRequest->getUserId());
+        
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー

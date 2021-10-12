@@ -6,7 +6,6 @@
 class EditRelMstRequest {
     private $relMstId;
     private $relMstName;
-    private $opusId;
     private $userId;
     private $version = 0;
     private $errorMsg = array();
@@ -31,14 +30,6 @@ class EditRelMstRequest {
 
     public function setRelMstName($relMstName) {
         $this->relMstName = $relMstName;
-    }
-
-    public function getOpusId() {
-        return $this->opusId;
-    }
-
-    public function setOpusId($opusId) {
-        $this->opusId = $opusId;
     }
 
     public function getUserId() {

@@ -2,23 +2,24 @@
 require_once dirname(__FILE__) . '/../common/Constant.php';
 
 /**
- * グループ削除処理の値を保持する
+ * 作品削除処理の値を保持する
  */
-class DeleteGroupRequest {
-    private $groupId;
+class DeleteOpusRequest {
+    private $opusId;
     private $userId;
+    private $version;
     private $errorMsg = array();
 
     /**
-     * グループ削除処理の値を格納します
+     * 作品削除処理の値を格納します
      */
-    public function __construct($groupId, $userId) {
-        $this->groupId = $groupId;
+    public function __construct($opusId, $userId) {
+        $this->opusId = $opusId;
         $this->userId = $userId;
     }
 
-    public function getGroupId() {
-        return $this->groupId;
+    public function getopusId() {
+        return $this->opusId;
     }
 
     public function getUserId() {
@@ -37,20 +38,20 @@ class DeleteGroupRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->groupId)) {
+            if (empty($this->opusId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }
 
-            // グループIDの文字数チェック
-            if (strlen($this->groupId) != Constant::GROUP_ID_DIGIT + strlen(Constant::GROUP_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：グループIDは' . Constant::GROUP_ID_DIGIT + strlen(Constant::GROUP_ID_STR) . '文字で入力してください');
+            // 作品IDの文字数チェック
+            if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：作品IDは'.Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR).'文字で入力してください');
                 $validationFlg = true;
             }
 
             // ユーザIDの文字数チェック
             if (strlen($this->userId) != Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR)) {
-                array_push($this->errorMsg, 'エラー ：ユーザIDは' . Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR) . '文字で入力してください');
+                array_push($this->errorMsg, 'エラー ：ユーザIDは'.Constant::USER_ID_DIGIT + strlen(Constant::USER_ID_STR).'文字で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {
