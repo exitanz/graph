@@ -63,4 +63,20 @@ class OpusService {
         // 更新処理
         $opusDao->update($opusId, $opusName, $userId, $version);
     }
+
+    /**
+     * 作品情報を削除します
+     */
+    public function deleteOpus($opusId, $userId) {
+        // 作品情報を取得
+        $opusDao = new OpusDao();
+        $corUser = $opusDao->selectById($opusId, null, $userId);
+
+        if(empty($corUser)){
+            throw new Exception('作品が存在しません。');
+        }
+
+        // 作品情報を削除する
+        $opusDao->delete($opusId, $userId);
+    }
 }
