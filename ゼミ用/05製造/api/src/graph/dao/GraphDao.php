@@ -1,0 +1,87 @@
+<?php
+require_once dirname(__FILE__) . '/ConnectionManager.php';
+
+class GraphDao {
+
+    /**
+     * 登場人物グラフ情報を取得します
+     */
+    public function selectGraphNodes($timeId, $opusId) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT CAST(REPLACE(actor.actor_id, 'actor', '') AS SIGNED) AS id, actor.actor_id, actor.actor_name AS name, actor.actor_info, actor.actor_img, actor.group_id, actor.time_id, actor.version, group_mst.group_name, time_mst.time_name, group_mst.group_color AS _color FROM actor INNER JOIN group_mst ON actor.group_id = group_mst.group_id INNER JOIN time_mst ON actor.time_id = time_mst.time_id WHERE actor.time_id = :time_id AND actor.opus_id = :opus_id;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':time_id', $timeId);
+        $stmt->bindParam(':opus_id', $opusId);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "id" => $row['id'],
+                "name" => $row['name'],
+                "_color" => $row['_color'],
+                "actor_id " => $row['actor_id'],
+                "actor_info" => $row['actor_info'],
+                "actor_img" => $row['actor_img'],
+                "group_id" => $row['group_id'],
+                "group_name" => $row['group_name'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
+     * 関係グラフ情報を取得します
+     */
+    public function selectGraphLinks($timeId, $opusId) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT CAST(REPLACE(rel.actor_id, 'actor', '') AS SIGNED) AS sid, CAST(REPLACE(rel.target_id, 'actor', '') AS SIGNED) AS tid, rel.rel_mst_info, rel.version, time_mst.time_name FROM rel INNER JOIN rel_mst ON rel.rel_mst_id = rel_mst.rel_mst_id INNER JOIN time_mst ON rel.time_id = time_mst.time_id WHERE rel.time_id = :time_id AND rel.opus_id = :opus_id;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':time_id', $timeId);
+        $stmt->bindParam(':opus_id', $opusId);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "id" => $row['sid'],
+                "id" => $row['tid'],
+                "rel_mst_info" => $row['rel_mst_info'],
+                "time_name " => $row['time_name'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+}
