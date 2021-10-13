@@ -170,6 +170,43 @@ class OpusDao {
     /**
      * 作品情報を取得します
      */
+    public function selectByOpusId($opusId) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM opus WHERE opus_id=:opus_id;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':opus_id', $opusId);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "opus_id" => $row['opus_id'],
+                "opus_name" => $row['opus_name'],
+                "user_id" => $row['user_id'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
+     * 作品情報を取得します
+     */
     public function selectByIdAndVersion($opusId, $opusName, $userId, $version) {
 
         // db接続

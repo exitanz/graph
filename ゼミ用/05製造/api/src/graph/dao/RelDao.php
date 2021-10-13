@@ -1,10 +1,10 @@
 <?php
 require_once dirname(__FILE__) . '/ConnectionManager.php';
 
-class RelMstDao {
+class RelDao {
 
     /**
-     * 最大値の関係性IDを取得します
+     * 最大値の関係IDを取得します
      */
     public function selectMaxId() {
 
@@ -30,7 +30,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を取得します
+     * 関係情報を取得します
      */
     public function selectAll() {
 
@@ -69,7 +69,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を取得します
+     * 関係情報を取得します
      */
     public function select(
         $relId,
@@ -167,7 +167,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を取得します
+     * 関係情報を取得します
      */
     public function selectById($relId, $userId) {
 
@@ -216,7 +216,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を取得します
+     * 関係情報を取得します
      */
     public function selectByIdAndVersion($relId, $userId, $version) {
 
@@ -260,7 +260,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を登録します
+     * 関係情報を登録します
      */
     public function insert(
         $relId,
@@ -297,7 +297,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を更新します
+     * 関係情報を更新します
      */
     public function update(
         $relId,
@@ -305,6 +305,7 @@ class RelMstDao {
         $relMstInfo,
         $acterId,
         $targetId,
+        $opusId,
         $timeId,
         $userId, 
         $version) {
@@ -323,6 +324,9 @@ class RelMstDao {
         if ($targetId != null) {
             $sql .= "target_id=:target_id, ";
         }
+        if ($opusId != null) {
+            $sql .= "opus_id=:opus_id, ";
+        }
         if ($timeId != null) {
             $sql .= "time_id=:time_id, ";
         }
@@ -339,16 +343,19 @@ class RelMstDao {
             $stmt->bindParam(':rel_mst_id', $relMstId);
         }
         if ($relMstInfo != null) {
-            $sql .= "rel_mst_info=:rel_mst_info, ";
+            $stmt->bindParam(':rel_mst_info', $relMstInfo);
         }
         if ($acterId != null) {
-            $sql .= "acter_id=:acter_id, ";
+            $stmt->bindParam(':acter_id', $acterId);
         }
         if ($targetId != null) {
-            $sql .= "target_id=:target_id, ";
+            $stmt->bindParam(':target_id', $targetId);
+        }
+        if ($opusId != null) {
+            $stmt->bindParam(':opus_id', $opusId);
         }
         if ($timeId != null) {
-            $sql .= "time_id=:time_id, ";
+            $stmt->bindParam(':time_id', $timeId);
         }
         $version++;
         $stmt->bindParam(':version', $version);
@@ -360,7 +367,7 @@ class RelMstDao {
     }
 
     /**
-     * 関係性情報を削除します
+     * 関係情報を削除します
      */
     public function delete($relId, $userId) {
 

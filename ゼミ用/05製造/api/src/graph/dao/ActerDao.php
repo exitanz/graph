@@ -75,7 +75,6 @@ class ActerDao {
         $acterId,
         $acterName,
         $acterInfo,
-        $acterImg,
         $opusId,
         $timeId,
         $groupId,
@@ -97,9 +96,6 @@ class ActerDao {
         }
         if ($acterInfo != null) {
             $sql .= "AND acter_info=:acter_info ";
-        }
-        if ($acterImg != null) {
-            $sql .= "AND acter_img=:acter_img ";
         }
         if ($opusId != null) {
             $sql .= "AND opus_id=:opus_id ";
@@ -127,9 +123,6 @@ class ActerDao {
         }
         if ($acterInfo != null) {
             $stmt->bindParam(':acter_info', $acterInfo);
-        }
-        if ($acterImg != null) {
-            $stmt->bindParam(':acter_img', $acterImg);
         }
         if ($opusId != null) {
             $stmt->bindParam(':opus_id', $opusId);

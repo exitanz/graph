@@ -78,6 +78,7 @@ CREATE TABLE group_mst(
     group_id VARCHAR(9) NOT NULL COMMENT 'グループID',
     group_name VARCHAR(100) NOT NULL COMMENT 'グループ名',
     group_info VARCHAR(1200) COMMENT '詳細',
+    group_color VARCHAR(100) NOT NULL COMMENT '色',
     opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
     time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
     user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
