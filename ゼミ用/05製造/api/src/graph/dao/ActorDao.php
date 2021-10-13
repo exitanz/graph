@@ -12,7 +12,7 @@ class ActorDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT Max(acter_id) AS acter_id FROM acter;";
+        $sql = "SELECT Max(actor_id) AS actor_id FROM actor;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -26,7 +26,7 @@ class ActorDao {
         // sql結果を配列に格納
         $result = $stmt->fetchAll();
 
-        return $result[0]['acter_id'];
+        return $result[0]['actor_id'];
     }
 
     /**
@@ -38,7 +38,7 @@ class ActorDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM acter;";
+        $sql = "SELECT * FROM actor;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -52,10 +52,10 @@ class ActorDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "acter_id" => $row['acter_id'],
-                "acter_name" => $row['acter_name'],
-                "acter_info" => $row['acter_info'],
-                "acter_img" => $row['acter_img'],
+                "actor_id" => $row['actor_id'],
+                "actor_name" => $row['actor_name'],
+                "actor_info" => $row['actor_info'],
+                "actor_img" => $row['actor_img'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "group_id" => $row['group_id'],
@@ -72,9 +72,9 @@ class ActorDao {
      * 登場人物情報を取得します
      */
     public function select(
-        $acterId,
-        $acterName,
-        $acterInfo,
+        $actorId,
+        $actorName,
+        $actorInfo,
         $opusId,
         $timeId,
         $groupId,
@@ -87,15 +87,15 @@ class ActorDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM acter WHERE ";
-        if ($acterId != null) {
-            $sql .= "AND acter_id=:acter_id ";
+        $sql = "SELECT * FROM actor WHERE ";
+        if ($actorId != null) {
+            $sql .= "AND actor_id=:actor_id ";
         }
-        if ($acterName != null) {
-            $sql .= "AND acter_name LIKE :acter_name ";
+        if ($actorName != null) {
+            $sql .= "AND actor_name LIKE :actor_name ";
         }
-        if ($acterInfo != null) {
-            $sql .= "AND acter_info=:acter_info ";
+        if ($actorInfo != null) {
+            $sql .= "AND actor_info=:actor_info ";
         }
         if ($opusId != null) {
             $sql .= "AND opus_id=:opus_id ";
@@ -115,15 +115,15 @@ class ActorDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($acterId != null) {
-            $stmt->bindParam(':acter_id', $acterId);
+        if ($actorId != null) {
+            $stmt->bindParam(':actor_id', $actorId);
         }
-        if ($acterName != null) {
-            $acterNameStr = '%' . $acterName . '%';
-            $stmt->bindParam(':acter_name', $acterNameStr);
+        if ($actorName != null) {
+            $actorNameStr = '%' . $actorName . '%';
+            $stmt->bindParam(':actor_name', $actorNameStr);
         }
-        if ($acterInfo != null) {
-            $stmt->bindParam(':acter_info', $acterInfo);
+        if ($actorInfo != null) {
+            $stmt->bindParam(':actor_info', $actorInfo);
         }
         if ($opusId != null) {
             $stmt->bindParam(':opus_id', $opusId);
@@ -144,10 +144,10 @@ class ActorDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "acter_id" => $row['acter_id'],
-                "acter_name" => $row['acter_name'],
-                "acter_info" => $row['acter_info'],
-                "acter_img" => $row['acter_img'],
+                "actor_id" => $row['actor_id'],
+                "actor_name" => $row['actor_name'],
+                "actor_info" => $row['actor_info'],
+                "actor_img" => $row['actor_img'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "group_id" => $row['group_id'],
@@ -166,7 +166,7 @@ class ActorDao {
     public function selectById($selectId, $userId) {
 
         // sql作成
-        $sql = "SELECT * FROM acter WHERE acter_id=:acter_id AND user_id=:user_id;";
+        $sql = "SELECT * FROM actor WHERE actor_id=:actor_id AND user_id=:user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -175,7 +175,7 @@ class ActorDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':acter_id', $selectId);
+        $stmt->bindParam(':actor_id', $selectId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
@@ -190,10 +190,10 @@ class ActorDao {
         if (!empty($result)) {
             // 実行結果を格納
             $dto = array(
-                "acter_id" => $result[0]['acter_id'],
-                "acter_name" => $result[0]['acter_name'],
-                "acter_info" => $result[0]['acter_info'],
-                "acter_img" => $result[0]['acter_img'],
+                "actor_id" => $result[0]['actor_id'],
+                "actor_name" => $result[0]['actor_name'],
+                "actor_info" => $result[0]['actor_info'],
+                "actor_img" => $result[0]['actor_img'],
                 "opus_id" => $result[0]['opus_id'],
                 "time_id" => $result[0]['time_id'],
                 "group_id" => $result[0]['group_id'],
@@ -214,7 +214,7 @@ class ActorDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM acter WHERE acter_id=:acter_id AND version=:version AND user_id=:user_id;";
+        $sql = "SELECT * FROM actor WHERE actor_id=:actor_id AND version=:version AND user_id=:user_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -223,7 +223,7 @@ class ActorDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':acter_id', $selectId);
+        $stmt->bindParam(':actor_id', $selectId);
         $stmt->bindParam(':version', $version);
         $stmt->bindParam(':user_id', $userId);
 
@@ -233,10 +233,10 @@ class ActorDao {
         $dtoList = array();
         foreach ($stmt->fetchAll() as $row) {
             $dto = array(
-                "acter_id" => $row['acter_id'],
-                "acter_name" => $row['acter_name'],
-                "acter_info" => $row['acter_info'],
-                "acter_img" => $row['acter_img'],
+                "actor_id" => $row['actor_id'],
+                "actor_name" => $row['actor_name'],
+                "actor_info" => $row['actor_info'],
+                "actor_img" => $row['actor_img'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "group_id" => $row['group_id'],
@@ -252,10 +252,10 @@ class ActorDao {
     /**
      * 登場人物情報を登録します
      */
-    public function insert($acterId, $acterName, $acterInfo, $acterImg, $opusId, $timeId, $groupId, $userId, $version = 0) {
+    public function insert($actorId, $actorName, $actorInfo, $actorImg, $opusId, $timeId, $groupId, $userId, $version = 0) {
 
         // sql作成
-        $sql = "INSERT INTO acter(acter_id, acter_name, acter_info, acter_img, opus_id, time_id, group_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        $sql = "INSERT INTO actor(actor_id, actor_name, actor_info, actor_img, opus_id, time_id, group_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -264,10 +264,10 @@ class ActorDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(1, $acterId);
-        $stmt->bindParam(2, $acterName);
-        $stmt->bindParam(3, $acterInfo);
-        $stmt->bindParam(4, $acterImg);
+        $stmt->bindParam(1, $actorId);
+        $stmt->bindParam(2, $actorName);
+        $stmt->bindParam(3, $actorInfo);
+        $stmt->bindParam(4, $actorImg);
         $stmt->bindParam(5, $opusId);
         $stmt->bindParam(6, $timeId);
         $stmt->bindParam(7, $groupId);
@@ -281,10 +281,10 @@ class ActorDao {
      * 登場人物情報を更新します
      */
     public function update(
-        $acterId,
-        $acterName,
-        $acterInfo,
-        $acterImg,
+        $actorId,
+        $actorName,
+        $actorInfo,
+        $actorImg,
         $opusId,
         $timeId,
         $groupId,
@@ -293,15 +293,15 @@ class ActorDao {
     ) {
 
         // sql作成
-        $sql = "UPDATE acter SET ";
-        if ($acterName != null) {
-            $sql .= "acter_name=:acter_name, ";
+        $sql = "UPDATE actor SET ";
+        if ($actorName != null) {
+            $sql .= "actor_name=:actor_name, ";
         }
-        if ($acterInfo != null) {
-            $sql .= "acter_info=:acter_info, ";
+        if ($actorInfo != null) {
+            $sql .= "actor_info=:actor_info, ";
         }
-        if ($acterImg != null) {
-            $sql .= "acter_img=:acter_img, ";
+        if ($actorImg != null) {
+            $sql .= "actor_img=:actor_img, ";
         }
         if ($opusId != null) {
             $sql .= "opus_id=:opus_id, ";
@@ -312,7 +312,7 @@ class ActorDao {
         if ($groupId != null) {
             $sql .= "group_id=:group_id, ";
         }
-        $sql .= "version=:version WHERE acter_id=:acter_id AND user_id=:user_id;";
+        $sql .= "version=:version WHERE actor_id=:actor_id AND user_id=:user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -321,14 +321,14 @@ class ActorDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        if ($acterName != null) {
-            $stmt->bindParam(':acter_name', $acterName);
+        if ($actorName != null) {
+            $stmt->bindParam(':actor_name', $actorName);
         }
-        if ($acterInfo != null) {
-            $stmt->bindParam(':acter_info', $acterInfo);
+        if ($actorInfo != null) {
+            $stmt->bindParam(':actor_info', $actorInfo);
         }
-        if ($acterImg != null) {
-            $stmt->bindParam(':acter_img', $acterImg);
+        if ($actorImg != null) {
+            $stmt->bindParam(':actor_img', $actorImg);
         }
         if ($opusId != null) {
             $stmt->bindParam(':opus_id', $opusId);
@@ -340,7 +340,7 @@ class ActorDao {
             $stmt->bindParam(':group_id', $groupId);
         }
         $stmt->bindParam(':version', $version + 1);
-        $stmt->bindParam(':acter_id', $acterId);
+        $stmt->bindParam(':actor_id', $actorId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
@@ -353,7 +353,7 @@ class ActorDao {
     public function delete($deleteId, $userId) {
 
         // sql作成
-        $sql = "DELETE FROM acter WHERE acter_id = :acter_id AND user_id = :user_id;";
+        $sql = "DELETE FROM actor WHERE actor_id = :actor_id AND user_id = :user_id;";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -362,7 +362,7 @@ class ActorDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(':acter_id', $deleteId);
+        $stmt->bindParam(':actor_id', $deleteId);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
