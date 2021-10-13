@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/ConnectionManager.php';
 
-class ActerDao {
+class ActorDao {
 
     /**
      * 最大値の登場人物IDを取得します
