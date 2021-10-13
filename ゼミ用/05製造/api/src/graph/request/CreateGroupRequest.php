@@ -6,6 +6,7 @@
 class CreateGroupRequest {
     private $groupName;
     private $groupInfo;
+    private $groupColor;
     private $opusId;
     private $timeId;
     private $userId;
@@ -32,6 +33,14 @@ class CreateGroupRequest {
 
     public function setGroupInfo($groupInfo) {
         $this->groupInfo = $groupInfo;
+    }
+
+    public function getGroupColor() {
+        return $this->groupColor;
+    }
+
+    public function setGroupColor($groupColor) {
+        $this->groupColor = $groupColor;
     }
 
     public function getOpusId() {
@@ -70,7 +79,7 @@ class CreateGroupRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->groupName) || empty($this->opusId) || empty($this->timeId)) {
+            if (empty($this->groupName) || empty($this->opusId) || empty($this->timeId) || empty($this->groupColor)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }
@@ -84,6 +93,12 @@ class CreateGroupRequest {
             // グループ詳細の文字数チェック
             if (!empty($this->groupInfo) && 1200 < strlen($this->groupInfo)) {
                 array_push($this->errorMsg, 'エラー ：グループ詳細は1200文字以内で入力してください');
+                $validationFlg = true;
+            }
+
+            // グループ色の文字数チェック
+            if (100 < strlen($this->groupColor)) {
+                array_push($this->errorMsg, 'エラー ：グループ色は100文字以内で入力してください');
                 $validationFlg = true;
             }
 

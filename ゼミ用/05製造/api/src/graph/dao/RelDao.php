@@ -55,7 +55,7 @@ class RelDao {
                 "rel_id" => $row['rel_id'],
                 "rel_mst_id" => $row['rel_mst_id'],
                 "rel_mst_info" => $row['rel_mst_info'],
-                "acter_id" => $row['acter_id'],
+                "actor_id" => $row['actor_id'],
                 "target_id" => $row['target_id'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
@@ -75,7 +75,7 @@ class RelDao {
         $relId,
         $relMstId,
         $relMstInfo,
-        $acterId,
+        $actorId,
         $targetId,
         $opusId,
         $timeId,
@@ -98,8 +98,8 @@ class RelDao {
         if ($relMstInfo != null) {
             $sql .= 'rel_mst_info LIKE :rel_mst_info AND ';
         }
-        if ($acterId != null) {
-            $sql .= 'acter_id=:acter_id AND ';
+        if ($actorId != null) {
+            $sql .= 'actor_id=:actor_id AND ';
         }
         if ($targetId != null) {
             $sql .= 'target_id=:target_id AND ';
@@ -126,11 +126,11 @@ class RelDao {
             $stmt->bindParam(':rel_mst_id', $relMstId);
         }
         if ($relMstInfo != null) {
-            $rrelMstInfoStr = '%' . $relMstInfo . '%';
-            $stmt->bindParam(':rel_mst_info', $rrelMstInfoStr);
+            $relMstInfoStr = '%' . $relMstInfo . '%';
+            $stmt->bindParam(':rel_mst_info', $relMstInfoStr);
         }
-        if ($acterId != null) {
-            $stmt->bindParam(':acter_id', $acterId);
+        if ($actorId != null) {
+            $stmt->bindParam(':actor_id', $actorId);
         }
         if ($targetId != null) {
             $stmt->bindParam(':target_id', $targetId);
@@ -154,7 +154,7 @@ class RelDao {
                 "rel_id" => $row['rel_id'],
                 "rel_mst_id" => $row['rel_mst_id'],
                 "rel_mst_info" => $row['rel_mst_info'],
-                "acter_id" => $row['acter_id'],
+                "actor_id" => $row['actor_id'],
                 "target_id" => $row['target_id'],
                 "opus_id" => $row['opus_id'],
                 "user_id" => $row['user_id'],
@@ -202,7 +202,7 @@ class RelDao {
                 "rel_id" => $row['rel_id'],
                 "rel_mst_id" => $row['rel_mst_id'],
                 "rel_mst_info" => $row['rel_mst_info'],
-                "acter_id" => $row['acter_id'],
+                "actor_id" => $row['actor_id'],
                 "target_id" => $row['target_id'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
@@ -246,7 +246,7 @@ class RelDao {
                 "rel_id" => $row['rel_id'],
                 "rel_mst_id" => $row['rel_mst_id'],
                 "rel_mst_info" => $row['rel_mst_info'],
-                "acter_id" => $row['acter_id'],
+                "actor_id" => $row['actor_id'],
                 "target_id" => $row['target_id'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
@@ -266,7 +266,7 @@ class RelDao {
         $relId,
         $relMstId,
         $relMstInfo,
-        $acterId,
+        $actorId,
         $targetId,
         $opusId,
         $timeId,
@@ -274,7 +274,15 @@ class RelDao {
     ) {
 
         // sql作成
-        $sql = "INSERT INTO rel(rel_id, rel_mst_id, rel_mst_info, acter_id, target_id, opus_id, time_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        $sql = "INSERT INTO rel(rel_id, rel_mst_id, ";
+        if ($relMstInfo != null) {
+            $sql .= "rel_mst_info, ";
+        }
+        $sql .= "actor_id, target_id, opus_id, time_id, user_id) VALUES (:rel_id, :rel_mst_id, ";
+        if ($relMstInfo != null) {
+            $sql .= ":rel_mst_info, ";
+        }
+        $sql .= ":actor_id, :target_id, :opus_id, :time_id, :user_id);";
 
         // db接続
         $connectionManager = new ConnectionManager();
@@ -283,14 +291,16 @@ class RelDao {
         $stmt = $connectionManager->getDB()->prepare($sql);
 
         // プレースホルダと変数をバインド
-        $stmt->bindParam(1, $relId);
-        $stmt->bindParam(2, $relMstId);
-        $stmt->bindParam(3, $relMstInfo);
-        $stmt->bindParam(4, $acterId);
-        $stmt->bindParam(5, $targetId);
-        $stmt->bindParam(6, $opusId);
-        $stmt->bindParam(7, $timeId);
-        $stmt->bindParam(8, $userId);
+        $stmt->bindParam(':rel_id', $relId);
+        $stmt->bindParam(':rel_mst_id', $relMstId);
+        if ($relMstInfo != null) {
+            $stmt->bindParam(':rel_mst_info', $relMstInfo);
+        }
+        $stmt->bindParam(':actor_id', $actorId);
+        $stmt->bindParam(':target_id', $targetId);
+        $stmt->bindParam(':opus_id', $opusId);
+        $stmt->bindParam(':time_id', $timeId);
+        $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
         $stmt->execute();
@@ -303,12 +313,13 @@ class RelDao {
         $relId,
         $relMstId,
         $relMstInfo,
-        $acterId,
+        $actorId,
         $targetId,
         $opusId,
         $timeId,
-        $userId, 
-        $version) {
+        $userId,
+        $version
+    ) {
 
         // sql作成
         $sql = "UPDATE rel SET ";
@@ -318,8 +329,8 @@ class RelDao {
         if ($relMstInfo != null) {
             $sql .= "rel_mst_info=:rel_mst_info, ";
         }
-        if ($acterId != null) {
-            $sql .= "acter_id=:acter_id, ";
+        if ($actorId != null) {
+            $sql .= "actor_id=:actor_id, ";
         }
         if ($targetId != null) {
             $sql .= "target_id=:target_id, ";
@@ -345,8 +356,8 @@ class RelDao {
         if ($relMstInfo != null) {
             $stmt->bindParam(':rel_mst_info', $relMstInfo);
         }
-        if ($acterId != null) {
-            $stmt->bindParam(':acter_id', $acterId);
+        if ($actorId != null) {
+            $stmt->bindParam(':actor_id', $actorId);
         }
         if ($targetId != null) {
             $stmt->bindParam(':target_id', $targetId);

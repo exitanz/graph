@@ -92,7 +92,7 @@ class ActerDao {
             $sql .= "AND acter_id=:acter_id ";
         }
         if ($acterName != null) {
-            $sql .= "AND acter_name=:acter_name ";
+            $sql .= "AND acter_name LIKE :acter_name ";
         }
         if ($acterInfo != null) {
             $sql .= "AND acter_info=:acter_info ";
@@ -119,7 +119,8 @@ class ActerDao {
             $stmt->bindParam(':acter_id', $acterId);
         }
         if ($acterName != null) {
-            $stmt->bindParam(':acter_name', $acterName);
+            $acterNameStr = '%' . $acterName . '%';
+            $stmt->bindParam(':acter_name', $acterNameStr);
         }
         if ($acterInfo != null) {
             $stmt->bindParam(':acter_info', $acterInfo);

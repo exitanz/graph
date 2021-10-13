@@ -34,6 +34,7 @@ try {
     $createGroupRequest = new CreateGroupRequest();
     if (!empty($REQUEST['group_name'])) $createGroupRequest->setGroupName($REQUEST['group_name']);
     if (!empty($REQUEST['group_info'])) $createGroupRequest->setGroupInfo($REQUEST['group_info']);
+    if (!empty($REQUEST['group_color'])) $createGroupRequest->setGroupColor($REQUEST['group_color']);
     if (!empty($REQUEST['opus_id'])) $createGroupRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['time_id'])) $createGroupRequest->setTimeId($REQUEST['time_id']);
     if (!empty($REQUEST['user_id'])) $createGroupRequest->setUserId($REQUEST['user_id']);
@@ -52,6 +53,7 @@ try {
         $optional = (new GroupService())->createGroup(
             $createGroupRequest->getGroupName(),
             $createGroupRequest->getGroupInfo(),
+            $createGroupRequest->getGroupColor(),
             $createGroupRequest->getOpusId(),
             $createGroupRequest->getTimeId(),
             $createGroupRequest->getUserId()

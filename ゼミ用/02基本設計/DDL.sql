@@ -16,9 +16,11 @@ CREATE USER dkgraph_exit IDENTIFIED BY 'g20e38h41AAbf';
 /* dkgraph_exitにデータベース捜査全ての権限を与える */
 GRANT ALL ON dkgraph_exit.* TO 'dkgraph_exit';
 
+DROP TABLE IF EXISTS common_mst;
+
 DROP TABLE IF EXISTS rel;
 
-DROP TABLE IF EXISTS acter;
+DROP TABLE IF EXISTS actor;
 
 DROP TABLE IF EXISTS group_mst;
 
@@ -90,17 +92,17 @@ CREATE TABLE group_mst(
 ) COMMENT 'グループマスタ';
 
 /* 登場人物マスタ */
-CREATE TABLE acter(
-    acter_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
-    acter_name VARCHAR(100) NOT NULL COMMENT '登場人物名',
-    acter_info VARCHAR(1200) COMMENT '説明',
-    acter_img VARCHAR(2000) COMMENT '画像',
+CREATE TABLE actor(
+    actor_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
+    actor_name VARCHAR(100) NOT NULL COMMENT '登場人物名',
+    actor_info VARCHAR(1200) COMMENT '説明',
+    actor_img VARCHAR(2000) COMMENT '画像',
     opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
     time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
     group_id VARCHAR(9) NOT NULL COMMENT 'グループID',
     user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
     version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
-    PRIMARY KEY(acter_id),
+    PRIMARY KEY(actor_id),
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(group_id) REFERENCES group_mst(group_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -112,7 +114,7 @@ CREATE TABLE rel(
     rel_id VARCHAR(9) NOT NULL UNIQUE COMMENT '関係ID',
     rel_mst_id VARCHAR(10) NOT NULL COMMENT '関係性ID',
     rel_mst_info VARCHAR(1200) COMMENT '関係詳細',
-    acter_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
+    actor_id VARCHAR(8) NOT NULL COMMENT '登場人物ID',
     target_id VARCHAR(8) NOT NULL COMMENT '対象ID',
     opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
     time_id VARCHAR(8) NOT NULL COMMENT '時系列ID',
@@ -120,12 +122,29 @@ CREATE TABLE rel(
     version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(rel_id),
     FOREIGN KEY(rel_mst_id) REFERENCES rel_mst(rel_mst_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(acter_id) REFERENCES acter(acter_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(target_id) REFERENCES acter(acter_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(actor_id) REFERENCES actor(actor_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(target_id) REFERENCES actor(actor_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(opus_id) REFERENCES opus(opus_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(time_id) REFERENCES time_mst(time_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(user_id) REFERENCES cor_user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) COMMENT '関係テーブル';
+
+/* 汎用マスタ */
+CREATE TABLE common_mst(
+    common_id MEDIUMINT NOT NULL AUTO_INCREMENT COMMENT '汎用ID',
+    common_key VARCHAR(1200) NOT NULL COMMENT 'キー',
+    common_value VARCHAR(1200) NOT NULL COMMENT '値',
+    common_info VARCHAR(1200) NOT NULL COMMENT '詳細',
+    PRIMARY KEY(common_id)
+) COMMENT '汎用マスタ';
+
+INSERT INTO
+    `common_mst`(`common_key`, `common_value`, `common_info`)
+VALUES
+    ('_color', '#FFA500', 'オレンジ'),
+    ('_color', '#2AFF00', '緑'),
+    ('_color', '#00C3FF', '青'),
+    ('_color', '#FF193F', '赤');
 
 INSERT INTO
     `cor_user` (`user_id`, `user_name`, `password`, `version`)

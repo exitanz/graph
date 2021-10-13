@@ -55,6 +55,7 @@ class GroupMstDao {
                 "group_id" => $row['group_id'],
                 "group_name" => $row['group_name'],
                 "group_info" => $row['group_info'],
+                "group_color" => $row['group_color'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
@@ -169,6 +170,7 @@ class GroupMstDao {
                 "group_id" => $row['group_id'],
                 "group_name" => $row['group_name'],
                 "group_info" => $row['group_info'],
+                "group_color" => $row['group_color'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
@@ -211,6 +213,7 @@ class GroupMstDao {
                 "group_id" => $row['group_id'],
                 "group_name" => $row['group_name'],
                 "group_info" => $row['group_info'],
+                "group_color" => $row['group_color'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
@@ -225,16 +228,22 @@ class GroupMstDao {
     /**
      * グループ情報を登録します
      */
-    public function insert($groupId, $groupName, $groupInfo, $opusId, $timeId, $userId) {
+    public function insert($groupId, $groupName, $groupInfo, $groupColor, $opusId, $timeId, $userId) {
 
         // sql作成
         $sql = "INSERT INTO group_mst (group_id, group_name, ";
         if ($groupInfo != null) {
             $sql .= 'group_info, ';
         }
+        if ($groupColor != null) {
+            $sql .= 'group_color, ';
+        }
         $sql .= "opus_id, time_id, user_id) VALUES (:group_id, :group_name, ";
         if ($groupInfo != null) {
             $sql .= ':group_info, ';
+        }
+        if ($groupColor != null) {
+            $sql .= ':group_color, ';
         }
         $sql .= ":opus_id, :time_id, :user_id);";
 
@@ -250,6 +259,9 @@ class GroupMstDao {
         if ($groupInfo != null) {
             $stmt->bindParam(':group_info', $groupInfo);
         }
+        if ($groupColor != null) {
+            $stmt->bindParam(':group_color', $groupColor);
+        }
         $stmt->bindParam(':opus_id', $opusId);
         $stmt->bindParam(':time_id', $timeId);
         $stmt->bindParam(':user_id', $userId);
@@ -261,7 +273,7 @@ class GroupMstDao {
     /**
      * グループ情報を更新します
      */
-    public function update($groupId, $groupName, $groupInfo, $userId, $version) {
+    public function update($groupId, $groupName, $groupInfo, $groupColor, $userId, $version) {
 
         // sql作成
         $sql = "UPDATE group_mst SET ";
@@ -270,6 +282,9 @@ class GroupMstDao {
         }
         if ($groupInfo != null) {
             $sql .= "group_info=:group_info, ";
+        }
+        if ($groupColor != null) {
+            $sql .= "group_color=:group_color, ";
         }
         $sql .= "version=:version WHERE group_id=:group_id AND user_id=:user_id;";
 
@@ -285,6 +300,9 @@ class GroupMstDao {
         }
         if ($groupInfo != null) {
             $stmt->bindParam(':group_info', $groupInfo);
+        }
+        if ($groupColor != null) {
+            $stmt->bindParam(':group_color', $groupColor);
         }
         $version++;
         $stmt->bindParam(':version', $version);

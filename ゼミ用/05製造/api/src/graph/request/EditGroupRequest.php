@@ -7,6 +7,7 @@ class EditGroupRequest {
     private $groupId;
     private $groupName;
     private $groupInfo;
+    private $groupColor;
     private $userId;
     private $version = 0;
     private $errorMsg = array();
@@ -39,6 +40,14 @@ class EditGroupRequest {
 
     public function setGroupInfo($groupInfo) {
         $this->groupInfo = $groupInfo;
+    }
+
+    public function getGroupColor() {
+        return $this->groupColor;
+    }
+
+    public function setGroupColor($groupColor) {
+        $this->groupColor = $groupColor;
     }
 
     public function getUserId() {
@@ -95,6 +104,12 @@ class EditGroupRequest {
             // グループ詳細の文字数チェック
             if (!empty($this->groupInfo) && 1200 < strlen($this->groupInfo)) {
                 array_push($this->errorMsg, 'エラー ：グループ詳細は1200文字以内で入力してください');
+                $validationFlg = true;
+            }
+
+            // グループ色の文字数チェック
+            if (!empty($this->groupColor) && 100 < strlen($this->groupColor)) {
+                array_push($this->errorMsg, 'エラー ：グループ色は100文字以内で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {

@@ -27,7 +27,7 @@ class GroupService {
     /**
      * グループ登録をします
      */
-    public function createGroup($groupName, $groupInfo, $opusId, $groupId, $userId) {
+    public function createGroup($groupName, $groupInfo, $groupColor, $opusId, $groupId, $userId) {
 
         if(empty( (new OpusDao())->selectById($opusId, null, $userId))){
             throw new Exception('作品が存在しません。');
@@ -44,7 +44,7 @@ class GroupService {
         $targetId = Constant::GROUP_ID_STR . Common::countup_id($max, Constant::GROUP_ID_DIGIT);
 
         // 登録処理
-        $groupMstDao->insert($targetId, $groupName, $groupInfo, $opusId, $groupId, $userId);
+        $groupMstDao->insert($targetId, $groupName, $groupInfo, $groupColor, $opusId, $groupId, $userId);
 
         $result = array(
             "group_id" => $targetId
@@ -56,7 +56,7 @@ class GroupService {
     /**
      * グループ更新をします
      */
-    public function editGroup($groupId, $groupName, $groupInfo, $userId, $version) {
+    public function editGroup($groupId, $groupName, $groupInfo, $groupColor, $userId, $version) {
 
         // グループ情報取得
         $groupMstDao = new GroupMstDao();
@@ -68,7 +68,7 @@ class GroupService {
         }
 
         // 更新処理
-        $groupMstDao->update($groupId, $groupName, $groupInfo, $userId, $version);
+        $groupMstDao->update($groupId, $groupName, $groupInfo, $groupColor, $userId, $version);
     }
 
     /**

@@ -34,6 +34,7 @@ try {
     if (!empty($REQUEST['group_id'])) $editGroupRequest->setGroupId($REQUEST['group_id']);
     if (!empty($REQUEST['group_name'])) $editGroupRequest->setGroupName($REQUEST['group_name']);
     if (!empty($REQUEST['group_info'])) $editGroupRequest->setGroupInfo($REQUEST['group_info']);
+    if (!empty($REQUEST['group_color'])) $editGroupRequest->setGroupColor($REQUEST['group_color']);
     if (!empty($REQUEST['user_id'])) $editGroupRequest->setUserId($REQUEST['user_id']);
     if (!empty($REQUEST['version'])) $editGroupRequest->setVersion($REQUEST['version']);    
     
@@ -52,6 +53,7 @@ try {
             $editGroupRequest->getGroupId(),
             $editGroupRequest->getGroupName(),
             $editGroupRequest->getGroupInfo(),
+            $editGroupRequest->getGroupColor(),
             $editGroupRequest->getUserId(),
             $editGroupRequest->getVersion()
         );
