@@ -10,7 +10,7 @@ class Constant {
     // ユーザID 桁数
     const USER_ID_DIGIT = 6;
     // 登場人物ID 先頭文字列
-    const ACTOR_ID_STR = "acter";
+    const ACTOR_ID_STR = "actor";
     // 登場人物ID 桁数
     const ACTOR_ID_DIGIT = 3;
     // 時系列ID 先頭文字列
