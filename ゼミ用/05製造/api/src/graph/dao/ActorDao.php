@@ -339,7 +339,8 @@ class ActorDao {
         if ($groupId != null) {
             $stmt->bindParam(':group_id', $groupId);
         }
-        $stmt->bindParam(':version', $version + 1);
+        $version++;
+        $stmt->bindParam(':version', $version);
         $stmt->bindParam(':actor_id', $actorId);
         $stmt->bindParam(':user_id', $userId);
 
