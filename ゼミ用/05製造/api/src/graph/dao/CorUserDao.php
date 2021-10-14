@@ -192,7 +192,8 @@ class CorUserDao {
         if ($password != null) {
             $stmt->bindParam(':password', $password);
         }
-        $stmt->bindParam(':version', $version + 1);
+        $version++;
+        $stmt->bindParam(':version', $version);
         $stmt->bindParam(':user_id', $userId);
 
         //  sql実行
