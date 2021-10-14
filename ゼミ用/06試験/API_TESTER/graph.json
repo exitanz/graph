@@ -69,6 +69,60 @@
               "entity": {
                 "type": "Request",
                 "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_name\": \"test3\",\n  \"group_info\": \"test\",\n  \"opus_id\": \"opus0001\",\n  \"time_id\": \"time0001\",\n  \"user_id\": \"user000002\",\n  \"token\": \"8d518b23960c469a4a086d30f7f0f7c17a90c7c59dc3b655d9f8ed95de75fc3d\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "opus_id",
+                        "value": "opus0011"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "time_id",
+                        "value": "time0011"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "user_id",
+                        "value": "user000001"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "token",
+                        "value": "8c206a0db8a2ee3007dfebcff1ff6d4d045d5bf3282ce72cc79715af23da121d"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/SearchGraphControler.php"
+                },
+                "id": "e5f24e96-da88-4158-9db3-e78bd7f5af6f",
+                "name": "グラフ検索",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
                   "requestBody": true,
                   "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
                   "name": "POST"
@@ -80,7 +134,200 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"group_name\": \"test3\",\n  \"group_info\": \"test\",\n  \"opus_id\": \"opus0001\",\n  \"time_id\": \"time0001\",\n  \"user_id\": \"user000002\",\n  \"token\": \"b3ceade1d2bdfcf12e963410493b5d440a2482bce24c1ad496a455c84a2071e9\"\n}"
+                  "textBody": "{\n    \"user_id\": \"user000001\",\n    \"token\": \"8c206a0db8a2ee3007dfebcff1ff6d4d045d5bf3282ce72cc79715af23da121d\",\n    \"graph\": {\n        \"nodes\": [\n            {\n                \"id\": \"1\",\n                \"name\": \"test\",\n                \"_color\": \"red\",\n                \"actor_id \": \"actor001\",\n                \"actor_info\": \"test actor\",\n                \"actor_img\": \"./\",\n                \"group_id\": \"group0001\",\n                \"group_name\": \"hogehoge\",\n                \"group_info\": \"fugafuga\",\n                \"time_id\": \"time0001\",\n                \"time_name\": \"pompom\",\n                \"opus_id\": \"opus0001\",\n                \"opus_name\": \"test\",\n                \"version\": \"0\"\n            },\n            {\n                \"id\": \"2\",\n                \"name\": \"test2\",\n                \"_color\": \"red\",\n                \"actor_id \": \"actor002\",\n                \"actor_info\": \"test2 actor\",\n                \"actor_img\": \"./\",\n                \"group_id\": \"group0001\",\n                \"group_name\": \"hogehoge\",\n                \"group_info\": \"fugafuga\",\n                \"time_id\": \"time0001\",\n                \"time_name\": \"pompom\",\n                \"opus_id\": \"opus0001\",\n                \"opus_name\": \"test\",\n                \"version\": \"0\"\n            }\n        ],\n        \"links\": [\n            {\n                \"sid\": \"1\",\n                \"tid\": \"2\",\n                \"rel_mst_id\": \"relmst0001\",\n                \"rel_mst_name\": \"友達\",\n                \"rel_mst_info\": \"test\",\n                \"time_id\": \"time0001\",\n                \"time_name\": \"pompom\",\n                \"opus_id\": \"opus0001\",\n                \"opus_name \": \"test\",\n                \"version\": \"0\"\n            }\n        ]\n    }\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/CreateGraphControler.php"
+                },
+                "id": "a648b87c-268b-435b-82bc-cb603c87c10a",
+                "name": "グラフ登録",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_id\": \"group0005\",\n  \"user_id\": \"user000002\",\n  \"token\": \"8d518b23960c469a4a086d30f7f0f7c17a90c7c59dc3b655d9f8ed95de75fc3d\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/DeleteGroupControler.php"
+                },
+                "id": "4ec8740e-2900-4659-ae84-37913ad5cb74",
+                "name": "グループ削除",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_id\": \"group0001\",\n  \"group_name\": \"hogehoge\",\n  \"group_info\": \"fugafuga\",\n  \"group_color\": \"red\",\n  \"user_id\": \"user000001\",\n  \"token\": \"b0a2b755f37be86785b42d29d8107840a554ac339cc69da49c26156fcc12babd\",\n  \"version\": \"1\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/EditGroupControler.php"
+                },
+                "id": "fe5d1245-4e27-4110-8cf5-23d2c9d2cb81",
+                "name": "グループ更新",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_name\": \"test3\",\n  \"group_info\": \"test\",\n  \"opus_id\": \"opus0001\",\n  \"time_id\": \"time0001\",\n  \"user_id\": \"user000002\",\n  \"token\": \"8d518b23960c469a4a086d30f7f0f7c17a90c7c59dc3b655d9f8ed95de75fc3d\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "name": "group_id",
+                        "value": "group0005"
+                      },
+                      {
+                        "name": "group_name",
+                        "value": "test3"
+                      },
+                      {
+                        "name": "group_info",
+                        "value": "test"
+                      },
+                      {
+                        "name": "opus_id",
+                        "value": "opus0001"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "time_id",
+                        "value": "time0001"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "user_id",
+                        "value": "user000002"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "token",
+                        "value": "8d518b23960c469a4a086d30f7f0f7c17a90c7c59dc3b655d9f8ed95de75fc3d"
+                      },
+                      {
+                        "name": "offset",
+                        "value": "2"
+                      },
+                      {
+                        "name": "limit",
+                        "value": "100"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/SearchGroupControler.php"
+                },
+                "id": "8fead006-dda5-4a85-9c41-ef9dd65383e6",
+                "name": "グループ検索",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_name\": \"test\",\n  \"group_info\": \"test info\",\n  \"group_color\": \"#123456\",\n  \"opus_id\": \"opus0001\",\n  \"time_id\": \"time0001\",\n  \"user_id\": \"user000001\",\n  \"token\": \"b0a2b755f37be86785b42d29d8107840a554ac339cc69da49c26156fcc12babd\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -159,7 +406,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"user_id\": \"user000002\",\n  \"password\": \"test\"\n}"
+                  "textBody": "{\n  \"user_id\": \"user000001\",\n  \"password\": \"test\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -329,8 +576,9 @@
                     "delimiter": "&",
                     "items": [
                       {
+                        "enabled": true,
                         "name": "opus_id",
-                        "value": "opus0002"
+                        "value": "opus0011"
                       },
                       {
                         "name": "opus_name",
@@ -339,20 +587,18 @@
                       {
                         "enabled": true,
                         "name": "user_id",
-                        "value": "user000002"
+                        "value": "user000001"
                       },
                       {
                         "enabled": true,
                         "name": "token",
-                        "value": "b3ceade1d2bdfcf12e963410493b5d440a2482bce24c1ad496a455c84a2071e9"
+                        "value": "8c206a0db8a2ee3007dfebcff1ff6d4d045d5bf3282ce72cc79715af23da121d"
                       },
                       {
-                        "enabled": true,
                         "name": "offset",
                         "value": "1"
                       },
                       {
-                        "enabled": true,
                         "name": "limit",
                         "value": "2"
                       }
@@ -391,7 +637,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"opus_name\": \"test\",\n  \"user_id\": \"user000002\",\n  \"token\": \"b3ceade1d2bdfcf12e963410493b5d440a2482bce24c1ad496a455c84a2071e9\"\n}"
+                  "textBody": "{\n  \"opus_name\": \"test\",\n  \"user_id\": \"user000001\",\n  \"token\": \"b0a2b755f37be86785b42d29d8107840a554ac339cc69da49c26156fcc12babd\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -565,18 +811,19 @@
                         "value": "pom"
                       },
                       {
+                        "enabled": true,
                         "name": "opus_id",
-                        "value": "opus0001"
+                        "value": "opus0011"
                       },
                       {
                         "enabled": true,
                         "name": "user_id",
-                        "value": "user000002"
+                        "value": "user000001"
                       },
                       {
                         "enabled": true,
                         "name": "token",
-                        "value": "b3ceade1d2bdfcf12e963410493b5d440a2482bce24c1ad496a455c84a2071e9"
+                        "value": "8c206a0db8a2ee3007dfebcff1ff6d4d045d5bf3282ce72cc79715af23da121d"
                       },
                       {
                         "name": "offset",
@@ -615,7 +862,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"time_name\": \"pompom\",\n  \"opus_id\": \"opus0001\",\n  \"user_id\": \"user000002\",\n  \"token\": \"b3ceade1d2bdfcf12e963410493b5d440a2482bce24c1ad496a455c84a2071e9\"\n}"
+                  "textBody": "{\n  \"time_name\": \"pompom\",\n  \"opus_id\": \"opus0001\",\n  \"user_id\": \"user000001\",\n  \"token\": \"b0a2b755f37be86785b42d29d8107840a554ac339cc69da49c26156fcc12babd\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -638,6 +885,55 @@
                     "value": "application/json"
                   }
                 ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"group_name\": \"test3\",\n  \"group_info\": \"test\",\n  \"opus_id\": \"opus0001\",\n  \"time_id\": \"time0001\",\n  \"user_id\": \"user000002\",\n  \"token\": \"8d518b23960c469a4a086d30f7f0f7c17a90c7c59dc3b655d9f8ed95de75fc3d\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "common_key",
+                        "value": "_color"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "user_id",
+                        "value": "user000001"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "token",
+                        "value": "b0a2b755f37be86785b42d29d8107840a554ac339cc69da49c26156fcc12babd"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost",
+                  "path": "/graph/controller/SearchCommonControler.php"
+                },
+                "id": "8aac7ee6-95fa-4926-8785-7c0ed9e07b49",
+                "name": "汎用マスタ検索",
+                "headers": []
               }
             }
           ]
