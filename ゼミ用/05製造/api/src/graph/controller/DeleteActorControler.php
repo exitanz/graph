@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../request/CreateOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/DeleteActorRequest.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
+require_once dirname(__FILE__) . '/../service/ActorService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
 header("Content-Type: application/json; charset=utf-8");
@@ -9,7 +9,6 @@ header("Content-Type: application/json; charset=utf-8");
 // 変数
 $resultCode = ResultCode::CODE000;
 $msg = array();
-$optional = array();
 
 try {
     if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
@@ -18,7 +17,7 @@ try {
         $resultCode = ResultCode::CODE104;
         throw new Exception('メソッドが存在しません。');
     }
-
+    
     // リクエスト取得
     $REQUEST = json_decode(file_get_contents("php://input"), true);
 
@@ -31,22 +30,22 @@ try {
     }
 
     // リクエストの値を格納
-    $createOpusRequest = new CreateOpusRequest();
-    if (!empty($REQUEST['opus_name'])) $createOpusRequest->setOpusName($REQUEST['opus_name']);
-    if (!empty($REQUEST['user_id'])) $createOpusRequest->setUserId($REQUEST['user_id']);
+    $deleteActorRequest = new DeleteActorRequest($REQUEST['actor_id'], $REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($createOpusRequest->validation()) {
+    if ($deleteActorRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $createOpusRequest->getErrorMsg();
+        $msg = $deleteActorRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 作品登録
-        $optional = (new OpusService())->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
+        // 登場人物削除
+        $actorService = new ActorService();
+        $actorService->deleteActor($deleteActorRequest->getActorId(), $deleteActorRequest->getUserId());
+        
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー
@@ -63,8 +62,7 @@ try {
 // レスポンスに値を格納
 $response = array(
     "resultCode" => $resultCode,
-    "msg" => $msg,
-    "optional" => $optional
+    "msg" => $msg
 );
 
 // レスポンス表示

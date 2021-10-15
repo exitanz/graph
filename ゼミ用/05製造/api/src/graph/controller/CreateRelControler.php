@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/CreateOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/CreateRelRequest.php';
+require_once dirname(__FILE__) . '/../service/RelService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -31,25 +31,38 @@ try {
     }
 
     // リクエストの値を格納
-    $createOpusRequest = new CreateOpusRequest();
-    if (!empty($REQUEST['opus_name'])) $createOpusRequest->setOpusName($REQUEST['opus_name']);
-    if (!empty($REQUEST['user_id'])) $createOpusRequest->setUserId($REQUEST['user_id']);
+    $createRelRequest = new CreateRelRequest();
+    if (!empty($REQUEST['rel_mst_id'])) $createRelRequest->setRelMstId($REQUEST['rel_mst_id']);
+    if (!empty($REQUEST['rel_mst_info'])) $createRelRequest->setRelMstInfo($REQUEST['rel_mst_info']);
+    if (!empty($REQUEST['actor_id'])) $createRelRequest->setActerId($REQUEST['actor_id']);
+    if (!empty($REQUEST['target_id'])) $createRelRequest->setTargetId($REQUEST['target_id']);
+    if (!empty($REQUEST['opus_id'])) $createRelRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['time_id'])) $createRelRequest->setTimeId($REQUEST['time_id']);
+    if (!empty($REQUEST['user_id'])) $createRelRequest->setUserId($REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($createOpusRequest->validation()) {
+    if ($createRelRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $createOpusRequest->getErrorMsg();
+        $msg = $createRelRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 作品登録
-        $optional = (new OpusService())->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
+        // 関係登録
+        $optional = (new RelService())->createRel(
+            $createRelRequest->getRelMstId(),
+            $createRelRequest->getRelMstInfo(),
+            $createRelRequest->getActerId(),
+            $createRelRequest->getTargetId(),
+            $createRelRequest->getOpusId(),
+            $createRelRequest->getTimeId(),
+            $createRelRequest->getUserId(),
+        );
         array_push($msg, "正常");
     } catch (Exception $e) {
-        // 作品登録エラー
+        // 関係登録エラー
         http_response_code(400);
         $resultCode = ResultCode::CODE109;
         throw $e;

@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/CreateOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/EditActorRequest.php';
+require_once dirname(__FILE__) . '/../service/ActorService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -9,10 +9,9 @@ header("Content-Type: application/json; charset=utf-8");
 // 変数
 $resultCode = ResultCode::CODE000;
 $msg = array();
-$optional = array();
 
 try {
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'PUT') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
@@ -31,22 +30,39 @@ try {
     }
 
     // リクエストの値を格納
-    $createOpusRequest = new CreateOpusRequest();
-    if (!empty($REQUEST['opus_name'])) $createOpusRequest->setOpusName($REQUEST['opus_name']);
-    if (!empty($REQUEST['user_id'])) $createOpusRequest->setUserId($REQUEST['user_id']);
+    $editActorRequest = new EditActorRequest();
+    if (!empty($REQUEST['actor_id'])) $editActorRequest->setActorId($REQUEST['actor_id']);
+    if (!empty($REQUEST['actor_name'])) $editActorRequest->setActorName($REQUEST['actor_name']);
+    if (!empty($REQUEST['actor_info'])) $editActorRequest->setActorInfo($REQUEST['actor_info']);
+    if (!empty($REQUEST['actor_img'])) $editActorRequest->setActorImg($REQUEST['actor_img']);
+    if (!empty($REQUEST['opus_id'])) $editActorRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['time_id'])) $editActorRequest->setTimeId($REQUEST['time_id']);
+    if (!empty($REQUEST['group_id'])) $editActorRequest->setGroupId($REQUEST['group_id']);
+    if (!empty($REQUEST['user_id'])) $editActorRequest->setUserId($REQUEST['user_id']);
+    if (!empty($REQUEST['version'])) $editActorRequest->setVersion($REQUEST['version']);
 
     // バリデーションチェック
-    if ($createOpusRequest->validation()) {
+    if ($editActorRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $createOpusRequest->getErrorMsg();
+        $msg = $editActorRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 作品登録
-        $optional = (new OpusService())->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
+        // 作品更新
+        (new ActorService())->editActor(
+            $editActorRequest->getActorId(),
+            $editActorRequest->getActorName(),
+            $editActorRequest->getActorInfo(),
+            $editActorRequest->getActorImg(),
+            $editActorRequest->getOpusId(),
+            $editActorRequest->getTimeId(),
+            $editActorRequest->getGroupId(),
+            $editActorRequest->getUserId(),
+            $editActorRequest->getVersion()
+        );
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー
@@ -63,8 +79,7 @@ try {
 // レスポンスに値を格納
 $response = array(
     "resultCode" => $resultCode,
-    "msg" => $msg,
-    "optional" => $optional
+    "msg" => $msg
 );
 
 // レスポンス表示
