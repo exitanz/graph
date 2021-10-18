@@ -45,11 +45,11 @@ class EditRelRequest {
         $this->relMstInfo = $relMstInfo;
     }
 
-    public function getActerId() {
+    public function getActorId() {
         return $this->actorId;
     }
 
-    public function setActerId($actorId) {
+    public function setActorId($actorId) {
         $this->actorId = $actorId;
     }
 

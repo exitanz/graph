@@ -34,7 +34,7 @@ try {
     $createRelRequest = new CreateRelRequest();
     if (!empty($REQUEST['rel_mst_id'])) $createRelRequest->setRelMstId($REQUEST['rel_mst_id']);
     if (!empty($REQUEST['rel_mst_info'])) $createRelRequest->setRelMstInfo($REQUEST['rel_mst_info']);
-    if (!empty($REQUEST['actor_id'])) $createRelRequest->setActerId($REQUEST['actor_id']);
+    if (!empty($REQUEST['actor_id'])) $createRelRequest->setActorId($REQUEST['actor_id']);
     if (!empty($REQUEST['target_id'])) $createRelRequest->setTargetId($REQUEST['target_id']);
     if (!empty($REQUEST['opus_id'])) $createRelRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['time_id'])) $createRelRequest->setTimeId($REQUEST['time_id']);
@@ -54,7 +54,7 @@ try {
         $optional = (new RelService())->createRel(
             $createRelRequest->getRelMstId(),
             $createRelRequest->getRelMstInfo(),
-            $createRelRequest->getActerId(),
+            $createRelRequest->getActorId(),
             $createRelRequest->getTargetId(),
             $createRelRequest->getOpusId(),
             $createRelRequest->getTimeId(),

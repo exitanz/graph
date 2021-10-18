@@ -34,7 +34,7 @@ try {
     if (!empty($REQUEST['rel_id'])) $editRelRequest->setRelId($REQUEST['rel_id']);
     if (!empty($REQUEST['rel_mst_id'])) $editRelRequest->setRelMstId($REQUEST['rel_mst_id']);
     if (!empty($REQUEST['rel_mst_info'])) $editRelRequest->setRelMstInfo($REQUEST['rel_mst_info']);
-    if (!empty($REQUEST['actor_id'])) $editRelRequest->setActerId($REQUEST['actor_id']);
+    if (!empty($REQUEST['actor_id'])) $editRelRequest->setActorId($REQUEST['actor_id']);
     if (!empty($REQUEST['target_id'])) $editRelRequest->setTargetId($REQUEST['target_id']);
     if (!empty($REQUEST['opus_id'])) $editRelRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['time_id'])) $editRelRequest->setTimeId($REQUEST['time_id']);
@@ -56,7 +56,7 @@ try {
             $editRelRequest->getRelId(),
             $editRelRequest->getRelMstId(),
             $editRelRequest->getRelMstInfo(),
-            $editRelRequest->getActerId(),
+            $editRelRequest->getActorId(),
             $editRelRequest->getTargetId(),
             $editRelRequest->getOpusId(),
             $editRelRequest->getTimeId(),
