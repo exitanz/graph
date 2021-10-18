@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/../request/CreateOpusRequest.php';
-require_once dirname(__FILE__) . '/../service/OpusService.php';
+require_once dirname(__FILE__) . '/../request/CreateActorRequest.php';
+require_once dirname(__FILE__) . '/../service/ActorService.php';
 require_once dirname(__FILE__) . '/../service/LoginService.php';
 require_once dirname(__FILE__) . '/../common/ResultCode.php';
 // ヘッダーを指定
@@ -31,25 +31,38 @@ try {
     }
 
     // リクエストの値を格納
-    $createOpusRequest = new CreateOpusRequest();
-    if (!empty($REQUEST['opus_name'])) $createOpusRequest->setOpusName($REQUEST['opus_name']);
-    if (!empty($REQUEST['user_id'])) $createOpusRequest->setUserId($REQUEST['user_id']);
+    $createActorRequest = new CreateActorRequest();
+    if (!empty($REQUEST['actor_name'])) $createActorRequest->setActorName($REQUEST['actor_name']);
+    if (!empty($REQUEST['actor_info'])) $createActorRequest->setActorInfo($REQUEST['actor_info']);
+    if (!empty($REQUEST['actor_img'])) $createActorRequest->setActorImg($REQUEST['actor_img']);
+    if (!empty($REQUEST['opus_id'])) $createActorRequest->setOpusId($REQUEST['opus_id']);
+    if (!empty($REQUEST['time_id'])) $createActorRequest->setTimeId($REQUEST['time_id']);
+    if (!empty($REQUEST['group_id'])) $createActorRequest->setGroupId($REQUEST['group_id']);
+    if (!empty($REQUEST['user_id'])) $createActorRequest->setUserId($REQUEST['user_id']);
 
     // バリデーションチェック
-    if ($createOpusRequest->validation()) {
+    if ($createActorRequest->validation()) {
         // バリデーション違反
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
-        $msg = $createOpusRequest->getErrorMsg();
+        $msg = $createActorRequest->getErrorMsg();
         throw new Exception();
     }
 
     try {
-        // 作品登録
-        $optional = (new OpusService())->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
+        // 登場人物登録
+        $optional = (new ActorService())->createActor(
+            $createActorRequest->getActorName(),
+            $createActorRequest->getActorInfo(),
+            $createActorRequest->getActorImg(),
+            $createActorRequest->getOpusId(),
+            $createActorRequest->getTimeId(),
+            $createActorRequest->getGroupId(),
+            $createActorRequest->getUserId()
+        );
         array_push($msg, "正常");
     } catch (Exception $e) {
-        // 作品登録エラー
+        // 登場人物登録エラー
         http_response_code(400);
         $resultCode = ResultCode::CODE109;
         throw $e;
