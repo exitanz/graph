@@ -18,14 +18,14 @@ try {
     }
 
     // リクエストの値を確認、バリデーションチェック
-    if (empty($_GET["userId"])) {
+    if (empty($_GET["user_id"])) {
         // リクエストエラー
         http_response_code(400);
         $resultCode = ResultCode::CODE101;
         throw new Exception('リクエストの値が不正です。');
     }
     // ログアウト
-    setcookie("token[" . $_GET["userId"] . "]", "", time() - 60);
+    setcookie("token[" . $_GET["user_id"] . "]", "", time() - 60);
     array_push($msg, "認証解除に成功しました。");
 } catch (Exception $e) {
     array_push($msg, '認証解除に失敗しました');

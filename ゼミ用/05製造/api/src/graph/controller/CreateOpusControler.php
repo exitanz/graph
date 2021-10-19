@@ -46,7 +46,8 @@ try {
 
     try {
         // 作品登録
-        $optional = (new OpusService())->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
+        $opusService = new OpusService();
+        $optional = $opusService->createOpus($createOpusRequest->getOpusName(), $createOpusRequest->getUserId());
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー

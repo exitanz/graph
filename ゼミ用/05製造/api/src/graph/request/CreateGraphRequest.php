@@ -5,6 +5,7 @@
  */
 class CreateGraphRequest {
     private $graph;
+    private $opusId;
     private $userId;
     private $errorMsg = array();
 
@@ -21,6 +22,14 @@ class CreateGraphRequest {
 
     public function setGraph($graph) {
         $this->graph = $graph;
+    }
+
+    public function getOpusId() {
+        return $this->opusId;
+    }
+
+    public function setOpusId($opusId) {
+        $this->opusId = $opusId;
     }
 
     public function getUserId() {

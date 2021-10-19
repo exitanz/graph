@@ -43,7 +43,7 @@ class GraphService {
     /**
      * グラフ作成をします
      */
-    public function createGraph($graph, $userId) {
+    public function createGraph($graph, $opusId, $userId) {
 
         // DAO
         $actorDao = new ActorDao();
@@ -59,18 +59,31 @@ class GraphService {
         $actorIdList = array();
         $relMstIdList = array();
 
+        $opusTarget = null;
         $opusTargetId = null;
 
         try {
+            if (!empty($opusId)) {
+                // 作品取得
+                $opusTarget = $opusDao->selectById($opusId, null, $userId);
+            }
 
-            // IDの最大値に1加算する
-            $opusMax = Common::start_truncate($opusDao->selectMaxId(), strlen(Constant::OPUS_ID_STR)) + 1;
+            // 作品存在チェック
+            if (empty($opusTarget)) {
+                // 新規作品ID
 
-            // ID作成
-            $opusTargetId = Constant::OPUS_ID_STR . Common::countup_id($opusMax, Constant::OPUS_ID_DIGIT);
+                // IDの最大値に1加算する
+                $opusMax = Common::start_truncate($opusDao->selectMaxId(), strlen(Constant::OPUS_ID_STR)) + 1;
 
-            // 登録処理
-            $opusDao->insert($opusTargetId, $graph['nodes'][0]['opus_name'], $userId);
+                // ID作成
+                $opusTargetId = Constant::OPUS_ID_STR . Common::countup_id($opusMax, Constant::OPUS_ID_DIGIT);
+
+                // 登録処理
+                $opusDao->insert($opusTargetId, $graph['nodes'][0]['opus_name'], $userId);
+            } else {
+                // 既存の作品ID
+                $opusTargetId = $opusTarget[0]['opus_id'];
+            }
 
             foreach ($graph['nodes'] as $nodes) {
                 if (empty($timeIdList[$nodes['time_id']])) {
@@ -161,7 +174,7 @@ class GraphService {
         }
 
         return array(
-            "opusId" => $opusTargetId
+            "opus_id" => $opusTargetId
         );
     }
 }
