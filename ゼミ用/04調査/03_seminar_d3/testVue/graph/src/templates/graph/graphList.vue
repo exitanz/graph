@@ -33,10 +33,16 @@
           <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
           <hr />
           <br />
-          <b-alert show variant="success">相関図が作成されました。</b-alert>
-          <b-alert show variant="danger"
-            >作品名は〇文字以内で入力してください。</b-alert
-          >
+          <div v-for="(val, key) in successMsgList" :key="key">
+            <b-alert show variant="success">
+              {{ val }}
+            </b-alert>
+          </div>
+          <div v-for="(val, key) in dangerMsgList" :key="key">
+            <b-alert show variant="danger">
+              {{ val }}
+            </b-alert>
+          </div>
           <br />
         </article>
         <b-container fluid>
@@ -47,6 +53,7 @@
             <b-col sm="8">
               <input
                 class="form-control"
+                v-bind:class="[createOpus.opusNameValid]"
                 placeholder="作品名を入力してください。"
                 type="text"
                 name="edit_actor_name"
@@ -54,7 +61,9 @@
               />
             </b-col>
             <b-col sm="2">
-              <b-button variant="info" @click="opusCreate()"> 追加 </b-button>
+              <b-button variant="info" @click="createOpusApi()">
+                追加
+              </b-button>
             </b-col>
           </b-row>
         </b-container>
@@ -69,12 +78,14 @@
           </thead>
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
-              <td class="col-sm-1">{{ row.opusName }}</td>
+              <td class="col-sm-1">{{ row.opus_name }}</td>
               <td>
                 <button
                   type="button"
                   class="btn btn-success"
-                  @click="isListEditModal = true"
+                  @click="
+                    isEditOpusModalOpen(row.opus_id, row.opus_name, row.version)
+                  "
                 >
                   <font-awesome-icon icon="pencil-alt" />
                 </button>
@@ -83,13 +94,15 @@
                 <button
                   type="button"
                   class="btn btn-danger"
-                  @click="isListDeleteModal = true"
+                  @click="isDeleteOpusModalOpen(row.opus_id, row.version)"
                 >
                   <font-awesome-icon icon="times" />
                 </button>
               </td>
               <td>
-                <router-link v-bind:to="{ name: graphCreate }">
+                <router-link
+                  v-bind:to="{ path: graphCreate + '/' + row.opus_id }"
+                >
                   <button type="button" class="btn btn-info">
                     <font-awesome-icon icon="eye" />
                   </button>
@@ -98,6 +111,23 @@
             </tr>
           </tbody>
         </table>
+        <br />
+        <article class="card-body">
+          <div class="btn-group" v-for="index in searchOpus.max" :key="index">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              v-bind:class="[
+                index === searchOpus.current
+                  ? 'btn-secondary active'
+                  : 'btn-secondary',
+              ]"
+              @click="searchOpusApi(index)"
+            >
+              {{ index }}
+            </button>
+          </div>
+        </article>
       </div>
     </aside>
     <!-----------モーダルウィンドウ-------------->
@@ -163,18 +193,18 @@
           variant="danger"
           size="sm"
           class="float-right"
-          @click="logoutCheck()"
+          @click="logout()"
         >
           ログアウト
         </b-button>
       </template>
     </b-modal>
     <!-----------編集 モーダル-------------->
-    <b-modal v-model="isListEditModal" title="編集画面">
+    <b-modal v-model="isEditOpusModal" title="編集画面">
       <b-container fluid>
         <b-row class="mb-1">
-          <input type="hidden" v-model="listEdit.listId" />
-          <input type="hidden" v-model="listEdit.version" />
+          <input type="hidden" v-model="editOpus.opusId" />
+          <input type="hidden" v-model="editOpus.version" />
           <b-col cols="3">作品名</b-col>
           <b-col>
             <div class="input-group">
@@ -183,8 +213,8 @@
                 placeholder="作品名を入力してください。"
                 type="text"
                 name="edit_list_name"
-                v-model="listEdit.listName"
-                v-bind:class="[listEdit.valid]"
+                v-model="editOpus.opusName"
+                v-bind:class="[editOpus.valid]"
               />
             </div>
           </b-col>
@@ -196,22 +226,22 @@
           variant="secondary"
           size="sm"
           class="float-right"
-          @click="isListEditModal = false"
+          @click="isEditOpusModal = false"
         >
           閉じる
         </b-button>
         <b-button
-          variant="primary"
+          variant="success"
           size="sm"
           class="float-right"
-          @click="listEdit()"
+          @click="editOpusApi()"
         >
-          登録
+          更新
         </b-button>
       </template>
     </b-modal>
     <!-----------削除ボタン モーダル-------------->
-    <b-modal v-model="isListDeleteModal" title="確認画面">
+    <b-modal v-model="isDeleteOpusModal" title="確認画面">
       <b-container fluid>
         <p class="my-4">データを削除しますか？</p>
       </b-container>
@@ -221,7 +251,7 @@
           variant="secondary"
           size="sm"
           class="float-right"
-          @click="isListDeleteModal = false"
+          @click="isDeleteOpusModal = false"
         >
           閉じる
         </b-button>
@@ -229,7 +259,7 @@
           variant="danger"
           size="sm"
           class="float-right"
-          @click="listDelete()"
+          @click="deleteOpusApi()"
         >
           削除
         </b-button>
@@ -239,45 +269,46 @@
 </template>
 
 <script type="module">
-//import { ApiURL } from "../../constants/ApiURL.js";
-//import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { ApiURL } from "../../constants/ApiURL.js";
+import { CommonUtils } from "../../common/CommonUtils.js";
+import { VueFileName } from "../../constants/VueFileName.js";
+import { Constant } from "../../constants/Constant.js";
 
 export default {
   data() {
     return {
       opusList: [],
+      successMsgList: [],
+      dangerMsgList: [],
+      searchOpus: {
+        current: 1,
+        offset: 0,
+        limit: Constant.OPUS_LIST_MAX,
+        max: 0,
+      },
       createOpus: {
         opusName: "",
+        opusNameValid: "",
       },
-      Upload: {
+      editOpus: {
+        opusId: "",
+        opusName: "",
         version: 0,
         valid: "",
       },
-      logoutCheck: {
+      deleteOpus: {
+        opusId: "",
         version: 0,
         valid: "",
       },
-      listEdit: {
-        listId: "",
-        listName: "",
-        version: 0,
-        valid: "",
-      },
-      listDelete: {
-        version: 0,
-        valid: "",
-      },
-      opusName: "",
-      graphSubmit: VueFaileName.graphSubmit,
-      graphCreate: VueFaileName.graphCreate,
-      login: VueFaileName.login,
+      graphSubmit: VueFileName.graphSubmit,
+      graphCreate: VueFileName.graphCreate,
       /* モーダルウィンドウ変数 */
       isUploadModal: false,
       isLogoutCheckModal: false,
       isListUploadModal: false,
-      isListEditModal: false,
-      isListDeleteModal: false,
+      isEditOpusModal: false,
+      isDeleteOpusModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -290,36 +321,284 @@ export default {
     initialize() {
       // 初期化処理
 
-      // 作品一覧取得
-      this.opusList = [
-        {
-          opusId: "opus0001",
-          opusName: "ああああ",
-        },
-        {
-          opusId: "opus0002",
-          opusName: "aaaa",
-        },
-        {
-          opusId: "opus0003",
-          opusName: "123445",
-        },
-        {
-          opusId: "opus0004",
-          opusName: "test",
-        },
-      ];
-    },
-    opusCreate() {
       let params = {
-        opusId: "opus0004",
-        opusName: this.createOpus.opusName,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+        offset: this.searchOpus.offset,
+        limit: this.searchOpus.limit,
       };
-      // 作品登録処理
+
+      // 作品一覧取得
+      this.$http
+        .get(ApiURL.SEARCH_OPUS, { params: params })
+        .then((response) => {
+          // 成功
+          this.opusList = response.data.optional;
+
+          // 画面切り替えボタン表示数
+          let initParams = {
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+          };
+
+          // 作品数取得
+          this.$http
+            .get(ApiURL.SEARCH_OPUS, { params: initParams })
+            .then((response) => {
+              // 成功
+
+              // 画面切り替えボタン表示数
+              this.searchOpus.max =
+                response.data.optional.length > Constant.OPUS_LIST_MAX
+                  ? Math.floor(
+                      (response.data.optional.length - 1) /
+                        Constant.OPUS_LIST_MAX
+                    )
+                  : 1;
+            })
+            .catch((error) => {
+              // 失敗
+              this.dangerMsgList = error.response.data.msg;
+            });
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
+    },
+    searchOpusApi(current) {
+      // 作品検索処理
+      this.searchOpus.current = current;
+      this.searchOpus.offset = current * Constant.OPUS_LIST_MAX;
+      this.searchOpus.limit = current + 1 * Constant.OPUS_LIST_MAX;
+
       // 作品画面反映処理
-      this.opusList.push(params);
+      this.initialize();
+    },
+    createOpusApi() {
+      // 作品登録処理
+
+      let params = {
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+        opus_name: this.createOpus.opusName,
+      };
+
+      // バリデーションチェック
+      if (this.createOpusValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 作品登録
+      this.$http
+        .post(ApiURL.CREATE_OPUS, params)
+        .then((response) => {
+          // 成功
+
+          // 作品画面反映処理
+          this.initialize();
+
+          // メッセージ更新
+          this.successMsgList = ["作品登録しました。"];
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
+    },
+    editOpusApi() {
+      // 作品更新処理
+
+      let params = {
+        opus_id: this.editOpus.opusId,
+        opus_name: this.editOpus.opusName,
+        version: this.editOpus.version,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // バリデーションチェック
+      if (this.editOpusValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 作品更新
+      this.$http
+        .put(ApiURL.EDIT_OPUS, params)
+        .then((response) => {
+          // 成功
+
+          // 作品画面反映処理
+          this.initialize();
+
+          // モーダルウィンドウ閉じる
+          this.isEditOpusModal = false;
+
+          // メッセージ更新
+          this.successMsgList = ["作品更新しました。"];
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
+    },
+    deleteOpusApi() {
+      // 作品削除処理
+
+      let params = {
+        opus_id: this.deleteOpus.opusId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // バリデーションチェック
+      if (this.deleteOpusValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 作品削除
+      this.$http
+        .post(ApiURL.DELETE_OPUS, params)
+        .then((response) => {
+          // 成功
+
+          // 作品画面反映処理
+          this.initialize();
+
+          // モーダルウィンドウ閉じる
+          this.isDeleteOpusModal = false;
+
+          // メッセージ更新
+          this.successMsgList = ["作品削除しました。"];
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
     },
     /* モーダルウィンドウ処理 */
+    isEditOpusModalOpen(opusId, opusName, version) {
+      // 作品編集モーダルウィンドウ
+
+      // 初期化
+      this.editOpus.opusId = opusId;
+      this.editOpus.opusName = opusName;
+      this.editOpus.version = version;
+
+      // モーダルウィンドウ開く
+      this.isEditOpusModal = true;
+    },
+    isDeleteOpusModalOpen(opusId, version) {
+      // 作品削除モーダルウィンドウ
+
+      // 初期化
+      this.deleteOpus.opusId = opusId;
+      this.deleteOpus.version = version;
+
+      // モーダルウィンドウ開く
+      this.isDeleteOpusModal = true;
+    },
+    /* バリデーション */
+    createOpusValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.successMsgList = [];
+      this.dangerMsgList = [];
+
+      this.createOpus.opusNameValid = "";
+
+      if (CommonUtils.eq(params.opus_name, "")) {
+        this.dangerMsgList.push("作品名は必須項目です。");
+        this.createOpus.opusNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      if (params.opus_name.length < 1 || 100 < params.opus_name.length) {
+        this.dangerMsgList.push("作品名は1から100文字以内で入力してください。");
+        this.createOpus.opusNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
+    editOpusValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.successMsgList = [];
+      this.dangerMsgList = [];
+
+      this.createOpus.opusNameValid = "";
+
+      if (CommonUtils.eq(params.opus_id, "")) {
+        this.dangerMsgList.push("作品IDは必須項目です。");
+        this.userNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      if (params.opus_id.length != Constant.OPUS_ID_LENGTH) {
+        this.dangerMsgList.push(
+          "作品IDは" + Constant.OPUS_ID_LENGTH + "文字で入力してください。"
+        );
+        this.userNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      if (CommonUtils.eq(params.opus_name, "")) {
+        this.dangerMsgList.push("作品名は必須項目です。");
+        this.createOpus.opusNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      if (params.opus_name.length < 1 || 100 < params.opus_name.length) {
+        this.dangerMsgList.push("作品名は1から100文字以内で入力してください。");
+        this.createOpus.opusNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
+    deleteOpusValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.successMsgList = [];
+      this.dangerMsgList = [];
+
+      this.createOpus.opusNameValid = "";
+
+      if (CommonUtils.eq(params.opus_id, "")) {
+        this.dangerMsgList.push("作品IDは必須項目です。");
+        this.userNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      if (params.opus_id.length != Constant.OPUS_ID_LENGTH) {
+        this.dangerMsgList.push(
+          "作品IDは" + Constant.OPUS_ID_LENGTH + "文字で入力してください。"
+        );
+        this.userNameValid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
+    // ログアウト処理
+    logout() {
+      // ログアウト
+      let params = {
+        user_id: this.$store.getters.getUserId,
+      };
+
+      // ログアウト処理
+      this.$http
+        .get(ApiURL.LOGOUT, { params: params })
+        .then((response) => {
+          // 成功
+
+          // 画面変更
+          this.$router.push({
+            name: VueFileName.login,
+          });
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
+    },
   },
 };
 </script>

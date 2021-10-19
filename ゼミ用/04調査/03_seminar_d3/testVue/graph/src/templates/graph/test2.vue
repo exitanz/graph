@@ -859,7 +859,7 @@
 <script type="module">
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 import { VueLoading } from "vue-loading-template";
 import { D3Service } from "../../scripts/D3Service.js";
 
@@ -969,8 +969,8 @@ export default {
       currentId: 0,
       timeName: "",
       groupName: "",
-      graphList: VueFaileName.graphList,
-      graphSubmit: VueFaileName.graphSubmit,
+      graphList: VueFileName.graphList,
+      graphSubmit: VueFileName.graphSubmit,
       /* モーダルウィンドウ変数 */
       isActorCreateModal: false,
       isLinkCreateModal: false,

@@ -390,7 +390,7 @@
 <script type="module">
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 import { D3Service } from "../../scripts/D3Service.js";
 
 export default {
@@ -418,7 +418,7 @@ export default {
       ],
       times: [],
       // group: [],
-      login: VueFaileName.login,
+      login: VueFileName.login,
     };
   },
   methods: {

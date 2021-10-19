@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import { VueURL } from '../constants/VueURL.js';
-import { VueFaileName } from '../constants/VueFaileName.js';
+import { VueFileName } from '../constants/VueFileName.js';
 // import { CommonUtils } from '../common/CommonUtils.js';
 
 Vue.use(Router);
@@ -42,7 +42,7 @@ export default new Router({
       },
     },
     {
-      path: '/graphCreate',
+      path: '/graphCreate/:id',
       name: 'graphCreate',
       components: {
         default: loadView('/graph/graphCreate'),
@@ -92,10 +92,10 @@ export default new Router({
     },
     {
       path: '*',
-      name: VueFaileName.NotFound,
+      name: VueFileName.NotFound,
       components: {
-        default: loadView(VueURL.ERORR + '/' + VueFaileName.NotFound),
-        menu: loadView('/' + VueFaileName.menu),
+        default: loadView(VueURL.ERORR + '/' + VueFileName.NotFound),
+        menu: loadView('/' + VueFileName.menu),
       },
     },
   ],

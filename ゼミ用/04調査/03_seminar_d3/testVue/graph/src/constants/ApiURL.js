@@ -8,14 +8,20 @@ export class ApiURL {
   /** ログイン */
   static LOGIN = ApiURL.CONTROLLER + '/LoginControler.php';
   /** ログアウト */
-  static LOGOUT = '/user/logout';
+  static LOGOUT = ApiURL.CONTROLLER + '/LogoutControler.php';
 
   /** 作品 */
+  static SEARCH_ALL_OPUS = ApiURL.CONTROLLER + '/SearchAllOpusControler.php';
   static SEARCH_OPUS = ApiURL.CONTROLLER + '/SearchOpusControler.php';
+  static CREATE_OPUS = ApiURL.CONTROLLER + '/CreateOpusControler.php';
+  static EDIT_OPUS = ApiURL.CONTROLLER + '/EditOpusControler.php';
+  static DELETE_OPUS = ApiURL.CONTROLLER + '/DeleteOpusControler.php';
+  
+  /** ユーザ */
+  static SIGNUP = ApiURL.CONTROLLER + '/CreateAccountControler.php';
   static DELETE_ACCOUNT = ApiURL.CONTROLLER + '/DeleteAccountControler.php';
 
   /** ユーザ管理機能 */
-  static SIGNUP = '/signup';
   static SEARCH = '/user/search';
   static ACCOUNT = '/account';
 

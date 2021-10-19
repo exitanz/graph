@@ -346,7 +346,7 @@
                       rows="3"
                       max-rows="6"
                       disabled
-                    ></b-form-textarea>
+                    >{{ $route.params.id }}-AAA</b-form-textarea>
                   </aside>
                 </div>
               </aside>
@@ -390,7 +390,7 @@
 <script type="module">
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 import { D3Service } from "../../scripts/D3Service.js";
 
 export default {
@@ -418,26 +418,12 @@ export default {
       ],
       times: [],
       // group: [],
-      login: VueFaileName.login,
+      login: VueFileName.login,
     };
   },
   methods: {
     createSvg() {
-      let json = {};
-
-      this.$http
-        .get("/test2/test01.php")
-        // .get("/project/test/d3/test01.php")
-        .then((res) => {
-          console.log(res.data);
-          console.log(res.data.links);
-          console.log(res.data.nodes);
-          json = res.data;
-          D3Service.init(json);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      console.log(this.$route.params.id);
     },
   },
   mounted() {

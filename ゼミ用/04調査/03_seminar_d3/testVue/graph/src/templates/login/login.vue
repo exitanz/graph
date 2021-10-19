@@ -27,11 +27,11 @@
               </div>
               <input
                 class="form-control"
-                v-bind:class="[userIdValid]"
+                v-bind:class="[loginRequest.userIdValid]"
                 placeholder="ユーザIDを入力してください。"
                 type="text"
                 name="userId"
-                v-model="userId"
+                v-model="loginRequest.userId"
               />
             </div>
           </div>
@@ -45,42 +45,32 @@
               </div>
               <input
                 class="form-control"
-                v-bind:class="[passwordValid]"
+                v-bind:class="[loginRequest.passwordValid]"
                 placeholder="パスワードを入力してください。"
                 type="password"
                 name="password"
-                v-model="password"
+                v-model="loginRequest.password"
               />
             </div>
           </div>
           <br />
           <div class="form-group">
-            <router-link v-bind:to="{ name: graphList }">
-              <button
-                @click="accountLogin"
-                type="submit"
-                class="btn btn-primary btn-block"
-                id="login"
-              >
-                ログイン
-              </button>
-            </router-link>
+            <button
+              @click="accountLogin"
+              type="submit"
+              class="btn btn-primary btn-block"
+              id="login"
+            >
+              ログイン
+            </button>
           </div>
           <div class="form-group">
             <p class="text-center">
               新規登録の方は
               <router-link
                 class="text-primary"
-                v-bind:to="{ name: userCreate }"
+                v-bind:to="{ name: vueLinks.userCreate }"
               >
-                こちら
-              </router-link>
-            </p>
-          </div>
-          <div class="form-group">
-            <p class="text-center">
-              パスワードをお忘れの方は
-              <router-link class="text-primary" v-bind:to="{ name: question }">
                 こちら
               </router-link>
             </p>
@@ -93,31 +83,35 @@
 </template>
 
 <script>
-//import { ApiURL } from "../../constants/ApiURL.js";
-//import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { ApiURL } from "../../constants/ApiURL.js";
+import { Constant } from "../../constants/Constant.js";
+import { CommonUtils } from "../../common/CommonUtils.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 
 export default {
   data() {
     return {
       loginStatus: false,
       errors: [],
-      userId: "",
-      password: "",
-      userIdValid: "",
-      passwordValid: "",
-      // graphList: VueFaileName.graphList,
-      graphList: "r",
-      userCreate: VueFaileName.userCreate,
-      question: VueFaileName.question,
+      // ログインリクエストパラメータ
+      loginRequest: {
+        userId: "",
+        userIdValid: "",
+        password: "",
+        passwordValid: "",
+      },
+      vueLinks: {
+        userCreate: VueFileName.userCreate,
+        question: VueFileName.question,
+      },
     };
   },
-  /*methods: {
+  methods: {
     accountLogin() {
       // パラメータ生成
-      const params = {
-        userId: this.userId,
-        password: this.password,
+      let params = {
+        user_id: this.loginRequest.userId,
+        password: this.loginRequest.password,
       };
 
       // バリデーションチェック
@@ -130,21 +124,20 @@ export default {
         .then((response) => {
           // ログイン成功
 
-          // CookieにJSESSIONIDを登録
-          CommonUtils.setCookie("JSESSIONID", response.data.optional.sessionId);
+          // VuexにUserIdを補完
+          this.$store.commit("setUserId", response.data.optional.user_id);
 
-          // VuexにJSESSIONIDを補完
-          this.$store.commit("setJsessionId", response.data.optional.sessionId);
+          // Vuexにtokenを補完
+          this.$store.commit("setToken", response.data.optional.token);
 
           // 画面変更
           this.$router.push({
-            name: VueFaileName.calendar,
+            name: VueFileName.graphList,
           });
         })
         .catch((error) => {
-          console.log(error);
           // ログイン失敗
-          this.errors.push("ユーザIDまたはパスワードが違います。");
+          this.errors = error.response.data.optional.msg;
         });
     },
 
@@ -153,13 +146,20 @@ export default {
       let validationFlg = false;
       this.errors = [];
 
-      if (CommonUtils.eq(params.userId, "")) {
+      if (CommonUtils.eq(params.user_id, "")) {
         this.errors.push("ユーザIDは必須項目です。");
         this.userIdValid = "is-invalid";
         validationFlg = true;
       }
-      if (params.userId.length != 12) {
-        this.errors.push("ユーザIDは12文字で入力してください。");
+      if (
+        params.user_id.length !=
+        Constant.USER_ID_STR.length + Constant.USER_ID_DIGIT
+      ) {
+        this.errors.push(
+          "ユーザIDは" +
+            (Constant.USER_ID_STR.length + Constant.USER_ID_DIGIT) +
+            "文字で入力してください。"
+        );
         this.userIdValid = "is-invalid";
         validationFlg = true;
       }
@@ -175,7 +175,7 @@ export default {
       }
       return validationFlg;
     },
-  },*/
+  },
 };
 </script>
 

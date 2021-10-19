@@ -298,7 +298,7 @@
 <script>
 //import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 
 export default {
   data() {
@@ -324,9 +324,9 @@ export default {
         version: 0,
         valid: "",
       },
-      graphList: VueFaileName.graphList,
-      graphCreate: VueFaileName.graphCreate,
-      login: VueFaileName.login,
+      graphList: VueFileName.graphList,
+      graphCreate: VueFileName.graphCreate,
+      login: VueFileName.login,
       /* モーダルウィンドウ変数 */
       isSubmitUploadModal: false,
       isSubmitManageModal: false,

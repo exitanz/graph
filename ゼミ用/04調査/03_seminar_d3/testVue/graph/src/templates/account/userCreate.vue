@@ -66,54 +66,6 @@
             </div>
           </div>
           <br />
-          <div class="form-group">
-            <h3>秘密の質問</h3>
-            <div class="row">
-              <div class="col-md">
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <font-awesome-icon icon="question-circle" />
-                      </span>
-                    </div>
-                    <select
-                      class="form-control"
-                      v-model="secretQuestionId"
-                      v-bind:class="[secretQuestionIdValid]"
-                    >
-                      <option
-                        v-for="(row, key) in items"
-                        :key="key"
-                        v-bind:value="row.secretQuestionId"
-                      >
-                        {{ row.secretName }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <h3>質問の答え</h3>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <font-awesome-icon icon="comment-dots" />
-                </span>
-              </div>
-              <input
-                class="form-control"
-                placeholder="質問の答えを入力してください。"
-                type="text"
-                name="secretAnswer"
-                v-model="secretAnswer"
-                v-bind:class="[secretAnswerValid]"
-              >
-            </div>
-          </div>
-          <br />
           <div class="form-group row">
             <div class="col">
               <button
@@ -147,23 +99,21 @@
 <script>
 import { ApiURL } from "../../constants/ApiURL.js";
 import { CommonUtils } from "../../common/CommonUtils.js";
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 
 export default {
   data() {
     return {
-      errors: [],
       userId: "",
-      complete: false,
       userName: "",
       password: "",
-      secretQuestionId: "",
-      secretAnswer: "",
       userNameValid: "",
       passwordValid: "",
       secretQuestionIdValid: "",
       secretAnswerValid: "",
       items: [],
+      errors: [],
+      complete: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -175,24 +125,12 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
-      // パラメータ生成
-      this.$http
-        .get(ApiURL.QUESTION)
-        .then((response) => {
-          // 秘密の質問取得
-          this.items = response.data.optional.secretQuestionList;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+      },
     userCreate() {
       // パラメータ生成
       const params = {
-        userName: this.userName,
+        user_name: this.userName,
         password: this.password,
-        secretQuestionId: this.secretQuestionId,
-        secretAnswer: this.secretAnswer,
       };
 
       // バリデーションチェック
@@ -206,12 +144,11 @@ export default {
           // ログイン成功
           // 完了処理
           this.complete = true;
-          this.userId = response.data.optional.userId;
+          this.userId = response.data.optional.user_id;
         })
         .catch((error) => {
-          console.log(error);
           // ユーザ登録失敗
-          this.errors.push("ユーザ登録に失敗しました。");
+          this.errors = error.response.data.optional.msg;
         });
     },
     validation(params) {
@@ -221,15 +158,13 @@ export default {
       this.errors = [];
       this.userNameValid = "";
       this.passwordValid = "";
-      this.secretQuestionIdValid = "";
-      this.secretAnswerValid = "";
 
-      if (CommonUtils.eq(params.userName, "")) {
+      if (CommonUtils.eq(params.user_name, "")) {
         this.errors.push("ユーザ名は必須項目です。");
         this.userNameValid = "is-invalid";
         validationFlg = true;
       }
-      if (params.userName.length < 1 || 20 < params.userName.length) {
+      if (params.user_name.length < 1 || 20 < params.user_name.length) {
         this.errors.push("ユーザ名は1から20文字以内で入力してください。");
         this.userNameValid = "is-invalid";
         validationFlg = true;
@@ -244,32 +179,12 @@ export default {
         this.passwordValid = "is-invalid";
         validationFlg = true;
       }
-      if (CommonUtils.eq(params.secretQuestionId, "")) {
-        this.errors.push("秘密の質問は必須項目です。");
-        this.secretQuestionIdValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.secretQuestionId.length != 7) {
-        this.errors.push("秘密の質問IDは7文字で入力してください。");
-        this.secretQuestionIdValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (CommonUtils.eq(params.secretAnswer, "")) {
-        this.errors.push("秘密の質問は必須項目です。");
-        this.secretAnswerValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.secretAnswer.length < 1 || 20 < params.secretAnswer.length) {
-        this.errors.push("秘密の答えは1から20文字以内で入力してください。");
-        this.secretAnswerValid = "is-invalid";
-        validationFlg = true;
-      }
       return validationFlg;
     },
     returnLogin() {
       // 画面変更
       this.$router.push({
-        name: VueFaileName.login,
+        name: VueFileName.login,
       });
     },
   },

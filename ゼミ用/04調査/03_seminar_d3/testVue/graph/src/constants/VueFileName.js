@@ -1,7 +1,7 @@
 /**
  * 非同期通信クラス
  */
-export class VueFaileName {
+export class VueFileName {
   /** ホーム [/] */
   static footer = 'footer';
   static loginMenu = 'loginMenu';

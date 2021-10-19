@@ -31,14 +31,14 @@
 </template>
 
 <script>
-import { VueFaileName } from "../../constants/VueFaileName.js";
+import { VueFileName } from "../../constants/VueFileName.js";
 
 export default {
   methods: {
     returnLogin() {
       // 画面変更
       this.$router.push({
-        name: VueFaileName.login,
+        name: VueFileName.login,
       });
     },
   },

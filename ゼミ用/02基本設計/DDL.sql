@@ -45,6 +45,7 @@ CREATE TABLE cor_user(
 CREATE TABLE opus(
     opus_id VARCHAR(8) NOT NULL COMMENT '作品ID',
     opus_name VARCHAR(100) NOT NULL COMMENT '作品名',
+    opus_flg TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '投稿フラグ',
     user_id VARCHAR(10) NOT NULL COMMENT 'ユーザID',
     version SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'バージョン',
     PRIMARY KEY(opus_id),

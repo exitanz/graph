@@ -30,12 +30,12 @@
 <script>
 //import { CommonUtils } from "../common/CommonUtils.js";
 //import { ApiURL } from "../constants/ApiURL.js";
-import { VueFaileName } from "../constants/VueFaileName.js";
+import { VueFileName } from "../constants/VueFileName.js";
 
 export default {
   data() {
     return {
-      graphList: VueFaileName.graphList,
+      graphList: VueFileName.graphList,
     };
   },
 };
