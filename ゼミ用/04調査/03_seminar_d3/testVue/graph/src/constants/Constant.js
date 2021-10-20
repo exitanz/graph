@@ -4,6 +4,8 @@
 export class Constant {
     // 作品一覧表示数
     static OPUS_LIST_MAX = 20;
+    // 作品一覧表示ボタン数
+    static OPUS_LIST_PAGE = 5;
     // ユーザID 先頭文字列
     static USER_ID_STR = "user";
     // ユーザID 桁数

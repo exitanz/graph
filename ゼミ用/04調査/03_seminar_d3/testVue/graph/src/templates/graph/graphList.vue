@@ -77,14 +77,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, key) in opusList" :key="key">
+            <tr
+              v-for="(row, key) in opusList"
+              :key="key"
+              v-bind:style="
+                row.opus_flg == 1 ? 'background-color: #ffa500;' : ''
+              "
+            >
               <td class="col-sm-1">{{ row.opus_name }}</td>
               <td>
                 <button
                   type="button"
                   class="btn btn-success"
                   @click="
-                    isEditOpusModalOpen(row.opus_id, row.opus_name, row.version)
+                    isEditOpusModalOpen(
+                      row.opus_id,
+                      row.opus_name,
+                      row.opus_flg,
+                      row.version
+                    )
                   "
                 >
                   <font-awesome-icon icon="pencil-alt" />
@@ -113,18 +124,52 @@
         </table>
         <br />
         <article class="card-body">
-          <div class="btn-group" v-for="index in searchOpus.max" :key="index">
+          <div class="btn-group" v-if="searchOpus.min != 0">
             <button
               type="button"
               class="btn btn-secondary"
               v-bind:class="[
-                index === searchOpus.current
+                searchOpus.min === searchOpus.current
                   ? 'btn-secondary active'
                   : 'btn-secondary',
               ]"
-              @click="searchOpusApi(index)"
+              @click="searchOpusApi(searchOpus.min)"
             >
-              {{ index }}
+              {{ searchOpus.min }}
+            </button>
+            　...
+          </div>
+          <div
+            class="btn-group"
+            v-for="index in searchOpus.btnloop"
+            :key="index"
+          >
+            <button
+              type="button"
+              class="btn btn-secondary"
+              v-bind:class="[
+                index + searchOpus.addpage === searchOpus.current
+                  ? 'btn-secondary active'
+                  : 'btn-secondary',
+              ]"
+              @click="searchOpusApi(index + searchOpus.addpage)"
+            >
+              {{ index + searchOpus.addpage }}
+            </button>
+          </div>
+          <div class="btn-group" v-if="searchOpus.max != 0">
+            ...　
+            <button
+              type="button"
+              class="btn btn-secondary"
+              v-bind:class="[
+                searchOpus.max === searchOpus.current
+                  ? 'btn-secondary active'
+                  : 'btn-secondary',
+              ]"
+              @click="searchOpusApi(searchOpus.max)"
+            >
+              {{ searchOpus.max }}
             </button>
           </div>
         </article>
@@ -145,11 +190,14 @@
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
               <td>
-                <b-col sm="2">
-                  <b-form-checkbox size="lg"></b-form-checkbox>
-                </b-col>
+                <input
+                  type="checkbox"
+                  size="lg"
+                  :value="row"
+                  v-model="uploadList"
+                />
               </td>
-              <td class="col-sm-1">{{ row.opusName }}</td>
+              <td>{{ row.opus_name }}</td>
             </tr>
           </tbody>
         </table>
@@ -168,7 +216,7 @@
           variant="primary"
           size="sm"
           class="float-right"
-          @click="listUpload()"
+          @click="uploadListApi()"
         >
           投稿する
         </b-button>
@@ -202,9 +250,9 @@
     <!-----------編集 モーダル-------------->
     <b-modal v-model="isEditOpusModal" title="編集画面">
       <b-container fluid>
+        <input type="hidden" v-model="editOpus.opusId" />
+        <input type="hidden" v-model="editOpus.version" />
         <b-row class="mb-1">
-          <input type="hidden" v-model="editOpus.opusId" />
-          <input type="hidden" v-model="editOpus.version" />
           <b-col cols="3">作品名</b-col>
           <b-col>
             <div class="input-group">
@@ -214,8 +262,25 @@
                 type="text"
                 name="edit_list_name"
                 v-model="editOpus.opusName"
-                v-bind:class="[editOpus.valid]"
+                v-bind:class="[editOpus.opusNameValid]"
               />
+            </div>
+          </b-col>
+        </b-row>
+
+        <b-row class="mb-1">
+          <input type="hidden" v-model="editOpus.opusId" />
+          <input type="hidden" v-model="editOpus.version" />
+          <b-col cols="3">投稿状態</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                v-model="editOpus.opusFlg"
+                v-bind:class="[editOpus.opusFlgValid]"
+              >
+                <option value="1">投稿中</option>
+                <option value="0">編集中</option>
+              </select>
             </div>
           </b-col>
         </b-row>
@@ -280,11 +345,15 @@ export default {
       opusList: [],
       successMsgList: [],
       dangerMsgList: [],
+      uploadList: [],
       searchOpus: {
         current: 1,
         offset: 0,
         limit: Constant.OPUS_LIST_MAX,
+        btnloop: 0,
+        min: 0,
         max: 0,
+        addpage: 0,
       },
       createOpus: {
         opusName: "",
@@ -293,18 +362,19 @@ export default {
       editOpus: {
         opusId: "",
         opusName: "",
+        opusFlg: "",
         version: 0,
-        valid: "",
+        opusNameValid: "",
+        opusFlgValid: "",
       },
       deleteOpus: {
         opusId: "",
         version: 0,
-        valid: "",
+        opusIdValid: "",
       },
       graphSubmit: VueFileName.graphSubmit,
       graphCreate: VueFileName.graphCreate,
       /* モーダルウィンドウ変数 */
-      isUploadModal: false,
       isLogoutCheckModal: false,
       isListUploadModal: false,
       isEditOpusModal: false,
@@ -321,6 +391,7 @@ export default {
     initialize() {
       // 初期化処理
 
+      // パラメータ作成
       let params = {
         user_id: this.$store.getters.getUserId,
         token: this.$store.getters.getToken,
@@ -336,9 +407,13 @@ export default {
           this.opusList = response.data.optional;
 
           // 画面切り替えボタン表示数
+
+          // パラメータ作成
           let initParams = {
             user_id: this.$store.getters.getUserId,
             token: this.$store.getters.getToken,
+            offset: 0,
+            limit: 9999,
           };
 
           // 作品数取得
@@ -348,13 +423,46 @@ export default {
               // 成功
 
               // 画面切り替えボタン表示数
-              this.searchOpus.max =
+              this.searchOpus.addpage = 0;
+              this.searchOpus.btnloop =
                 response.data.optional.length > Constant.OPUS_LIST_MAX
                   ? Math.floor(
                       (response.data.optional.length - 1) /
                         Constant.OPUS_LIST_MAX
-                    )
+                    ) + 1
                   : 1;
+
+              // nページ以上表示しない
+              if (this.searchOpus.btnloop > Constant.OPUS_LIST_PAGE) {
+                // 初期化
+                // ボタン最大値
+                this.searchOpus.max = 0;
+                // ボタン最小値
+                this.searchOpus.min = 0;
+
+                if (
+                  this.searchOpus.btnloop <
+                  this.searchOpus.current + Constant.OPUS_LIST_PAGE
+                ) {
+                  // ページ開始位置
+                  this.searchOpus.addpage =
+                    this.searchOpus.btnloop - Constant.OPUS_LIST_PAGE - 1;
+                  // ループ回数
+                  this.searchOpus.btnloop = Constant.OPUS_LIST_PAGE + 1;
+                } else {
+                  // ボタン最大値
+                  this.searchOpus.max = this.searchOpus.btnloop;
+                  // ページ開始位置
+                  this.searchOpus.addpage = this.searchOpus.current - 1;
+                  // ループ回数
+                  this.searchOpus.btnloop = Constant.OPUS_LIST_PAGE;
+                }
+
+                if (this.searchOpus.current != 1) {
+                  // ボタン最小値
+                  this.searchOpus.min = 1;
+                }
+              }
             })
             .catch((error) => {
               // 失敗
@@ -366,11 +474,44 @@ export default {
           this.dangerMsgList = error.response.data.msg;
         });
     },
+    async uploadListApi() {
+      // 作品投稿処理
+
+      for (let row of this.uploadList) {
+        // パラメータ作成
+        let params = {
+          opus_id: row.opus_id,
+          opus_flg: 1,
+          version: row.version,
+          user_id: this.$store.getters.getUserId,
+          token: this.$store.getters.getToken,
+        };
+
+        // 作品更新
+        await this.$http
+          .put(ApiURL.EDIT_OPUS, params)
+          .then((response) => {
+            // 成功
+          })
+          .catch((error) => {
+            // 失敗
+            this.dangerMsgList = error.response.data.msg;
+          });
+      }
+
+      // メッセージ更新
+      this.successMsgList = ["作品を投稿しました。"];
+
+      // 作品画面反映処理
+      this.initialize();
+
+      // モーダルウィンドウ閉じる
+      this.isListUploadModal = false;
+    },
     searchOpusApi(current) {
       // 作品検索処理
       this.searchOpus.current = current;
-      this.searchOpus.offset = current * Constant.OPUS_LIST_MAX;
-      this.searchOpus.limit = current + 1 * Constant.OPUS_LIST_MAX;
+      this.searchOpus.offset = (current - 1) * Constant.OPUS_LIST_MAX;
 
       // 作品画面反映処理
       this.initialize();
@@ -378,6 +519,7 @@ export default {
     createOpusApi() {
       // 作品登録処理
 
+      // パラメータ作成
       let params = {
         user_id: this.$store.getters.getUserId,
         token: this.$store.getters.getToken,
@@ -399,7 +541,7 @@ export default {
           this.initialize();
 
           // メッセージ更新
-          this.successMsgList = ["作品登録しました。"];
+          this.successMsgList = ["作品を登録しました。"];
         })
         .catch((error) => {
           // 失敗
@@ -409,9 +551,11 @@ export default {
     editOpusApi() {
       // 作品更新処理
 
+      // パラメータ作成
       let params = {
         opus_id: this.editOpus.opusId,
         opus_name: this.editOpus.opusName,
+        opus_flg: this.editOpus.opusFlg,
         version: this.editOpus.version,
         user_id: this.$store.getters.getUserId,
         token: this.$store.getters.getToken,
@@ -435,7 +579,7 @@ export default {
           this.isEditOpusModal = false;
 
           // メッセージ更新
-          this.successMsgList = ["作品更新しました。"];
+          this.successMsgList = ["作品を更新しました。"];
         })
         .catch((error) => {
           // 失敗
@@ -445,16 +589,12 @@ export default {
     deleteOpusApi() {
       // 作品削除処理
 
+      // パラメータ作成
       let params = {
         opus_id: this.deleteOpus.opusId,
         user_id: this.$store.getters.getUserId,
         token: this.$store.getters.getToken,
       };
-
-      // バリデーションチェック
-      if (this.deleteOpusValidation(params)) {
-        throw "バリデーションエラー";
-      }
 
       // 作品削除
       this.$http
@@ -469,7 +609,7 @@ export default {
           this.isDeleteOpusModal = false;
 
           // メッセージ更新
-          this.successMsgList = ["作品削除しました。"];
+          this.successMsgList = ["作品を削除しました。"];
         })
         .catch((error) => {
           // 失敗
@@ -477,12 +617,13 @@ export default {
         });
     },
     /* モーダルウィンドウ処理 */
-    isEditOpusModalOpen(opusId, opusName, version) {
+    isEditOpusModalOpen(opusId, opusName, opusFlg, version) {
       // 作品編集モーダルウィンドウ
 
       // 初期化
       this.editOpus.opusId = opusId;
       this.editOpus.opusName = opusName;
+      this.editOpus.opusFlg = opusFlg;
       this.editOpus.version = version;
 
       // モーダルウィンドウ開く
@@ -527,20 +668,8 @@ export default {
       this.successMsgList = [];
       this.dangerMsgList = [];
 
-      this.createOpus.opusNameValid = "";
+      this.editOpus.opusNameValid = "";
 
-      if (CommonUtils.eq(params.opus_id, "")) {
-        this.dangerMsgList.push("作品IDは必須項目です。");
-        this.userNameValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.opus_id.length != Constant.OPUS_ID_LENGTH) {
-        this.dangerMsgList.push(
-          "作品IDは" + Constant.OPUS_ID_LENGTH + "文字で入力してください。"
-        );
-        this.userNameValid = "is-invalid";
-        validationFlg = true;
-      }
       if (CommonUtils.eq(params.opus_name, "")) {
         this.dangerMsgList.push("作品名は必須項目です。");
         this.createOpus.opusNameValid = "is-invalid";
@@ -553,32 +682,11 @@ export default {
       }
       return validationFlg;
     },
-    deleteOpusValidation(params) {
-      // 初期化
-      let validationFlg = false;
-
-      this.successMsgList = [];
-      this.dangerMsgList = [];
-
-      this.createOpus.opusNameValid = "";
-
-      if (CommonUtils.eq(params.opus_id, "")) {
-        this.dangerMsgList.push("作品IDは必須項目です。");
-        this.userNameValid = "is-invalid";
-        validationFlg = true;
-      }
-      if (params.opus_id.length != Constant.OPUS_ID_LENGTH) {
-        this.dangerMsgList.push(
-          "作品IDは" + Constant.OPUS_ID_LENGTH + "文字で入力してください。"
-        );
-        this.userNameValid = "is-invalid";
-        validationFlg = true;
-      }
-      return validationFlg;
-    },
-    // ログアウト処理
+    /* ログアウト処理 */
     logout() {
       // ログアウト
+
+      // パラメータ作成
       let params = {
         user_id: this.$store.getters.getUserId,
       };

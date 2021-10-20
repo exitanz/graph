@@ -346,7 +346,7 @@
                       rows="3"
                       max-rows="6"
                       disabled
-                    >{{ $route.params.id }}-AAA</b-form-textarea>
+                    ></b-form-textarea>
                   </aside>
                 </div>
               </aside>
