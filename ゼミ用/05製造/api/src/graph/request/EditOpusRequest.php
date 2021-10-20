@@ -6,6 +6,7 @@
 class EditOpusRequest {
     private $opusId;
     private $opusName;
+    private $opusFlg = '0';
     private $userId;
     private $version = 0;
     private $errorMsg = array();
@@ -30,6 +31,14 @@ class EditOpusRequest {
 
     public function setOpusName($opusName) {
         $this->opusName = $opusName;
+    }
+
+    public function setOpusFlg($opusFlg) {
+        $this->opusFlg = $opusFlg;
+    }
+
+    public function getOpusFlg() {
+        return $this->opusFlg;
     }
 
     public function getUserId() {
@@ -60,7 +69,7 @@ class EditOpusRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->opusName) || empty($this->opusId)) {
+            if (empty($this->opusId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }

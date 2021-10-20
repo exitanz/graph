@@ -38,7 +38,7 @@ class OpusDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM opus;";
+        $sql = "SELECT * FROM opus WHERE opus_flg=1;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -107,6 +107,7 @@ class OpusDao {
             $dto = array(
                 "opus_id" => $row['opus_id'],
                 "opus_name" => $row['opus_name'],
+                "opus_flg" => $row['opus_flg'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
@@ -278,12 +279,15 @@ class OpusDao {
     /**
      * 作品情報を更新します
      */
-    public function update($opusId, $opusName, $userId, $version) {
+    public function update($opusId, $opusName, $opusFlg, $userId, $version) {
 
         // sql作成
         $sql = "UPDATE opus SET ";
         if ($opusName != null) {
             $sql .= "opus_name=:opus_name, ";
+        }
+        if ($opusFlg != null) {
+            $sql .= "opus_flg=:opus_flg, ";
         }
         $sql .= "version=:version WHERE opus_id=:opus_id AND user_id=:user_id;";
 
@@ -296,6 +300,9 @@ class OpusDao {
         // プレースホルダと変数をバインド
         if ($opusName != null) {
             $stmt->bindParam(':opus_name', $opusName);
+        }
+        if ($opusFlg != null) {
+            $stmt->bindParam(':opus_flg', $opusFlg);
         }
         $version++;
         $stmt->bindParam(':version', $version);

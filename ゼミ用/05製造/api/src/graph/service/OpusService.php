@@ -50,7 +50,7 @@ class OpusService {
     /**
      * 作品更新をします
      */
-    public function editOpus($opusId, $opusName, $userId, $version) {
+    public function editOpus($opusId, $opusName, $opusFlg, $userId, $version) {
         // 作品情報取得
         $opusDao = new OpusDao();
         $target = $opusDao->selectByIdAndVersion($opusId, null, $userId, $version);
@@ -61,7 +61,7 @@ class OpusService {
         }
 
         // 更新処理
-        $opusDao->update($opusId, $opusName, $userId, $version);
+        $opusDao->update($opusId, $opusName, $opusFlg, $userId, $version);
     }
 
     /**

@@ -33,6 +33,7 @@ try {
     $editOpusRequest = new EditOpusRequest();
     if (!empty($REQUEST['opus_id'])) $editOpusRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['opus_name'])) $editOpusRequest->setOpusName($REQUEST['opus_name']);
+    if (!empty($REQUEST['opus_flg'])) $editOpusRequest->setOpusFlg($REQUEST['opus_flg']);
     if (!empty($REQUEST['user_id'])) $editOpusRequest->setUserId($REQUEST['user_id']);
     if (!empty($REQUEST['version'])) $editOpusRequest->setVersion($REQUEST['version']);
 
@@ -50,6 +51,7 @@ try {
         (new OpusService())->editOpus(
             $editOpusRequest->getOpusId(),
             $editOpusRequest->getOpusName(),
+            $editOpusRequest->getOpusFlg(),
             $editOpusRequest->getUserId(),
             $editOpusRequest->getVersion()
         );
