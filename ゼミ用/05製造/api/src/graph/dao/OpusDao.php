@@ -32,19 +32,23 @@ class OpusDao {
     /**
      * 作品情報を取得します
      */
-    public function selectAll() {
+    public function selectAll($offset, $limit) {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM opus WHERE opus_flg=1;";
+        $sql = "SELECT opus.opus_id, opus.opus_name, opus.opus_flg, opus.user_id, opus.version, cor_user.user_name FROM opus INNER JOIN cor_user ON opus.user_id = cor_user.user_id WHERE opus_flg = 1 LIMIT :offset, :limit;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
 
         // プリペアドステートメントを作成
         $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 
         //  sql実行
         $stmt->execute();
@@ -55,6 +59,7 @@ class OpusDao {
                 "opus_id" => $row['opus_id'],
                 "opus_name" => $row['opus_name'],
                 "user_id" => $row['user_id'],
+                "user_name" => $row['user_name'],
                 "version" => $row['version']
             );
             array_push($dtoList, $dto);

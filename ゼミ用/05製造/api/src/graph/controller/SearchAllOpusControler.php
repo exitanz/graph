@@ -27,10 +27,15 @@ try {
         throw new Exception('認証されていません');
     }
 
+    $offset = 0;
+    $limit = 100;
+    if (!empty($_REQUEST['offset'])) $offset = $_REQUEST['offset'];
+    if (!empty($_REQUEST['limit'])) $limit = $_REQUEST['limit'];
+
     try {
         // 検索
         $opusService = new OpusService();
-        $optional = $opusService->searchAllOpus();
+        $optional = $opusService->searchAllOpus($offset, $limit);
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 検索エラー

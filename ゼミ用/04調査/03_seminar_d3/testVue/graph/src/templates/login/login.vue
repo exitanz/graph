@@ -137,7 +137,7 @@ export default {
         })
         .catch((error) => {
           // ログイン失敗
-          this.errors = error.response.data.optional.msg;
+          this.errors = error.response.data.msg;
         });
     },
 
