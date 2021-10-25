@@ -18,9 +18,9 @@ class OpusService {
     /**
      * 作品全検索をします
      */
-    public function searchAllOpus($offset, $limit) {
+    public function searchAllOpus($userName, $opusName, $offset, $limit) {
         // 検索処理
-        return (new OpusDao())->selectAll($offset, $limit);
+        return (new OpusDao())->selectAll($userName, $opusName, $offset, $limit);
     }
 
     /**

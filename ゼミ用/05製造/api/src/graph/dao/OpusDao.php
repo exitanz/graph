@@ -32,13 +32,20 @@ class OpusDao {
     /**
      * 作品情報を取得します
      */
-    public function selectAll($offset, $limit) {
+    public function selectAll($userName, $opusName, $offset, $limit) {
 
         // db接続
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT opus.opus_id, opus.opus_name, opus.opus_flg, opus.user_id, opus.version, cor_user.user_name FROM opus INNER JOIN cor_user ON opus.user_id = cor_user.user_id WHERE opus_flg = 1 LIMIT :offset, :limit;";
+        $sql = "SELECT opus.opus_id, opus.opus_name, opus.opus_flg, opus.user_id, opus.version, cor_user.user_name FROM opus INNER JOIN cor_user ON opus.user_id = cor_user.user_id WHERE opus_flg = 1 ";
+        if ($userName != null) {
+            $sql .= "AND user_name LIKE :user_name ";
+        }
+        if ($opusName != null) {
+            $sql .= "AND opus_name LIKE :opus_name ";
+        }
+        $sql .= "LIMIT :offset, :limit;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -47,6 +54,14 @@ class OpusDao {
         $stmt = $pdo->prepare($sql);
 
         // プレースホルダと変数をバインド
+        if ($userName != null) {
+            $userNameStr = '%' . $userName . '%';
+            $stmt->bindParam(':user_name', $userNameStr);
+        }
+        if ($opusName != null) {
+            $opusNameStr = '%' . $opusName . '%';
+            $stmt->bindParam(':opus_name', $opusNameStr);
+        }
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 

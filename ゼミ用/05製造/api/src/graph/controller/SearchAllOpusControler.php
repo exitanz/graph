@@ -27,15 +27,22 @@ try {
         throw new Exception('認証されていません');
     }
 
+    // リクエスト代入
+    $userName = null;
+    $opusName = null;
     $offset = 0;
     $limit = 100;
+
+    // リクエストチェック
+    if (!empty($_REQUEST['user_name'])) $userName = $_REQUEST['user_name'];
+    if (!empty($_REQUEST['opus_name'])) $opusName = $_REQUEST['opus_name'];
     if (!empty($_REQUEST['offset'])) $offset = $_REQUEST['offset'];
     if (!empty($_REQUEST['limit'])) $limit = $_REQUEST['limit'];
 
     try {
         // 検索
         $opusService = new OpusService();
-        $optional = $opusService->searchAllOpus($offset, $limit);
+        $optional = $opusService->searchAllOpus($userName, $opusName, $offset, $limit);
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 検索エラー
