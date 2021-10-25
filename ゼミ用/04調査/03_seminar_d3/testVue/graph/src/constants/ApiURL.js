@@ -9,6 +9,10 @@ export class ApiURL {
   static LOGIN = ApiURL.CONTROLLER + '/LoginControler.php';
   /** ログアウト */
   static LOGOUT = ApiURL.CONTROLLER + '/LogoutControler.php';
+  
+  /** ユーザ */
+  static SIGNUP = ApiURL.CONTROLLER + '/CreateAccountControler.php';
+  static DELETE_ACCOUNT = ApiURL.CONTROLLER + '/DeleteAccountControler.php';
 
   /** 作品 */
   static SEARCH_ALL_OPUS = ApiURL.CONTROLLER + '/SearchAllOpusControler.php';
@@ -16,10 +20,22 @@ export class ApiURL {
   static CREATE_OPUS = ApiURL.CONTROLLER + '/CreateOpusControler.php';
   static EDIT_OPUS = ApiURL.CONTROLLER + '/EditOpusControler.php';
   static DELETE_OPUS = ApiURL.CONTROLLER + '/DeleteOpusControler.php';
-  
-  /** ユーザ */
-  static SIGNUP = ApiURL.CONTROLLER + '/CreateAccountControler.php';
-  static DELETE_ACCOUNT = ApiURL.CONTROLLER + '/DeleteAccountControler.php';
+
+  /** 時系列 */
+  static SEARCH_TIME = ApiURL.CONTROLLER + '/SearchTimeControler.php';
+  static CREATE_TIME = ApiURL.CONTROLLER + '/CreateTimeControler.php';
+  static EDIT_TIME = ApiURL.CONTROLLER + '/EditTimeControler.php';
+  static DELETE_TIME = ApiURL.CONTROLLER + '/DeleteTimeControler.php';
+
+  /** グループ */
+  static SEARCH_GROUP = ApiURL.CONTROLLER + '/SearchGroupControler.php';
+  static CREATE_GROUP = ApiURL.CONTROLLER + '/CreateGroupControler.php';
+  static EDIT_GROUP = ApiURL.CONTROLLER + '/EditGroupControler.php';
+  static DELETE_GROUP = ApiURL.CONTROLLER + '/DeleteGroupControler.php';
+
+  /** グラフ */
+  static SEARCH_GRAPH = ApiURL.CONTROLLER + '/SearchGraphControler.php';
+  static CREATE_GRAPH = ApiURL.CONTROLLER + '/CreateGraphControler.php';
 
   /** ユーザ管理機能 */
   static SEARCH = '/user/search';

@@ -344,42 +344,6 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
-      this.opusList = [
-        {
-          opusId: "opus0001",
-          opusName: "あああ",
-        },
-        {
-          opusId: "opus0002",
-          opusName: "aaaa",
-        },
-        {
-          opusId: "opus0003",
-          opusName: "123445",
-        },
-        {
-          opusId: "opus0004",
-          opusName: "test",
-        },
-      ];
-      this.submitList = [
-        {
-          userName: "user0001",
-          workName: "あいうえお",
-        },
-        {
-          userName: "user0002",
-          workName: "abcdefg",
-        },
-        {
-          userName: "user0003",
-          workName: "123123123",
-        },
-        {
-          userName: "user0004",
-          workName: "testtest",
-        },
-      ];
 
       // 作品一覧取得
       this.opusList = [

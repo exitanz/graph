@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { VueURL } from '../constants/VueURL.js';
 import { VueFileName } from '../constants/VueFileName.js';
-// import { CommonUtils } from '../common/CommonUtils.js';
+import store from '../store';
 
 Vue.use(Router);
 
@@ -40,6 +40,13 @@ export default new Router({
       components: {
         default: loadView('/graph/graphList')
       },
+      beforeEnter(to, from, next) {
+        if (store.getters.getUserId && store.getters.getToken) {
+          next();
+        } else {
+          next('/');
+        }
+      },
     },
     {
       path: '/graphCreate/:id',
@@ -47,12 +54,26 @@ export default new Router({
       components: {
         default: loadView('/graph/graphCreate'),
       },
+      beforeEnter(to, from, next) {
+        if (store.getters.getUserId && store.getters.getToken) {
+          next();
+        } else {
+          next('/');
+        }
+      },
     },
     {
       path: '/graphSubmit',
       name: 'graphSubmit',
       components: {
         default: loadView('/graph/graphSubmit'),
+      },
+      beforeEnter(to, from, next) {
+        if (store.getters.getUserId && store.getters.getToken) {
+          next();
+        } else {
+          next('/');
+        }
       },
     },
     {
@@ -84,18 +105,10 @@ export default new Router({
       },
     },
     {
-      path: '/r',
-      name: 'r',
-      components: {
-        default: loadView('/graph/r'),
-      },
-    },
-    {
       path: '*',
       name: VueFileName.NotFound,
       components: {
         default: loadView(VueURL.ERORR + '/' + VueFileName.NotFound),
-        menu: loadView('/' + VueFileName.menu),
       },
     },
   ],
