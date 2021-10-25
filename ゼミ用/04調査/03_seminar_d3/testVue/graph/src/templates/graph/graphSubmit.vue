@@ -33,6 +33,17 @@
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <article class="card-body">
         <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
+        <div v-for="(val, key) in successMsgList" :key="key">
+          <b-alert show variant="success">
+            {{ val }}
+          </b-alert>
+        </div>
+        <div v-for="(val, key) in dangerMsgList" :key="key">
+          <b-alert show variant="danger">
+            {{ val }}
+          </b-alert>
+        </div>
+        <br />
         <div>
           <b-card>
             <template #header>
@@ -67,11 +78,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, key) in submitList" :key="key">
-              <td class="col-sm-2">{{ row.userName }}</td>
-              <td class="col-sm-2">{{ row.workName }}</td>
+            <tr v-for="(row, key) in opusSubmitList" :key="key">
+              <td class="col-sm-2">{{ row.user_name }}</td>
+              <td class="col-sm-2">{{ row.opus_name }}</td>
               <td>
-                <router-link v-bind:to="{ name: graphCreate }">
+                <router-link v-bind:to="{ path: graphCreate + '/' + row.opus_id }">
                   <button type="button" class="btn btn-info">
                     <font-awesome-icon icon="eye" />
                   </button>
@@ -119,7 +130,7 @@
                   <b-form-checkbox size="lg"></b-form-checkbox>
                 </b-col>
               </td>
-              <td class="col-sm-1">{{ row.opusName }}</td>
+              <td class="col-sm-1">{{ row.opus_name }}</td>
             </tr>
           </tbody>
         </table>
@@ -158,7 +169,7 @@
           </thead>
           <tbody>
             <tr v-for="(row, key) in opusList" :key="key">
-              <td>{{ row.opusName }}</td>
+              <td>{{ row.opus_name }}</td>
               <td>
                 <button
                   type="button"
@@ -286,7 +297,7 @@
           variant="danger"
           size="sm"
           class="float-right"
-          @click="logoutCheck()"
+          @click="logout()"
         >
           ログアウト
         </b-button>
@@ -296,31 +307,22 @@
 </template>
 
 <script>
-//import { ApiURL } from "../../constants/ApiURL.js";
+import { ApiURL } from "../../constants/ApiURL.js";
 //import { CommonUtils } from "../../common/CommonUtils.js";
 import { VueFileName } from "../../constants/VueFileName.js";
+import { Constant } from "../../constants/Constant.js";
 
 export default {
   data() {
     return {
       opusList: [],
-      submitList: [],
+      opusSubmitList: [],
       works: [],
-      submitUpload: {
-        version: 0,
-        valid: "",
-      },
-      submitManage: {
-        version: 0,
-        valid: "",
-      },
+      successMsgList: [],
+      dangerMsgList: [],
       submitManageEdit: {
         submitManageId: "",
         submitManageName: "",
-        version: 0,
-        valid: "",
-      },
-      logoutCheck: {
         version: 0,
         valid: "",
       },
@@ -345,43 +347,25 @@ export default {
     initialize() {
       // 初期化処理
 
+      // パラメータ作成
+      let params = {
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+        offset: 0,
+        limit: Constant.OPUS_LIST_MAX,
+      };
+
       // 作品一覧取得
-      this.opusList = [
-        {
-          opusId: "opus0001",
-          opusName: "あああ",
-        },
-        {
-          opusId: "opus0002",
-          opusName: "aaaa",
-        },
-        {
-          opusId: "opus0003",
-          opusName: "123445",
-        },
-        {
-          opusId: "opus0004",
-          opusName: "test",
-        },
-      ];
-      this.submitList = [
-        {
-          userName: "user0001",
-          workName: "あいうえお",
-        },
-        {
-          userName: "user0002",
-          workName: "abcdefg",
-        },
-        {
-          userName: "user0003",
-          workName: "123123123",
-        },
-        {
-          userName: "user0004",
-          workName: "testtest",
-        },
-      ];
+      this.$http
+        .get(ApiURL.SEARCH_ALL_OPUS, { params: params })
+        .then((response) => {
+          // 成功
+          this.opusSubmitList = response.data.optional;
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
     },
     userCreate() {
       let params = {
@@ -394,6 +378,31 @@ export default {
       this.$router.go({ name: "graphSubmit" });
     },
     /* モーダルウィンドウ処理 */
+    /* ログアウト処理 */
+    logout() {
+      // ログアウト
+
+      // パラメータ作成
+      let params = {
+        user_id: this.$store.getters.getUserId,
+      };
+
+      // ログアウト処理
+      this.$http
+        .get(ApiURL.LOGOUT, { params: params })
+        .then((response) => {
+          // 成功
+
+          // 画面変更
+          this.$router.push({
+            name: VueFileName.login,
+          });
+        })
+        .catch((error) => {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        });
+    },
   },
 };
 </script>
