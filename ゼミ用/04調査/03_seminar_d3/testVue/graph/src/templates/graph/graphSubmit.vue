@@ -48,8 +48,24 @@
           <b-card>
             <template #header>
               <b-tabs pills>
-                <b-tab title="ユーザ名" active></b-tab>
-                <b-tab title="作品名"></b-tab>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary col-12"
+                  style="height: 40px"
+                  @click="btnval = 1"
+                  v-bind:class="{ active: btnval === 1 }"
+                >
+                  ユーザ名
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary col-12"
+                  style="height: 40px"
+                  @click="btnval = 2"
+                  v-bind:class="{ active: btnval === 2 }"
+                >
+                  作品名
+                </button>
               </b-tabs>
             </template>
 
@@ -59,6 +75,7 @@
                 <b-form-input
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="Search"
+                  v-model="xname"
                 ></b-form-input>
                 <b-button variant="info">
                   <font-awesome-icon icon="search" />
@@ -82,7 +99,9 @@
               <td class="col-sm-2">{{ row.user_name }}</td>
               <td class="col-sm-2">{{ row.opus_name }}</td>
               <td>
-                <router-link v-bind:to="{ path: graphCreate + '/' + row.opus_id }">
+                <router-link
+                  v-bind:to="{ path: graphCreate + '/' + row.opus_id }"
+                >
                   <button type="button" class="btn btn-info">
                     <font-awesome-icon icon="eye" />
                   </button>
@@ -326,6 +345,8 @@ export default {
         version: 0,
         valid: "",
       },
+      btnval: 1,
+      xname: "",
       graphList: VueFileName.graphList,
       graphCreate: VueFileName.graphCreate,
       login: VueFileName.login,
@@ -354,6 +375,14 @@ export default {
         offset: 0,
         limit: Constant.OPUS_LIST_MAX,
       };
+
+      if (this.xname) {
+        if (this.btnval == 1) {
+          params.user_name = this.xname;
+        } else {
+          params.opus_name = this.xname;
+        }
+      }
 
       // 作品一覧取得
       this.$http
