@@ -5,17 +5,10 @@
       <b-navbar toggleable type="dark" variant="dark">
         <b-navbar-brand> 相関図投稿画面 </b-navbar-brand>
         <b-navbar-brand>
-          <b-button variant="success" @click="isSubmitUploadModal = true"
-            >投稿する
-            <font-awesome-icon icon="upload" />
-          </b-button>
           <b-dropdown right toggle-class="text-decoration-none" no-caret>
             <template #button-content>
               <font-awesome-icon icon="cog" />
             </template>
-            <b-dropdown-item @click="isSubmitManageModal = true"
-              >相関図管理</b-dropdown-item
-            >
             <b-dropdown-item>
               <router-link v-bind:to="{ name: graphList }"
                 >相関図一覧画面へ
@@ -32,7 +25,7 @@
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <aside class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
       <article class="card-body">
-        <h4 class="card-title text-center mb-4 mt-1">相関図一覧</h4>
+        <h4 class="card-title text-center mb-4 mt-1">投稿一覧</h4>
         <div v-for="(val, key) in successMsgList" :key="key">
           <b-alert show variant="success">
             {{ val }}
@@ -50,8 +43,7 @@
               <b-tabs pills>
                 <button
                   type="button"
-                  class="btn btn-outline-primary col-12"
-                  style="height: 40px"
+                  class="col-12 p-3"
                   @click="btnval = 1"
                   v-bind:class="{ active: btnval === 1 }"
                 >
@@ -59,8 +51,7 @@
                 </button>
                 <button
                   type="button"
-                  class="btn btn-outline-primary col-12"
-                  style="height: 40px"
+                  class="col-12 p-3"
                   @click="btnval = 2"
                   v-bind:class="{ active: btnval === 2 }"
                 >
@@ -132,171 +123,6 @@
     </aside>
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
     <!-----------モーダルウィンドウ-------------->
-    <!-----------投稿するボタン モーダルウィンドウ-------------->
-    <b-modal v-model="isSubmitUploadModal" title="確認画面">
-      <b-container fluid>
-        <table class="table">
-          <thead class="thead-light">
-            <tr>
-              <th>選択</th>
-              <th>作品名</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, key) in opusList" :key="key">
-              <td>
-                <b-col sm="2">
-                  <b-form-checkbox size="lg"></b-form-checkbox>
-                </b-col>
-              </td>
-              <td class="col-sm-1">{{ row.opus_name }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isSubmitUploadModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="primary"
-          size="sm"
-          class="float-right"
-          @click="submitUpload()"
-        >
-          投稿する
-        </b-button>
-      </template>
-    </b-modal>
-    <!-----------投稿管理 モーダルウィンドウ-------------->
-    <b-modal v-model="isSubmitManageModal" title="管理画面">
-      <b-container fluid>
-        <table class="table">
-          <thead class="thead-light">
-            <tr>
-              <th>作品名</th>
-              <th>編集</th>
-              <th>削除</th>
-              <th>閲覧</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, key) in opusList" :key="key">
-              <td>{{ row.opus_name }}</td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-success"
-                  @click="isSubmitManageEditModal = true"
-                >
-                  <font-awesome-icon icon="pencil-alt" />
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  @click="isSubmitManageDeleteModal = true"
-                >
-                  <font-awesome-icon icon="times" />
-                </button>
-              </td>
-              <td>
-                <router-link v-bind:to="{ name: graphCreate }">
-                  <button type="button" class="btn btn-info">
-                    <font-awesome-icon icon="eye" />
-                  </button>
-                </router-link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isSubmitManageModal = false"
-        >
-          閉じる
-        </b-button>
-      </template>
-    </b-modal>
-    <!-----------編集 モーダル-------------->
-    <b-modal v-model="isSubmitManageEditModal" title="編集画面">
-      <b-container fluid>
-        <b-row class="mb-1">
-          <input type="hidden" v-model="submitManageEdit.opusId" />
-          <input type="hidden" v-model="submitManageEdit.version" />
-          <b-col cols="3">作品名</b-col>
-          <b-col>
-            <div class="input-group">
-              <input
-                class="form-control"
-                placeholder="作品名を入力してください。"
-                type="text"
-                name="edit_submitManage_name"
-                v-model="submitManageEdit.opusName"
-                v-bind:class="[submitManageEdit.valid]"
-              />
-            </div>
-          </b-col>
-        </b-row>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isSubmitManageEditModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="primary"
-          size="sm"
-          class="float-right"
-          @click="submitManageEdit()"
-        >
-          登録
-        </b-button>
-      </template>
-    </b-modal>
-    <!-----------削除 モーダル-------------->
-    <b-modal v-model="isSubmitManageDeleteModal" title="確認画面">
-      <b-container fluid>
-        <p class="my-4">データを削除しますか？</p>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isSubmitManageDeleteModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="danger"
-          size="sm"
-          class="float-right"
-          @click="submitManageDelete()"
-        >
-          削除
-        </b-button>
-      </template>
-    </b-modal>
-
     <!-----------ログアウト モーダル-------------->
     <b-modal v-model="isLogoutCheckModal" title="確認画面">
       <b-container fluid>
@@ -339,22 +165,12 @@ export default {
       works: [],
       successMsgList: [],
       dangerMsgList: [],
-      submitManageEdit: {
-        submitManageId: "",
-        submitManageName: "",
-        version: 0,
-        valid: "",
-      },
       btnval: 1,
       xname: "",
       graphList: VueFileName.graphList,
       graphCreate: VueFileName.graphCreate,
       login: VueFileName.login,
       /* モーダルウィンドウ変数 */
-      isSubmitUploadModal: false,
-      isSubmitManageModal: false,
-      isSubmitManageEditModal: false,
-      isSubmitManageDeleteModal: false,
       isLogoutCheckModal: false,
     };
   },
