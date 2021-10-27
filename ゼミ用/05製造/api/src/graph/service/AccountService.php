@@ -39,6 +39,12 @@ class AccountService
         // ユーザID, ユーザ名, パスワードを登録する
         $corUserDao->insert($userId, $userName, $passwordSha256);
 
+        // フォルダ存在確認
+        if (!file_exists('../../user/' . $userId)) {
+            // フォルダ作成処理
+            mkdir('../../user/' . $userId, 0777);
+        }
+
         return $userId;
     }
 

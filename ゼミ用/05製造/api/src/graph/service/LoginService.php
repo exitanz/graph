@@ -25,11 +25,8 @@ class LoginService {
             throw new Exception('ユーザIDまたはパスワードが一致しません。');
         }
 
-        // パスワードの暗号化
-        $passwordSha256 = password_hash($password, PASSWORD_DEFAULT);
-
         // パスワードの比較
-        if (!password_verify($password, $passwordSha256)) {
+        if (!password_verify($password, $corUser['password'])) {
             throw new Exception('ユーザIDまたはパスワードが一致しません。');
         }
 
