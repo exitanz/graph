@@ -6,14 +6,12 @@ require_once dirname(__FILE__) . '/../dao/CorUserDao.php';
 /**
  * 新規登録処理をするクラス
  */
-class AccountService
-{
+class AccountService {
 
     /**
      * アカウント全検索をします
      */
-    public function searchAllAccount()
-    {
+    public function searchAllAccount() {
         // 検索処理
         return (new CorUserDao())->selectAll();
     }
@@ -21,8 +19,7 @@ class AccountService
     /**
      * 新規登録をします
      */
-    public function createAccount($userName, $password)
-    {
+    public function createAccount($userName, $password) {
         // ユーザIDの最大値を取得
         $corUserDao = new CorUserDao();
         $maxId = $corUserDao->selectMaxId();
@@ -33,11 +30,11 @@ class AccountService
         // ユーザID作成
         $userId = Constant::USER_ID_STR . Common::countup_id($max, Constant::USER_ID_DIGIT);
 
-        // パスワードの暗号化（sha256）
-        $passwordSha256 = password_hash($password, PASSWORD_DEFAULT);
+        // パスワードの暗号化（BCRYPT）
+        $passwordBcrypt = password_hash($password, PASSWORD_BCRYPT, Constant::BCRYPT_COST);
 
         // ユーザID, ユーザ名, パスワードを登録する
-        $corUserDao->insert($userId, $userName, $passwordSha256);
+        $corUserDao->insert($userId, $userName, $passwordBcrypt);
 
         // フォルダ存在確認
         if (!file_exists('../../user/' . $userId)) {
@@ -52,8 +49,7 @@ class AccountService
      * アカウント更新をします
      * 
      */
-    public function editAccount($userId, $userName, $password, $version)
-    {
+    public function editAccount($userId, $userName, $password, $version) {
 
         // アカウント情報取得
         $corUserDao = new CorUserDao();
@@ -64,18 +60,17 @@ class AccountService
             throw new Exception('アカウントが存在しません。');
         }
 
-        // パスワードの暗号化（sha256）
-        $passwordSha256 = password_hash($password, PASSWORD_DEFAULT);
+        // パスワードの暗号化（BCRYPT）
+        $passwordBcrypt = password_hash($password, PASSWORD_BCRYPT, Constant::BCRYPT_COST);
 
         // 更新処理
-        $corUserDao->update($userId, $userName, $passwordSha256, $version);
+        $corUserDao->update($userId, $userName, $passwordBcrypt, $version);
     }
 
     /**
      * ユーザ情報を削除します
      */
-    public function deleteAccount($userId)
-    {
+    public function deleteAccount($userId) {
         // ユーザ情報を取得
         $corUserDao = new CorUserDao();
         $corUser = $corUserDao->selectByUserId($userId);

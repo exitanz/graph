@@ -5,6 +5,10 @@
  */
 class Constant {
 
+    // BCRYPTコスト
+    const BCRYPT_COST = [
+        'cost' => 10,
+    ];
     // ユーザID 先頭文字列
     const USER_ID_STR = "user";
     // ユーザID 桁数
