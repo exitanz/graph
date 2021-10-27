@@ -26,10 +26,10 @@ class LoginService {
         }
 
         // パスワードの暗号化
-        $passwordSha256 = hash("sha256", $password);
+        $passwordSha256 = password_hash($password, PASSWORD_DEFAULT);
 
         // パスワードの比較
-        if (strcmp($passwordSha256, $corUser['password']) != 0) {
+        if (!password_verify($password, $passwordSha256)) {
             throw new Exception('ユーザIDまたはパスワードが一致しません。');
         }
 
