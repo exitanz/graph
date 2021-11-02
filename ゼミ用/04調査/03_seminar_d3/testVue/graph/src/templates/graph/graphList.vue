@@ -672,12 +672,12 @@ export default {
 
       if (CommonUtils.eq(params.opus_name, "")) {
         this.dangerMsgList.push("作品名は必須項目です。");
-        this.createOpus.opusNameValid = "is-invalid";
+        this.editOpus.opusNameValid = "is-invalid";
         validationFlg = true;
       }
       if (params.opus_name.length < 1 || 100 < params.opus_name.length) {
         this.dangerMsgList.push("作品名は1から100文字以内で入力してください。");
-        this.createOpus.opusNameValid = "is-invalid";
+        this.editOpus.opusNameValid = "is-invalid";
         validationFlg = true;
       }
       return validationFlg;

@@ -84,12 +84,15 @@
           ></vue-loading>
         </div>
         <!-----------相関図画面-------------->
-        <div class="card" id="view" v-show="!loading">
-          <!-- カーソルを合わせたときに表示する情報領域-->
-          <div id="datatip">
-            <h2></h2>
-            <p></p>
-          </div>
+
+        <div class="content" @click="clickCell($event)" v-show="!loading">
+          <d3-network
+            :net-nodes="nodes"
+            :net-links="links"
+            :options="options"
+            :node-cb="formatNode"
+          >
+          </d3-network>
         </div>
         <br />
 
@@ -971,6 +974,12 @@ export default {
       groupName: "",
       graphList: VueFileName.graphList,
       graphSubmit: VueFileName.graphSubmit,
+      /* グラフ変数 */
+      nodes: [],
+      links: [],
+      nodeSize: 40,
+      canvas: false,
+      force: 4000,
       /* モーダルウィンドウ変数 */
       isActorCreateModal: false,
       isLinkCreateModal: false,
@@ -1145,9 +1154,44 @@ export default {
       // モーダルウィンドウを閉じる
       this.isActorEditModal = false;
     },
+    formatNode(node) {
+      let svgAttrs = node._svgAttrs || {};
+      if (!svgAttrs.id) svgAttrs.id = "node-" + node.id;
+      node._svgAttrs = svgAttrs;
+      return node;
+    },
+    clickCell(event) {
+      let cell = event.target;
+      this.nodes.push({ id: 11, name: "my awesome node 1" });
+      console.log(cell);
+      console.log(event.target);
+    },
+    // スクロール時のズーム処理
+    handleScroll() {
+      this.scrollY = window.scrollY;
+      this.force = window.scrollY * 20 + 500;
+      console.log(this.force);
+    },
   },
   components: {
+    D3Network,
     VueLoading,
+  },
+  computed: {
+    options() {
+      return {
+        force: this.force,
+        // size:{ w:600, h:600},
+        linkWidth: 5,
+        nodeSize: this.nodeSize,
+        nodeLabels: true,
+        linkLabels: true,
+        canvas: this.canvas,
+      };
+    },
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
   },
 };
 </script>

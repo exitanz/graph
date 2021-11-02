@@ -37,6 +37,9 @@ export class ApiURL {
   static SEARCH_GRAPH = ApiURL.CONTROLLER + '/SearchGraphControler.php';
   static CREATE_GRAPH = ApiURL.CONTROLLER + '/CreateGraphControler.php';
 
+  /** グラフ */
+  static COMMON_MST = ApiURL.CONTROLLER + '/SearchCommonControler.php';
+
   /** ユーザ管理機能 */
   static SEARCH = '/user/search';
   static ACCOUNT = '/account';
