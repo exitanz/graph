@@ -6,12 +6,6 @@
 class Common {
 
     /**
-     * 文字列内の禁則文字を除外して返却します
-     */
-    public static function esc($str) {
-    }
-
-    /**
      * IDを指定した桁数まで0埋めして返却します
      * @param $id ID
      * @param $digit 桁数
@@ -70,7 +64,43 @@ class Common {
      * base64形式から画像にデータを変換して返却します
      * @param $str base64形式
      */
-    public function decode($str) {
+    public static function decode($str) {
         return base64_decode($str);
+    }
+
+    /**
+     * 拡張子が画像か判別します
+     * @param $mimetype 拡張子
+     */
+    public static function isImgMimetype($mimetype) {
+        $extensions = [
+            'image/gif' => 'gif',
+            'image/jpeg' => 'jpeg',
+            'image/png' => 'png',
+            'image/bmp' => 'bmp'
+        ];
+        if(empty($extensions[$mimetype])){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 拡張子を返却します
+     * 画像以外の拡張子の場合はnullを返します
+     * @param $mimetype 拡張子
+     */
+    public static function getImgMimetype($mimetype) {
+        $extensions = [
+            'image/gif' => 'gif',
+            'image/jpeg' => 'jpeg',
+            'image/jpg' => 'jpg',
+            'image/png' => 'png',
+            'image/bmp' => 'bmp'
+        ];
+        if(empty($extensions[$mimetype])){
+            return null;
+        }
+        return $extensions[$mimetype];
     }
 }
