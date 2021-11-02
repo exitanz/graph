@@ -33,6 +33,13 @@ export class ApiURL {
   static EDIT_GROUP = ApiURL.CONTROLLER + '/EditGroupControler.php';
   static DELETE_GROUP = ApiURL.CONTROLLER + '/DeleteGroupControler.php';
 
+  /** 登場人物 */
+  static SEARCH_ACTOR = ApiURL.CONTROLLER + '/SearchActorControler.php';
+  static CREATE_ACTOR = ApiURL.CONTROLLER + '/CreateActorControler.php';
+  static CREATE_IMG_ACTOR = ApiURL.CONTROLLER + '/CreateActorImgControler.php';
+  static EDIT_ACTOR = ApiURL.CONTROLLER + '/EditActorControler.php';
+  static DELETE_ACTOR = ApiURL.CONTROLLER + '/DeleteActorControler.php';
+
   /** グラフ */
   static SEARCH_GRAPH = ApiURL.CONTROLLER + '/SearchGraphControler.php';
   static CREATE_GRAPH = ApiURL.CONTROLLER + '/CreateGraphControler.php';
