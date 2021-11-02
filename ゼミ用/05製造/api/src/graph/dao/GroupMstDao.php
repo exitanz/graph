@@ -129,6 +129,7 @@ class GroupMstDao {
                 "group_id" => $row['group_id'],
                 "group_name" => $row['group_name'],
                 "group_info" => $row['group_info'],
+                "group_color" => $row['group_color'],
                 "opus_id" => $row['opus_id'],
                 "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
