@@ -33,7 +33,7 @@ class GraphDao {
                 "id" => $row['id'],
                 "name" => $row['name'],
                 "_color" => $row['_color'],
-                "actor_id " => $row['actor_id'],
+                "actor_id" => $row['actor_id'],
                 "actor_info" => $row['actor_info'],
                 "actor_img" => $row['actor_img'],
                 "group_id" => $row['group_id'],

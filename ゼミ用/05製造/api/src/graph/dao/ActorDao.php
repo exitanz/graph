@@ -89,22 +89,22 @@ class ActorDao {
         // sql作成
         $sql = "SELECT * FROM actor WHERE ";
         if ($actorId != null) {
-            $sql .= "AND actor_id=:actor_id ";
+            $sql .= "actor_id=:actor_id AND ";
         }
         if ($actorName != null) {
-            $sql .= "AND actor_name LIKE :actor_name ";
+            $sql .= "actor_name LIKE :actor_name AND ";
         }
         if ($actorInfo != null) {
-            $sql .= "AND actor_info=:actor_info ";
+            $sql .= "actor_info=:actor_info AND ";
         }
         if ($opusId != null) {
-            $sql .= "AND opus_id=:opus_id ";
+            $sql .= "opus_id=:opus_id AND ";
         }
         if ($timeId != null) {
-            $sql .= "AND time_id=:time_id ";
+            $sql .= "time_id=:time_id AND ";
         }
         if ($groupId != null) {
-            $sql .= "AND group_id=:group_id ";
+            $sql .= "group_id=:group_id AND ";
         }
         $sql .= "user_id=:user_id LIMIT :offset, :limit;";
 
