@@ -125,7 +125,7 @@
                     <!-----------人物情報編集ボタン-------------->
                     <b-button
                       variant="success"
-                      @click="isActorEditModal = true"
+                      @click="isEditActorOrLinkModalOpen()"
                     >
                       編集
                     </b-button>
@@ -817,7 +817,7 @@
       </template>
     </b-modal>
     <!-----------Actor編集 モーダル-------------->
-    <b-modal v-model="isActorEditModal" title="編集画面">
+    <b-modal v-model="isEditActorModal" title="編集画面">
       <b-container fluid>
         <b-row class="mb-1">
           <input type="hidden" v-model="editActor.actorId" />
@@ -840,22 +840,7 @@
           <b-col cols="3">時系列</b-col>
           <b-col>
             <div class="input-group">
-              <select
-                class="form-control"
-                v-model="editActor.timeId"
-                v-bind:class="[editActor.timeIdValid]"
-              >
-                <option :value="null" disabled>
-                  時系列を選択してください。
-                </option>
-                <option
-                  v-for="(row, key) in timeList"
-                  :key="key"
-                  v-bind:value="row.time_id"
-                >
-                  {{ row.time_name }}
-                </option>
-              </select>
+              {{ currentName }}
             </div>
           </b-col>
         </b-row>
@@ -887,6 +872,7 @@
           <b-col>
             <div class="input-group">
               <b-form-file
+                v-model="editActor.actorImg"
                 v-on:change="editActorFile"
                 placeholder="ファイルを選択"
               ></b-form-file>
@@ -899,7 +885,7 @@
             <div class="input-group">
               <b-form-textarea
                 id="actor_info"
-                v-model="text"
+                v-model="editActor.actorInfo"
                 rows="3"
                 max-rows="10"
               ></b-form-textarea>
@@ -913,17 +899,17 @@
           variant="secondary"
           size="sm"
           class="float-right"
-          @click="isActorEditModal = false"
+          @click="isEditActorModal = false"
         >
           閉じる
         </b-button>
         <b-button
-          variant="primary"
+          variant="success"
           size="sm"
           class="float-right"
-          @click="actorEdit()"
+          @click="editActorApi()"
         >
-          登録
+          更新
         </b-button>
       </template>
     </b-modal>
@@ -1008,6 +994,7 @@ export default {
         timeId: null,
         groupId: null,
         imgFile: null,
+        version: 0,
         actorNameValid: "",
         timeIdValid: "",
         groupIdValid: "",
@@ -1065,7 +1052,9 @@ export default {
       force: 4000,
       /* モーダルウィンドウ変数 */
       isCreateActorModal: false,
+      isEditActorModal: false,
       isLinkCreateModal: false,
+      isEditLinkModal: false,
       isSubmitCheckModal: false,
       isTimeModal: false,
       isEditTimeModal: false,
@@ -1075,7 +1064,6 @@ export default {
       isDeleteGroupModal: false,
       isGraphDeleteModal: false,
       isLogoutCheckModal: false,
-      isActorEditModal: false,
       isActorDeleteModal: false,
     };
   },
@@ -1097,24 +1085,27 @@ export default {
         token: this.$store.getters.getToken,
       };
 
-      // パラメータ作成
-      params = {
-        opus_id: this.$route.params.id,
-        user_id: this.$store.getters.getUserId,
-        token: this.$store.getters.getToken,
-      };
-
       // 作品取得
       this.$http
         .get(ApiURL.SEARCH_OPUS, { params: params })
         .then((response) => {
-          // 汎用マスタ取得
+          // 作品情報格納
           this.opusInfo.opusId = response.data.optional[0].opus_id;
           this.opusInfo.opusName = response.data.optional[0].opus_name;
           this.opusInfo.opusFlg = response.data.optional[0].opus_flg;
           this.opusInfo.version = response.data.optional[0].version;
+
+          // 汎用マスタ（グループ色）取得
           this.selectCommonMstApi("_color");
 
+          // 時系列取得
+          params = {
+            opus_id: this.$route.params.id,
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+          };
+
+          // 時系列画面反映処理
           // 時系列取得
           this.$http
             .get(ApiURL.SEARCH_TIME, { params: params })
@@ -1131,45 +1122,10 @@ export default {
                 this.currentName = this.timeList[0].time_name;
               }
 
-              // パラメータ生成
-              params = {
-                time_id: this.currentId,
-                user_id: this.$store.getters.getUserId,
-                token: this.$store.getters.getToken,
-              };
-
               // グループ取得
-              this.$http
-                .get(ApiURL.SEARCH_GROUP, { params: params })
-                .then((response) => {
-                  // 成功
-
-                  // グループ
-                  this.groupList = response.data.optional;
-
-                  // パラメータ生成
-                  params = {
-                    opus_id: this.$route.params.id,
-                    time_id: this.currentId,
-                    user_id: this.$store.getters.getUserId,
-                    token: this.$store.getters.getToken,
-                  };
-
-                  // グラフ取得
-                  this.$http
-                    .get(ApiURL.SEARCH_GRAPH, { params: params })
-                    .then((response) => {
-                      this.nodes = response.data.optional.nodes;
-                      this.links = response.data.optional.links;
-                    })
-                    .catch(() => {
-                      console.log("グラフ取得に失敗しました。");
-                    });
-                })
-                .catch(() => {
-                  // 失敗
-                  console.log("グループ取得に失敗しました。");
-                });
+              this.selectGroupApi(null, null);
+              // グラフ取得
+              this.selectGraphApi();
             })
             .catch(() => {
               // 失敗
@@ -1182,8 +1138,8 @@ export default {
         });
     },
     /* API */
-    createActorApi() {
-      // 画像取得
+    async createActorApi() {
+      // 画像登録
       let params = {
         actor_img: this.createActor.imgFile,
         user_id: this.$store.getters.getUserId,
@@ -1192,7 +1148,7 @@ export default {
 
       if (!!this.createActor.imgFile) {
         // 画像登録
-        this.$http
+        await this.$http
           .post(ApiURL.CREATE_IMG_ACTOR, params)
           .then((response) => {
             // 成功
@@ -1208,7 +1164,9 @@ export default {
       params = {
         actor_name: this.createActor.actorName,
         actor_info: this.createActor.actorInfo,
-        actor_img: !!this.createActor.actorImg ? this.createActor.actorImg: '/user/unknown.png',
+        actor_img: !!this.createActor.actorImg
+          ? this.createActor.actorImg
+          : "/user/unknown.png",
         opus_id: this.$route.params.id,
         time_id: this.currentId,
         group_id: this.createActor.groupId,
@@ -1238,7 +1196,65 @@ export default {
           console.log("登場人物登録に失敗しました。");
         });
     },
-    selectTimeApi(timeId, timeName) {
+    async editActorApi() {
+      // 更新処理
+      let params = {
+        actor_img: this.editActor.imgFile,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      if (!!this.editActor.imgFile) {
+        // 画像登録
+        await this.$http
+          .post(ApiURL.CREATE_IMG_ACTOR, params)
+          .then((response) => {
+            // 成功
+            // 画像取得
+            this.editActor.actorImg = response.data.optional[0].actor_img;
+          })
+          .catch(() => {
+            // 失敗
+            console.log("画像登録に失敗しました。");
+          });
+      }
+
+      // パラメータ作成
+      params = {
+        actor_id: this.editActor.actorId,
+        actor_name: this.editActor.actorName,
+        actor_info: this.editActor.actorInfo,
+        actor_img: this.editActor.actorImg,
+        opus_id: this.$route.params.id,
+        time_id: this.currentId,
+        group_id: this.editActor.groupId,
+        version: this.editActor.version,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 更新
+      this.$http
+        .put(ApiURL.EDIT_ACTOR, params)
+        .then(() => {
+          // 成功
+
+          // 画面反映処理
+          this.selectGraphApi();
+
+          // 表示変数初期化
+          this.currentInfoFormat();
+
+          // モーダルウィンドウ閉じる
+          this.isEditActorModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          this.editTime.valid = "is-invalid";
+          console.log("登場人物更新に失敗しました。");
+        });
+    },
+    async selectTimeApi(timeId, timeName) {
       let params = {
         time_id: timeId,
         time_name: timeName,
@@ -1249,7 +1265,7 @@ export default {
 
       // 時系列画面反映処理
       // 時系列取得
-      this.$http
+      await this.$http
         .get(ApiURL.SEARCH_TIME, { params: params })
         .then((response) => {
           // 成功
@@ -1352,7 +1368,7 @@ export default {
           console.log("時系列削除に失敗しました。");
         });
     },
-    selectGroupApi(groupId, groupName) {
+    async selectGroupApi(groupId, groupName) {
       let params = {
         group_id: groupId,
         group_name: groupName,
@@ -1364,7 +1380,7 @@ export default {
 
       // グループ画面反映処理
       // グループ取得
-      this.$http
+      await this.$http
         .get(ApiURL.SEARCH_GROUP, { params: params })
         .then((response) => {
           // 成功
@@ -1474,7 +1490,7 @@ export default {
           console.log("時系列削除に失敗しました。");
         });
     },
-    selectGraphApi() {
+    async selectGraphApi() {
       // パラメータ生成
       let params = {
         opus_id: this.$route.params.id,
@@ -1484,13 +1500,13 @@ export default {
       };
 
       // グラフ取得
-      this.$http
+      await this.$http
         .get(ApiURL.SEARCH_GRAPH, { params: params })
         .then((response) => {
           this.nodes = response.data.optional.nodes;
           this.links = response.data.optional.links;
         })
-        .catch((error) => {
+        .catch(() => {
           console.log("グラフ取得に失敗しました。");
         });
     },
@@ -1517,6 +1533,30 @@ export default {
         });
     },
     /* バリデーション */
+    createActorValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.createActor.actorNameValid = "";
+      this.createActor.timeIdValid = "";
+      this.createActor.groupIdValid = "";
+
+      if (CommonUtils.eq(params.actor_name, "")) {
+        this.createActor.actorNameValid = "is-invalid";
+        validationFlg = true;
+      }
+
+      if (CommonUtils.eq(params.time_id, "")) {
+        this.createActor.timeIdValid = "is-invalid";
+        validationFlg = true;
+      }
+
+      if (CommonUtils.eq(params.group_id, "")) {
+        this.createActor.groupIdValid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
     createTimeValidation(params) {
       // 初期化
       let validationFlg = false;
@@ -1573,30 +1613,6 @@ export default {
 
       if (CommonUtils.eq(params.group_color, "")) {
         this.editTime.groupColorValid = "is-invalid";
-        validationFlg = true;
-      }
-      return validationFlg;
-    },
-    createActorValidation(params) {
-      // 初期化
-      let validationFlg = false;
-
-      this.createActor.actorNameValid = "";
-      this.createActor.timeIdValid = "";
-      this.createActor.groupIdValid = "";
-
-      if (CommonUtils.eq(params.actor_name, "")) {
-        this.createActor.actorNameValid = "is-invalid";
-        validationFlg = true;
-      }
-
-      if (CommonUtils.eq(params.time_id, "")) {
-        this.createActor.timeIdValid = "is-invalid";
-        validationFlg = true;
-      }
-
-      if (CommonUtils.eq(params.group_id, "")) {
-        this.createActor.groupIdValid = "is-invalid";
         validationFlg = true;
       }
       return validationFlg;
@@ -1663,6 +1679,46 @@ export default {
       // モーダルウィンドウ開く
       this.isCreateActorModal = true;
     },
+    isEditActorOrLinkModalOpen() {
+      // 編集モーダルウィンドウ
+
+      if (!!this.currentInfo.currentId) {
+        if (this.currentInfo.isActor) {
+          // 登場人物編集
+          // パラメータ生成
+          let params = {
+            actor_id: this.currentInfo.currentId,
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+          };
+
+          // 登場人物取得
+          this.$http
+            .get(ApiURL.SEARCH_ACTOR, { params: params })
+            .then((response) => {
+              // モーダルウィンドウ開く
+              this.editActor.actorId = response.data.optional[0].actor_id;
+              this.editActor.actorName = response.data.optional[0].actor_name;
+              this.editActor.actorInfo = response.data.optional[0].actor_info;
+              this.editActor.actorImg = response.data.optional[0].actor_img;
+              this.editActor.opusId = response.data.optional[0].opus_id;
+              this.editActor.timeId = response.data.optional[0].time_id;
+              this.editActor.groupId = response.data.optional[0].group_id;
+              this.editActor.version = response.data.optional[0].version;
+
+              // モーダルウィンドウ開く
+              this.isEditActorModal = true;
+            })
+            .catch(() => {
+              console.log("登場人物取得に失敗しました。");
+            });
+        } else {
+          // 関係編集
+          // モーダルウィンドウ開く
+          this.isEditTimeModal = true;
+        }
+      }
+    },
     /* 相関図表示処理 */
     isSelectSvg(currentId) {
       // 画面変更
@@ -1708,27 +1764,19 @@ export default {
         console.log(e);
       }
     },
+    /* 前ページ遷移処理 */
     returnBtn() {
       this.$router.go(-1);
     },
-    /* モーダルウィンドウ処理 */
-    actorEdit() {
-      // アクター更新処理
-
-      // 選択中のアクターID取得
-      this.createEdit.actorId = document
-        .getElementById("actor_id")
-        .getAttribute("value");
-      // モーダルウィンドウを閉じる
-      this.isActorEditModal = false;
-    },
+    /* 相関図ノード処理 */
     formatNode(node) {
       let svgAttrs = node._svgAttrs || {};
       if (!svgAttrs.id) svgAttrs.id = "node-" + node.id;
       node._svgAttrs = svgAttrs;
       return node;
     },
-    clickCell(event) {
+    /* 表示変数初期化処理 */
+    currentInfoFormat() {
       // 表示変数初期化
       this.currentInfo.currentId = "";
       this.currentInfo.currentName = "";
@@ -1738,6 +1786,11 @@ export default {
       this.currentInfo.timeId = "";
       this.currentInfo.groupId = "";
       this.currentInfo.isActor = true;
+    },
+    /* 相関図クリック時処理 */
+    clickCell(event) {
+      // 表示変数初期化
+      this.currentInfoFormat();
 
       let id = 0;
       if (!!event.target.id) {
