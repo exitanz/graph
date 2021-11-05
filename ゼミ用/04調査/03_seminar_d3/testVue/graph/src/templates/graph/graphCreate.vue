@@ -11,7 +11,7 @@
           <b-button variant="info" @click="isCreateActorModalOpen()"
             >Actor<font-awesome-icon icon="user-plus" />
           </b-button>
-          <b-button variant="success" @click="isLinkCreateModal = true"
+          <b-button variant="success" @click="isCreateRelModal = true"
             >Link
             <font-awesome-icon icon="arrows-alt-h" />
           </b-button>
@@ -21,7 +21,7 @@
             variant="warning"
           >
             <template #button-content>
-              Edit
+              others
               <font-awesome-icon icon="edit" />
             </template>
             <b-dropdown-item @click="isTimeModal = true"
@@ -30,6 +30,9 @@
             <b-dropdown-item @click="isGroupModal = true"
               >グループ管理</b-dropdown-item
             >
+            <b-dropdown-item @click="isRelMstModal = true">
+              関係性管理
+            </b-dropdown-item>
           </b-dropdown>
           <b-dropdown right toggle-class="text-decoration-none" no-caret>
             <template #button-content>
@@ -132,7 +135,7 @@
                     <!-----------削除ボタン-------------->
                     <b-button
                       variant="danger"
-                      @click="isActorDeleteModal = true"
+                      @click="isDeleteActorOrLinkModalOpen()"
                     >
                       削除
                     </b-button>
@@ -316,56 +319,23 @@
         </b-button>
       </template>
     </b-modal>
-    <!-----------Linkボタン モーダル-------------->
-    <b-modal v-model="isLinkCreateModal" title="入力画面">
+    <!-----------Actor編集 モーダル-------------->
+    <b-modal v-model="isEditActorModal" title="編集画面">
       <b-container fluid>
         <b-row class="mb-1">
-          <b-col cols="3">関係名</b-col>
+          <input type="hidden" v-model="editActor.actorId" />
+          <input type="hidden" v-model="editActor.version" />
+          <b-col cols="3">名前</b-col>
           <b-col>
             <div class="input-group">
               <input
                 class="form-control"
-                placeholder="関係を入力してください。"
+                placeholder="名前を入力してください。"
                 type="text"
-                name="create_link_name"
-                v-model="linkName"
-                v-bind:class="[linkCreate.valid]"
+                name="edit_actor_name"
+                v-model="editActor.actorName"
+                v-bind:class="[editActor.valid]"
               />
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">From</b-col>
-          <b-col>
-            <div class="input-group">
-              <b-form-select v-model="selected" :options="options">
-                <b-form-select-option>A</b-form-select-option>
-                <b-form-select-option>B</b-form-select-option>
-                <b-form-select-option>C</b-form-select-option>
-              </b-form-select>
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">to</b-col>
-          <b-col>
-            <div class="input-group">
-              <b-form-select v-model="selected" :options="options">
-                <b-form-select-option>A</b-form-select-option>
-                <b-form-select-option>B</b-form-select-option>
-                <b-form-select-option>C</b-form-select-option>
-              </b-form-select>
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">関係性</b-col>
-          <b-col>
-            <div class="input-group">
-              <b-form-select v-model="selected" :options="options">
-                <b-form-select-option>友達</b-form-select-option>
-                <b-form-select-option>恋人</b-form-select-option>
-              </b-form-select>
             </div>
           </b-col>
         </b-row>
@@ -373,11 +343,42 @@
           <b-col cols="3">時系列</b-col>
           <b-col>
             <div class="input-group">
-              <b-form-select v-model="selected" :options="options">
-                <b-form-select-option>時系列１</b-form-select-option>
-                <b-form-select-option>時系列２</b-form-select-option>
-                <b-form-select-option>時系列３</b-form-select-option>
-              </b-form-select>
+              {{ currentName }}
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">グループ</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="editActor.groupId"
+                v-bind:class="[editActor.valid]"
+              >
+                <option :value="null" disabled>
+                  グループを選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in groupList"
+                  :key="key"
+                  v-bind:value="row.group_id"
+                >
+                  {{ row.group_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">アイコン</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-file
+                v-model="editActor.actorImg"
+                v-on:change="editActorFile"
+                placeholder="ファイルを選択"
+              ></b-form-file>
             </div>
           </b-col>
         </b-row>
@@ -386,8 +387,8 @@
           <b-col>
             <div class="input-group">
               <b-form-textarea
-                id="link_info"
-                v-model="text"
+                id="actor_info"
+                v-model="editActor.actorInfo"
                 rows="3"
                 max-rows="10"
               ></b-form-textarea>
@@ -401,7 +402,147 @@
           variant="secondary"
           size="sm"
           class="float-right"
-          @click="isLinkCreateModal = false"
+          @click="isEditActorModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="success"
+          size="sm"
+          class="float-right"
+          @click="editActorApi()"
+        >
+          更新
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------Actor削除ボタン モーダル-------------->
+    <b-modal v-model="isDeleteActorModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">データを削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isDeleteActorModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="deleteActorApi()"
+        >
+          削除
+        </b-button>
+      </template>
+    </b-modal>
+
+    <!-----------Linkボタン モーダル-------------->
+    <b-modal v-model="isCreateRelModal" title="入力画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <b-col cols="3">関係性</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="createRel.relMstId"
+                v-bind:class="[createRel.relMstIdValid]"
+              >
+                <option :value="null" disabled>
+                  関係性を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in relMstList"
+                  :key="key"
+                  v-bind:value="row.rel_mst_id"
+                >
+                  {{ row.rel_mst_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">From</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="createRel.actorId"
+                v-bind:class="[createRel.actorIdValid]"
+              >
+                <option :value="null" disabled>
+                  登場人物を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in actorList"
+                  :key="key"
+                  v-bind:value="row.actor_id"
+                >
+                  {{ row.actor_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">to</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="createRel.targetId"
+                v-bind:class="[createRel.targetIdvalid]"
+              >
+                <option :value="null" disabled>
+                  登場人物を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in actorList"
+                  :key="key"
+                  v-bind:value="row.actor_id"
+                >
+                  {{ row.actor_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">時系列</b-col>
+          <b-col>
+            <div class="input-group">
+              {{ currentName }}
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">詳細情報</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-textarea
+                id="link_info"
+                v-model="createRel.relInfo"
+                rows="3"
+                max-rows="10"
+              ></b-form-textarea>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isCreateRelModal = false"
         >
           閉じる
         </b-button>
@@ -409,9 +550,152 @@
           variant="primary"
           size="sm"
           class="float-right"
-          @click="linkCreate()"
+          @click="createRelApi()"
         >
           登録
+        </b-button>
+      </template>
+    </b-modal>
+
+    <!-----------関係性編集 モーダル-------------->
+    <b-modal v-model="isRelMstModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="editRelMst.relMstId" />
+          <input type="hidden" v-model="editRelMst.version" />
+          <b-col cols="3">関係性名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="関係性名を入力してください。"
+                type="text"
+                name="edit_rel_mst_name"
+                v-model="createRelMst.relMstName"
+                v-bind:class="[createRelMst.valid]"
+              />
+              <b-button variant="info" @click="createRelMstApi()">
+                追加
+              </b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>関係性名</th>
+                <th>編集</th>
+                <th>削除</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, key) in relMstList" :key="key">
+                <td>{{ row.rel_mst_name }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    @click="
+                      isEditRelMstModalOpen(
+                        row.rel_mst_id,
+                        row.rel_mst_name,
+                        row.version
+                      )
+                    "
+                  >
+                    <font-awesome-icon icon="pencil-alt" />
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    @click="isDeleteRelMstModalOpen(row.rel_mst_id)"
+                  >
+                    <font-awesome-icon icon="times" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isRelMstModal = false"
+        >
+          閉じる
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------編集 モーダル-------------->
+    <b-modal v-model="isEditRelMstModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <input type="hidden" v-model="editRelMst.relMstId" />
+          <input type="hidden" v-model="editRelMst.version" />
+          <b-col cols="3">関係性名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="関係性名を入力してください。"
+                type="text"
+                name="edit_rel_mst_name"
+                v-model="editRelMst.relMstName"
+                v-bind:class="[editRelMst.valid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isEditRelMstModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="success"
+          size="sm"
+          class="float-right"
+          @click="editRelMstApi()"
+        >
+          更新
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------削除 モーダル-------------->
+    <b-modal v-model="isDeleteRelMstModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">関係性を削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isDeleteRelMstModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="deleteRelMstApi()"
+        >
+          削除
         </b-button>
       </template>
     </b-modal>
@@ -661,94 +945,95 @@
         >
           閉じる
         </b-button>
-        <!-----------編集 モーダル-------------->
-        <b-modal v-model="isEditGroupModal" title="編集画面">
-          <b-container fluid>
-            <input type="hidden" v-model="editGroup.group_id" />
-            <input type="hidden" v-model="editGroup.version" />
-            <b-row class="mb-1">
-              <b-col cols="3">グループ名</b-col>
-              <b-col>
-                <div class="input-group">
-                  <input
-                    class="form-control"
-                    placeholder="グループ名を入力してください。"
-                    type="text"
-                    name="edit_group_name"
-                    v-model="editGroup.groupName"
-                    v-bind:class="[editGroup.groupNameValid]"
-                  />
-                </div>
-              </b-col>
-            </b-row>
-            <b-row class="mb-1">
-              <b-col cols="3">グループ色</b-col>
-              <b-col>
-                <div class="input-group">
-                  <select
-                    class="form-control"
-                    v-model="editGroup.groupColor"
-                    v-bind:class="[editGroup.groupColorValid]"
-                  >
-                    <option
-                      v-for="(val, key) in commonMstColor"
-                      :key="key"
-                      v-bind:value="val.common_value"
-                    >
-                      {{ val.common_info }}
-                    </option>
-                  </select>
-                </div>
-              </b-col>
-            </b-row>
-          </b-container>
-
-          <template #modal-footer>
-            <b-button
-              variant="secondary"
-              size="sm"
-              class="float-right"
-              @click="isEditGroupModal = false"
-            >
-              閉じる
-            </b-button>
-            <b-button
-              variant="success"
-              size="sm"
-              class="float-right"
-              @click="editGroupApi()"
-            >
-              更新
-            </b-button>
-          </template>
-        </b-modal>
-        <!-----------削除 モーダル-------------->
-        <b-modal v-model="isDeleteGroupModal" title="確認画面">
-          <b-container fluid>
-            <p class="my-4">グループを削除しますか？</p>
-          </b-container>
-
-          <template #modal-footer>
-            <b-button
-              variant="secondary"
-              size="sm"
-              class="float-right"
-              @click="isDeleteGroupModal = false"
-            >
-              閉じる
-            </b-button>
-            <b-button
-              variant="danger"
-              size="sm"
-              class="float-right"
-              @click="deleteGroupApi()"
-            >
-              削除
-            </b-button>
-          </template>
-        </b-modal>
       </template>
     </b-modal>
+    <!-----------編集 モーダル-------------->
+    <b-modal v-model="isEditGroupModal" title="編集画面">
+      <b-container fluid>
+        <input type="hidden" v-model="editGroup.group_id" />
+        <input type="hidden" v-model="editGroup.version" />
+        <b-row class="mb-1">
+          <b-col cols="3">グループ名</b-col>
+          <b-col>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="グループ名を入力してください。"
+                type="text"
+                name="edit_group_name"
+                v-model="editGroup.groupName"
+                v-bind:class="[editGroup.groupNameValid]"
+              />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">グループ色</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="editGroup.groupColor"
+                v-bind:class="[editGroup.groupColorValid]"
+              >
+                <option
+                  v-for="(val, key) in commonMstColor"
+                  :key="key"
+                  v-bind:value="val.common_value"
+                >
+                  {{ val.common_info }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isEditGroupModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="success"
+          size="sm"
+          class="float-right"
+          @click="editGroupApi()"
+        >
+          更新
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------削除 モーダル-------------->
+    <b-modal v-model="isDeleteGroupModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">グループを削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isDeleteGroupModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="deleteGroupApi()"
+        >
+          削除
+        </b-button>
+      </template>
+    </b-modal>
+
     <!-----------投稿するボタン モーダル-------------->
     <b-modal v-model="isSubmitCheckModal" title="確認画面">
       <b-container fluid>
@@ -766,7 +1051,7 @@
         </b-button>
       </template>
     </b-modal>
-    <!-----------相関図を削除 モーダル-------------->
+    <!-----------相関図削除 モーダル-------------->
     <b-modal v-model="isGraphDeleteModal" title="確認画面">
       <b-container fluid>
         <p class="my-4">相関図を削除しますか？</p>
@@ -816,128 +1101,6 @@
         </b-button>
       </template>
     </b-modal>
-    <!-----------Actor編集 モーダル-------------->
-    <b-modal v-model="isEditActorModal" title="編集画面">
-      <b-container fluid>
-        <b-row class="mb-1">
-          <input type="hidden" v-model="editActor.actorId" />
-          <input type="hidden" v-model="editActor.version" />
-          <b-col cols="3">名前</b-col>
-          <b-col>
-            <div class="input-group">
-              <input
-                class="form-control"
-                placeholder="名前を入力してください。"
-                type="text"
-                name="edit_actor_name"
-                v-model="editActor.actorName"
-                v-bind:class="[editActor.valid]"
-              />
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">時系列</b-col>
-          <b-col>
-            <div class="input-group">
-              {{ currentName }}
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">グループ</b-col>
-          <b-col>
-            <div class="input-group">
-              <select
-                class="form-control"
-                v-model="editActor.groupId"
-                v-bind:class="[editActor.valid]"
-              >
-                <option :value="null" disabled>
-                  グループを選択してください。
-                </option>
-                <option
-                  v-for="(row, key) in groupList"
-                  :key="key"
-                  v-bind:value="row.group_id"
-                >
-                  {{ row.group_name }}
-                </option>
-              </select>
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">アイコン</b-col>
-          <b-col>
-            <div class="input-group">
-              <b-form-file
-                v-model="editActor.actorImg"
-                v-on:change="editActorFile"
-                placeholder="ファイルを選択"
-              ></b-form-file>
-            </div>
-          </b-col>
-        </b-row>
-        <b-row class="mb-1">
-          <b-col cols="3">詳細情報</b-col>
-          <b-col>
-            <div class="input-group">
-              <b-form-textarea
-                id="actor_info"
-                v-model="editActor.actorInfo"
-                rows="3"
-                max-rows="10"
-              ></b-form-textarea>
-            </div>
-          </b-col>
-        </b-row>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isEditActorModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="success"
-          size="sm"
-          class="float-right"
-          @click="editActorApi()"
-        >
-          更新
-        </b-button>
-      </template>
-    </b-modal>
-    <!-----------Actor削除ボタン モーダル-------------->
-    <b-modal v-model="isActorDeleteModal" title="確認画面">
-      <b-container fluid>
-        <p class="my-4">データを削除しますか？</p>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isActorDeleteModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="danger"
-          size="sm"
-          class="float-right"
-          @click="actorDelete()"
-        >
-          削除
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 
@@ -952,7 +1115,9 @@ export default {
   data() {
     return {
       loading: false,
+      actorList: [],
       timeList: [],
+      relMstList: [],
       groupList: [],
       commonMstColor: [],
       currentInfo: {
@@ -1033,11 +1198,27 @@ export default {
       deleteGroup: {
         groupId: "",
       },
-      linkCreate: {
-        linkId: "1",
-        linkName: "2",
-        linkInfo: "3",
+      createRelMst: {
+        relMstName: "",
         valid: "",
+      },
+      editRelMst: {
+        relMstId: "",
+        relMstName: "",
+        version: 0,
+        valid: "",
+      },
+      deleteRelMst: {
+        relMstId: "",
+      },
+      createRel: {
+        relMstId: null,
+        relInfo: "",
+        actorId: null,
+        targetId: null,
+        actorIdValid: "",
+        targetIdvalid: "",
+        relMstIdValid: "",
       },
       currentId: "time0000",
       currentName: "",
@@ -1053,18 +1234,22 @@ export default {
       /* モーダルウィンドウ変数 */
       isCreateActorModal: false,
       isEditActorModal: false,
-      isLinkCreateModal: false,
-      isEditLinkModal: false,
-      isSubmitCheckModal: false,
+      isDeleteActorModal: false,
       isTimeModal: false,
       isEditTimeModal: false,
       isDeleteTimeModal: false,
       isGroupModal: false,
       isEditGroupModal: false,
       isDeleteGroupModal: false,
+      isRelMstModal: false,
+      isEditRelMstModal: false,
+      isDeleteRelMstModal: false,
       isGraphDeleteModal: false,
+
+      isCreateRelModal: false,
+      isEditLinkModal: false,
+      isSubmitCheckModal: false,
       isLogoutCheckModal: false,
-      isActorDeleteModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1098,6 +1283,9 @@ export default {
           // 汎用マスタ（グループ色）取得
           this.selectCommonMstApi("_color");
 
+          // 関係性取得
+          this.selectRelMstApi(null, null);
+
           // 時系列取得
           params = {
             opus_id: this.$route.params.id,
@@ -1126,6 +1314,8 @@ export default {
               this.selectGroupApi(null, null);
               // グラフ取得
               this.selectGraphApi();
+              // 登場人物取得
+              this.selectActorApi(null, null);
             })
             .catch(() => {
               // 失敗
@@ -1138,6 +1328,31 @@ export default {
         });
     },
     /* API */
+    async selectActorApi(actorId, actorName) {
+      let params = {
+        actor_id: actorId,
+        actor_name: actorName,
+        opus_id: this.$route.params.id,
+        time_id: this.currentId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 登場人物画面反映処理
+      // 登場人物取得
+      await this.$http
+        .get(ApiURL.SEARCH_ACTOR, { params: params })
+        .then((response) => {
+          // 成功
+
+          // 登場人物
+          this.actorList = response.data.optional;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("登場人物取得に失敗しました。");
+        });
+    },
     async createActorApi() {
       // 画像登録
       let params = {
@@ -1186,7 +1401,8 @@ export default {
           // 成功
 
           // 画面反映処理
-          this.selectGraphApi(null, null);
+          this.selectGraphApi();
+          this.selectActorApi(null, null);
 
           // モーダルウィンドウを閉じる
           this.isCreateActorModal = false;
@@ -1241,6 +1457,7 @@ export default {
 
           // 画面反映処理
           this.selectGraphApi();
+          this.selectActorApi(null, null);
 
           // 表示変数初期化
           this.currentInfoFormat();
@@ -1252,6 +1469,69 @@ export default {
           // 失敗
           this.editTime.valid = "is-invalid";
           console.log("登場人物更新に失敗しました。");
+        });
+    },
+    deleteActorApi() {
+      // 削除処理
+
+      // パラメータ作成
+      let params = {
+        actor_id: this.currentInfo.currentId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 削除
+      this.$http
+        .post(ApiURL.DELETE_ACTOR, params)
+        .then(() => {
+          // 成功
+          // 画面反映処理
+          this.selectGraphApi();
+
+          // 表示変数初期化
+          this.currentInfoFormat();
+
+          // モーダルウィンドウ閉じる
+          this.isDeleteActorModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("登場人物削除に失敗しました。");
+        });
+    },
+    createRelApi() {
+      let params = {
+        rel_mst_id: this.createRel.relMstId,
+        rel_mst_info: this.createRel.relInfo,
+        actor_id: this.createRel.actorId,
+        target_id: this.createRel.targetId,
+        opus_id: this.$route.params.id,
+        time_id: this.currentId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // バリデーションチェック
+      if (this.createRelValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 登録
+      this.$http
+        .post(ApiURL.CREATE_REL, params)
+        .then(() => {
+          // 成功
+
+          // 画面反映処理
+          this.selectGraphApi();
+
+          // モーダルウィンドウを閉じる
+          this.isCreateRelModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係登録に失敗しました。");
         });
     },
     async selectTimeApi(timeId, timeName) {
@@ -1475,7 +1755,7 @@ export default {
       // 削除
       this.$http
         .post(ApiURL.DELETE_GROUP, params)
-        .then((response) => {
+        .then(() => {
           // 成功
 
           // 画面反映処理
@@ -1487,7 +1767,121 @@ export default {
         })
         .catch(() => {
           // 失敗
-          console.log("時系列削除に失敗しました。");
+          console.log("グループ削除に失敗しました。");
+        });
+    },
+    async selectRelMstApi(relMstId, relMstName) {
+      let params = {
+        rel_mst_id: relMstId,
+        rel_mst_name: relMstName,
+        opus_id: this.$route.params.id,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 関係性画面反映処理
+      // 関係性取得
+      await this.$http
+        .get(ApiURL.SEARCH_RELMST, { params: params })
+        .then((response) => {
+          // 成功
+
+          // 関係性
+          this.relMstList = response.data.optional;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係性取得に失敗しました。");
+        });
+    },
+    createRelMstApi() {
+      let params = {
+        rel_mst_name: this.createRelMst.relMstName,
+        opus_id: this.$route.params.id,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // バリデーションチェック
+      if (this.createRelMstValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 関係性登録
+      this.$http
+        .post(ApiURL.CREATE_RELMST, params)
+        .then(() => {
+          // 成功
+
+          // 画面反映処理
+          this.selectRelMstApi(null, null);
+        })
+        .catch(() => {
+          // 失敗
+          this.createRelMst.valid = "is-invalid";
+          console.log("関係性登録に失敗しました。");
+        });
+    },
+    editRelMstApi() {
+      // 更新処理
+
+      // パラメータ作成
+      let params = {
+        rel_mst_id: this.editRelMst.relMstId,
+        rel_mst_name: this.editRelMst.relMstName,
+        version: this.editRelMst.version,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // バリデーションチェック
+      if (this.editRelMstValidation(params)) {
+        throw "バリデーションエラー";
+      }
+
+      // 更新
+      this.$http
+        .put(ApiURL.EDIT_RELMST, params)
+        .then((response) => {
+          // 成功
+
+          // 画面反映処理
+          this.selectRelMstApi(null, null);
+
+          // モーダルウィンドウ閉じる
+          this.isEditRelMstModal = false;
+        })
+        .catch((error) => {
+          // 失敗
+          this.editRelMst.valid = "is-invalid";
+          console.log("関係性更新に失敗しました。");
+        });
+    },
+    deleteRelMstApi() {
+      // 削除処理
+
+      // パラメータ作成
+      let params = {
+        rel_mst_id: this.deleteRelMst.relMstId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 削除
+      this.$http
+        .post(ApiURL.DELETE_RELMST, params)
+        .then((response) => {
+          // 成功
+
+          // 画面反映処理
+          this.selectRelMstApi(null, null);
+
+          // モーダルウィンドウ閉じる
+          this.isDeleteRelMstModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係性削除に失敗しました。");
         });
     },
     async selectGraphApi() {
@@ -1557,6 +1951,30 @@ export default {
       }
       return validationFlg;
     },
+    createRelValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.createRel.relMstIdValid = "";
+      this.createRel.actorIdValid = "";
+      this.createRel.targetIdvalid = "";
+
+      if (CommonUtils.eq(params.rel_mst_id, "")) {
+        this.createRel.relMstIdValid = "is-invalid";
+        validationFlg = true;
+      }
+
+      if (CommonUtils.eq(params.actor_id, "")) {
+        this.createRel.actorIdValid = "is-invalid";
+        validationFlg = true;
+      }
+
+      if (CommonUtils.eq(params.target_id, "")) {
+        this.createRel.targetIdvalid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
     createTimeValidation(params) {
       // 初期化
       let validationFlg = false;
@@ -1585,8 +2003,8 @@ export default {
       // 初期化
       let validationFlg = false;
 
-      this.createGroup.group_name = "";
-      this.createGroup.group_color = "";
+      this.createGroup.groupNameValid = "";
+      this.createGroup.groupColorValid = "";
 
       if (CommonUtils.eq(params.group_name, "")) {
         this.createGroup.groupNameValid = "is-invalid";
@@ -1613,6 +2031,30 @@ export default {
 
       if (CommonUtils.eq(params.group_color, "")) {
         this.editTime.groupColorValid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
+    createRelMstValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.createRelMst.relMstName = "";
+
+      if (CommonUtils.eq(params.rel_mst_name, "")) {
+        this.createRelMst.valid = "is-invalid";
+        validationFlg = true;
+      }
+      return validationFlg;
+    },
+    editRelMstValidation(params) {
+      // 初期化
+      let validationFlg = false;
+
+      this.editRelMst.valid = "";
+
+      if (CommonUtils.eq(params.rel_mst_name, "")) {
+        this.editRelMst.valid = "is-invalid";
         validationFlg = true;
       }
       return validationFlg;
@@ -1659,7 +2101,7 @@ export default {
       // 削除モーダルウィンドウ
 
       // 初期化
-      this.editGroup.groupId = groupId;
+      this.deleteGroup.groupId = groupId;
 
       // モーダルウィンドウ開く
       this.isDeleteGroupModal = true;
@@ -1718,6 +2160,40 @@ export default {
           this.isEditTimeModal = true;
         }
       }
+    },
+    isDeleteActorOrLinkModalOpen() {
+      // 編集モーダルウィンドウ
+
+      if (!!this.currentInfo.currentId) {
+        if (this.currentInfo.isActor) {
+          // モーダルウィンドウ開く
+          this.isDeleteActorModal = true;
+        } else {
+          // 関係編集
+          // モーダルウィンドウ開く
+          this.isEditTimeModal = true;
+        }
+      }
+    },
+    isEditRelMstModalOpen(relMstId, relMstName, version) {
+      // 編集モーダルウィンドウ
+
+      // 初期化
+      this.editRelMst.relMstId = relMstId;
+      this.editRelMst.relMstName = relMstName;
+      this.editRelMst.version = version;
+
+      // モーダルウィンドウ開く
+      this.isEditRelMstModal = true;
+    },
+    isDeleteRelMstModalOpen(relMstId) {
+      // 削除モーダルウィンドウ
+
+      // 初期化
+      this.deleteRelMst.relMstId = relMstId;
+
+      // モーダルウィンドウ開く
+      this.isDeleteRelMstModal = true;
     },
     /* 相関図表示処理 */
     isSelectSvg(currentId) {
@@ -1833,14 +2309,15 @@ export default {
           this.currentInfo.currentId = this.links[id].rel_id;
           this.currentInfo.currentName = this.links[id].rel_mst_name;
           this.currentInfo.currentInfo =
+            "【" +
             sname +
             "と" +
             tname +
-            "の関係" +
-            "\n\n" +
-            "【詳細情報】" +
+            "の関係】" +
             "\n" +
-            this.links[id].rel_mst_info;
+            !!this.links[id].rel_mst_info
+              ? this.links[id].rel_mst_info
+              : "";
           this.currentInfo.currentImg = "/user/line.png";
           this.currentInfo.isActor = false;
         }

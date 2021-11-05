@@ -142,7 +142,12 @@ CREATE TABLE common_mst(
 INSERT INTO
     `common_mst`(`common_key`, `common_value`, `common_info`)
 VALUES
+    ('_color', '#808080', 'グレー'),
+    ('_color', '#FF69B4', 'ピンク'),
+    ('_color', '#8B4513', 'ブラウン'),
     ('_color', '#FFA500', 'オレンジ'),
+    ('_color', '#FFFF00', '黄'),
+    ('_color', '#800080', '紫'),
     ('_color', '#2AFF00', '緑'),
     ('_color', '#00C3FF', '青'),
     ('_color', '#FF193F', '赤');

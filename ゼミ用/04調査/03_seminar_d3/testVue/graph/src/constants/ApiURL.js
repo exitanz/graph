@@ -27,6 +27,18 @@ export class ApiURL {
   static EDIT_TIME = ApiURL.CONTROLLER + '/EditTimeControler.php';
   static DELETE_TIME = ApiURL.CONTROLLER + '/DeleteTimeControler.php';
 
+  /** 関係性 */
+  static SEARCH_RELMST = ApiURL.CONTROLLER + '/SearchRelMstControler.php';
+  static CREATE_RELMST = ApiURL.CONTROLLER + '/CreateRelMstControler.php';
+  static EDIT_RELMST = ApiURL.CONTROLLER + '/EditRelMstControler.php';
+  static DELETE_RELMST = ApiURL.CONTROLLER + '/DeleteRelMstControler.php';
+
+  /** 関係 */
+  static SEARCH_REL = ApiURL.CONTROLLER + '/SearchRelControler.php';
+  static CREATE_REL = ApiURL.CONTROLLER + '/CreateRelControler.php';
+  static EDIT_REL = ApiURL.CONTROLLER + '/EditRelControler.php';
+  static DELETE_REL = ApiURL.CONTROLLER + '/DeleteRelControler.php';
+
   /** グループ */
   static SEARCH_GROUP = ApiURL.CONTROLLER + '/SearchGroupControler.php';
   static CREATE_GROUP = ApiURL.CONTROLLER + '/CreateGroupControler.php';
