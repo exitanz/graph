@@ -2746,6 +2746,5 @@ export default {
 </script>
 
 <style>
-@import "../../style/d3.css";
 @import "../../style/d3-network.css";
 </style>

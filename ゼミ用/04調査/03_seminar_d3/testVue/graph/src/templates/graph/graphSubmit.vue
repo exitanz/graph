@@ -40,24 +40,22 @@
         <div>
           <b-card>
             <template #header>
-              <b-tabs pills>
+              <div class="btn-group btn-group-lg">
                 <button
-                  type="button"
-                  class="col-12 p-3"
+                  class="btn btn-secondary"
                   @click="btnval = 1"
                   v-bind:class="{ active: btnval === 1 }"
                 >
                   ユーザ名
                 </button>
                 <button
-                  type="button"
-                  class="col-12 p-3"
+                  class="btn btn-secondary"
                   @click="btnval = 2"
                   v-bind:class="{ active: btnval === 2 }"
                 >
                   作品名
                 </button>
-              </b-tabs>
+              </div>
             </template>
 
             <aside class="col-12" id="side_search">
@@ -68,14 +66,13 @@
                   placeholder="Search"
                   v-model="xname"
                 ></b-form-input>
-                <b-button variant="info">
+                <b-button variant="info" @click="initialize()">
                   <font-awesome-icon icon="search" />
                 </b-button>
               </b-form>
             </aside>
           </b-card>
         </div>
-        <hr />
         <br />
         <table class="table">
           <thead class="thead-light">
@@ -86,39 +83,72 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, key) in opusSubmitList" :key="key">
-              <td class="col-sm-2">{{ row.user_name }}</td>
-              <td class="col-sm-2">{{ row.opus_name }}</td>
+            <tr
+              v-for="(row, key) in opusSubmitList"
+              :key="key"
+              style="background-color: #ffa500"
+            >
+              <td>{{ row.user_name }}</td>
+              <td>{{ row.opus_name }}</td>
               <td>
-                <router-link
-                  v-bind:to="{ path: graphCreate + '/' + row.opus_id }"
+                <button
+                  class="btn btn-info"
+                  @click="createGraphApi(row.opus_id)"
                 >
-                  <button type="button" class="btn btn-info">
-                    <font-awesome-icon icon="eye" />
-                  </button>
-                </router-link>
+                  <font-awesome-icon icon="eye" />
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
-        <!-----------ページ切り替え-------------->
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+      </article>
+      <!-----------ページ切り替え-------------->
+
+      <article class="card-body">
+        <div class="btn-group" v-if="searchOpus.min != 0">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            v-bind:class="[
+              searchOpus.min === searchOpus.current
+                ? 'btn-secondary active'
+                : 'btn-secondary',
+            ]"
+            @click="searchOpusApi(searchOpus.min)"
+          >
+            {{ searchOpus.min }}
+          </button>
+          　...
+        </div>
+        <div class="btn-group" v-for="index in searchOpus.btnloop" :key="index">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            v-bind:class="[
+              index + searchOpus.addpage === searchOpus.current
+                ? 'btn-secondary active'
+                : 'btn-secondary',
+            ]"
+            @click="searchOpusApi(index + searchOpus.addpage)"
+          >
+            {{ index + searchOpus.addpage }}
+          </button>
+        </div>
+        <div class="btn-group" v-if="searchOpus.max != 0">
+          ...　
+          <button
+            type="button"
+            class="btn btn-secondary"
+            v-bind:class="[
+              searchOpus.max === searchOpus.current
+                ? 'btn-secondary active'
+                : 'btn-secondary',
+            ]"
+            @click="searchOpusApi(searchOpus.max)"
+          >
+            {{ searchOpus.max }}
+          </button>
+        </div>
       </article>
     </aside>
     <aside class="col-sm-0 col-md-2 col-lg-2 col-xl-2"></aside>
@@ -160,11 +190,19 @@ import { Constant } from "../../constants/Constant.js";
 export default {
   data() {
     return {
-      opusList: [],
       opusSubmitList: [],
       works: [],
       successMsgList: [],
       dangerMsgList: [],
+      searchOpus: {
+        current: 1,
+        offset: 0,
+        limit: Constant.OPUS_LIST_MAX,
+        btnloop: 0,
+        min: 0,
+        max: 0,
+        addpage: 0,
+      },
       btnval: 1,
       xname: "",
       graphList: VueFileName.graphList,
@@ -188,8 +226,8 @@ export default {
       let params = {
         user_id: this.$store.getters.getUserId,
         token: this.$store.getters.getToken,
-        offset: 0,
-        limit: Constant.OPUS_LIST_MAX,
+        offset: this.searchOpus.offset,
+        limit: this.searchOpus.limit,
       };
 
       if (this.xname) {
@@ -206,21 +244,131 @@ export default {
         .then((response) => {
           // 成功
           this.opusSubmitList = response.data.optional;
+
+          // 画面切り替えボタン表示数
+
+          // パラメータ作成
+          let initParams = {
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+            offset: 0,
+            limit: 9999,
+          };
+
+          if (this.xname) {
+            if (this.btnval == 1) {
+              initParams.user_name = this.xname;
+            } else {
+              initParams.opus_name = this.xname;
+            }
+          }
+
+          // 作品数取得
+          this.$http
+            .get(ApiURL.SEARCH_ALL_OPUS, { params: initParams })
+            .then((response) => {
+              // 成功
+
+              // 画面切り替えボタン表示数
+              this.searchOpus.addpage = 0;
+              this.searchOpus.btnloop =
+                response.data.optional.length > Constant.OPUS_LIST_MAX
+                  ? Math.floor(
+                      (response.data.optional.length - 1) /
+                        Constant.OPUS_LIST_MAX
+                    ) + 1
+                  : 1;
+
+              // nページ以上表示しない
+              if (this.searchOpus.btnloop > Constant.OPUS_LIST_PAGE) {
+                // 初期化
+                // ボタン最大値
+                this.searchOpus.max = 0;
+                // ボタン最小値
+                this.searchOpus.min = 0;
+
+                if (
+                  this.searchOpus.btnloop <
+                  this.searchOpus.current + Constant.OPUS_LIST_PAGE
+                ) {
+                  // ページ開始位置
+                  this.searchOpus.addpage =
+                    this.searchOpus.btnloop - Constant.OPUS_LIST_PAGE - 1;
+                  // ループ回数
+                  this.searchOpus.btnloop = Constant.OPUS_LIST_PAGE + 1;
+                } else {
+                  // ボタン最大値
+                  this.searchOpus.max = this.searchOpus.btnloop;
+                  // ページ開始位置
+                  this.searchOpus.addpage = this.searchOpus.current - 1;
+                  // ループ回数
+                  this.searchOpus.btnloop = Constant.OPUS_LIST_PAGE;
+                }
+
+                if (this.searchOpus.current != 1) {
+                  // ボタン最小値
+                  this.searchOpus.min = 1;
+                }
+              }
+            })
+            .catch((error) => {
+              // 失敗
+              this.dangerMsgList = error.response.data.msg;
+            });
         })
         .catch((error) => {
           // 失敗
           this.dangerMsgList = error.response.data.msg;
         });
     },
-    userCreate() {
-      let params = {
-        userName: "user0004",
-      };
-      // 作品追加処理
-      console.log(params);
+    searchOpusApi(current) {
+      // 作品検索処理
+      this.searchOpus.current = current;
+      this.searchOpus.offset = (current - 1) * Constant.OPUS_LIST_MAX;
 
-      // 再読み込み
-      this.$router.go({ name: "graphSubmit" });
+      // 作品画面反映処理
+      this.initialize();
+    },
+    createGraphApi(opusId) {
+      // 作品検索処理
+
+      // パラメータ生成
+      let params = {
+        opus_id: opusId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 作品取得
+      this.$http
+        .get(ApiURL.SEARCH_OPUS, { params: params })
+        .then((response) => {
+          // 成功
+          if (!response.data.optional.length) {
+            this.$http
+              .post(ApiURL.CREATE_GRAPH, params)
+              .then((response) => {
+                // 成功
+                console.log(response);
+                console.log(response.data.optional);
+                // 画面変更
+                this.$router.push({
+                  path: this.graphCreate + "/" + response.data.optional.opus_id,
+                });
+              })
+              .catch(() => {
+                console.log("グラフ登録に失敗しました。");
+              });
+          } else {
+            // 画面変更
+            this.$router.push({
+              path: this.graphCreate + "/" + opusId,
+            });
+          }
+        })
+        .catch(() => {
+          console.log("作品取得に失敗しました。");
+        });
     },
     /* モーダルウィンドウ処理 */
     /* ログアウト処理 */
@@ -245,7 +393,6 @@ export default {
         })
         .catch((error) => {
           // 失敗
-          this.dangerMsgList = error.response.data.msg;
         });
     },
   },
