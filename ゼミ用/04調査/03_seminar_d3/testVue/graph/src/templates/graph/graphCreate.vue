@@ -1,61 +1,53 @@
 <template>
   <div class="row">
-    <aside class="col-12">
-      <!-----------------------------------メニューバー--------------------------------------->
-      <b-navbar toggleable type="dark" variant="dark">
-        <b-button variant="secondary" @click="returnBtn()">
-          <font-awesome-icon icon="arrow-circle-left" />
+    <!-----------------------------------メニューバー--------------------------------------->
+    <b-navbar class="col-12" toggleable type="dark" variant="dark">
+      <b-button variant="secondary" @click="returnBtn()">
+        <font-awesome-icon icon="arrow-circle-left" />
+      </b-button>
+      <b-navbar-brand> {{ opusInfo.opusName }}</b-navbar-brand>
+      <b-navbar-brand>
+        <b-button variant="info" @click="isCreateActorModalOpen()"
+          >Actor<font-awesome-icon icon="user-plus" />
         </b-button>
-        <b-navbar-brand> {{ opusInfo.opusName }}</b-navbar-brand>
-        <b-navbar-brand>
-          <b-button variant="info" @click="isCreateActorModalOpen()"
-            >Actor<font-awesome-icon icon="user-plus" />
-          </b-button>
-          <b-button variant="success" @click="isCreateRelModal = true"
-            >Link
-            <font-awesome-icon icon="arrows-alt-h" />
-          </b-button>
-          <b-dropdown
-            right
-            toggle-class="text-decoration-none"
-            variant="warning"
+        <b-button variant="success" @click="isCreateRelModalOpen()"
+          >Link
+          <font-awesome-icon icon="arrows-alt-h" />
+        </b-button>
+        <b-dropdown right toggle-class="text-decoration-none" variant="warning">
+          <template #button-content>
+            others
+            <font-awesome-icon icon="edit" />
+          </template>
+          <b-dropdown-item @click="isTimeModal = true"
+            >時系列管理</b-dropdown-item
           >
-            <template #button-content>
-              others
-              <font-awesome-icon icon="edit" />
-            </template>
-            <b-dropdown-item @click="isTimeModal = true"
-              >時系列管理</b-dropdown-item
-            >
-            <b-dropdown-item @click="isGroupModal = true"
-              >グループ管理</b-dropdown-item
-            >
-            <b-dropdown-item @click="isRelMstModal = true">
-              関係性管理
-            </b-dropdown-item>
-          </b-dropdown>
-          <b-dropdown right toggle-class="text-decoration-none" no-caret>
-            <template #button-content>
-              <font-awesome-icon icon="cog" />
-            </template>
-            <b-dropdown-item @click="isSubmitCheckModal = true"
-              >投稿する</b-dropdown-item
-            >
-            <b-dropdown-item>
-              <router-link v-bind:to="{ name: graphSubmit }"
-                >相関図投稿画面へ
-              </router-link>
-            </b-dropdown-item>
-            <b-dropdown-item variant="danger" @click="isGraphDeleteModal = true"
-              >相関図を削除</b-dropdown-item
-            >
-            <b-dropdown-item variant="danger" @click="isLogoutCheckModal = true"
-              >ログアウト</b-dropdown-item
-            >
-          </b-dropdown>
-        </b-navbar-brand>
-      </b-navbar>
-    </aside>
+          <b-dropdown-item @click="isGroupModal = true"
+            >グループ管理</b-dropdown-item
+          >
+          <b-dropdown-item @click="isRelMstModal = true">
+            関係性管理
+          </b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown right toggle-class="text-decoration-none" no-caret>
+          <template #button-content>
+            <font-awesome-icon icon="cog" />
+          </template>
+          <b-dropdown-item @click="editOpusApi()">投稿する</b-dropdown-item>
+          <b-dropdown-item>
+            <router-link v-bind:to="{ name: graphSubmit }"
+              >相関図投稿画面へ
+            </router-link>
+          </b-dropdown-item>
+          <b-dropdown-item variant="danger" @click="isGraphDeleteModal = true"
+            >相関図を削除</b-dropdown-item
+          >
+          <b-dropdown-item variant="danger" @click="isLogoutCheckModal = true"
+            >ログアウト</b-dropdown-item
+          >
+        </b-dropdown>
+      </b-navbar-brand>
+    </b-navbar>
     <aside class="col-12">
       <div class="row">
         <!-----------時系列タブ-------------->
@@ -159,20 +151,21 @@
         <!-----------検索-------------->
         <div class="card col-6">
           <div class="card-body">
-            <div class="row h-50 w-100">
+            <div class="row">
               <aside class="col-12">
-                <b-form inline>
-                  <div class="input-group mb-2 mr-sm-2">
-                    <b-form-input
-                      placeholder="検索文字列を入力してください"
-                    ></b-form-input>
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-info">
-                        <font-awesome-icon icon="search" />
-                      </button>
-                    </div>
+                <div class="input-group mb-2 mr-sm-2" inline>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="検索文字列を入力してください"
+                    v-model="currentSearchText"
+                  />
+                  <div class="input-group-prepend">
+                    <button class="btn btn-outline-info" @click="searchGraph()">
+                      <font-awesome-icon icon="search" />
+                    </button>
                   </div>
-                </b-form>
+                </div>
               </aside>
               <!-----------検索タブ-------------->
               <aside class="col-12 p-3">
@@ -185,21 +178,9 @@
                         ? 'btn-secondary active'
                         : 'btn-secondary',
                     ]"
-                    @click="searchOpusApi(1)"
+                    @click="currentSearchBtn = 1"
                   >
                     人物名
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    v-bind:class="[
-                      currentSearchBtn === 2
-                        ? 'btn-secondary active'
-                        : 'btn-secondary',
-                    ]"
-                    @click="searchOpusApi(2)"
-                  >
-                    関係名
                   </button>
                   <button
                     type="button"
@@ -209,7 +190,19 @@
                         ? 'btn-secondary active'
                         : 'btn-secondary',
                     ]"
-                    @click="searchOpusApi(3)"
+                    @click="currentSearchBtn = 3"
+                  >
+                    関係名
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    v-bind:class="[
+                      currentSearchBtn === 2
+                        ? 'btn-secondary active'
+                        : 'btn-secondary',
+                    ]"
+                    @click="currentSearchBtn = 2"
                   >
                     グループ名
                   </button>
@@ -217,7 +210,7 @@
               </aside>
               <!-----------ズームタブ-------------->
               <aside class="col-12 p-3">
-                <input type="range" max="100000" min="4000" v-model="force" />
+                <input type="range" max="50000" min="2000" v-model="force" />
               </aside>
             </div>
           </div>
@@ -553,6 +546,145 @@
           @click="createRelApi()"
         >
           登録
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------Link編集 モーダル-------------->
+    <b-modal v-model="isEditRelModal" title="編集画面">
+      <b-container fluid>
+        <b-row class="mb-1">
+          <b-col cols="3">関係性</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="editRel.relMstId"
+                v-bind:class="[editRel.relMstIdValid]"
+              >
+                <option :value="null" disabled>
+                  関係性を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in relMstList"
+                  :key="key"
+                  v-bind:value="row.rel_mst_id"
+                >
+                  {{ row.rel_mst_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">From</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="editRel.actorId"
+                v-bind:class="[editRel.actorIdValid]"
+              >
+                <option :value="null" disabled>
+                  登場人物を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in actorList"
+                  :key="key"
+                  v-bind:value="row.actor_id"
+                >
+                  {{ row.actor_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">to</b-col>
+          <b-col>
+            <div class="input-group">
+              <select
+                class="form-control"
+                v-model="editRel.targetId"
+                v-bind:class="[editRel.targetIdvalid]"
+              >
+                <option :value="null" disabled>
+                  登場人物を選択してください。
+                </option>
+                <option
+                  v-for="(row, key) in actorList"
+                  :key="key"
+                  v-bind:value="row.actor_id"
+                >
+                  {{ row.actor_name }}
+                </option>
+              </select>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">時系列</b-col>
+          <b-col>
+            <div class="input-group">
+              {{ currentName }}
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="mb-1">
+          <b-col cols="3">詳細情報</b-col>
+          <b-col>
+            <div class="input-group">
+              <b-form-textarea
+                id="link_info"
+                v-model="editRel.relInfo"
+                rows="3"
+                max-rows="10"
+              ></b-form-textarea>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isEditRelModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="success"
+          size="sm"
+          class="float-right"
+          @click="editRelApi()"
+        >
+          更新
+        </b-button>
+      </template>
+    </b-modal>
+    <!-----------Link削除ボタン モーダル-------------->
+    <b-modal v-model="isDeleteRelModal" title="確認画面">
+      <b-container fluid>
+        <p class="my-4">データを削除しますか？</p>
+      </b-container>
+
+      <template #modal-footer>
+        <b-button
+          variant="secondary"
+          size="sm"
+          class="float-right"
+          @click="isDeleteRelModal = false"
+        >
+          閉じる
+        </b-button>
+        <b-button
+          variant="danger"
+          size="sm"
+          class="float-right"
+          @click="deleteRelApi()"
+        >
+          削除
         </b-button>
       </template>
     </b-modal>
@@ -1220,8 +1352,20 @@ export default {
         targetIdvalid: "",
         relMstIdValid: "",
       },
+      editRel: {
+        relId: "",
+        relMstId: null,
+        relInfo: "",
+        actorId: null,
+        targetId: null,
+        version: 0,
+        actorIdValid: "",
+        targetIdvalid: "",
+        relMstIdValid: "",
+      },
       currentId: "time0000",
       currentName: "",
+      currentSearchText: "",
       currentSearchBtn: 1,
       graphList: VueFileName.graphList,
       graphSubmit: VueFileName.graphSubmit,
@@ -1230,7 +1374,7 @@ export default {
       links: [],
       nodeSize: 40,
       canvas: false,
-      force: 4000,
+      force: 2000,
       /* モーダルウィンドウ変数 */
       isCreateActorModal: false,
       isEditActorModal: false,
@@ -1245,9 +1389,9 @@ export default {
       isEditRelMstModal: false,
       isDeleteRelMstModal: false,
       isGraphDeleteModal: false,
-
       isCreateRelModal: false,
-      isEditLinkModal: false,
+      isEditRelModal: false,
+      isDeleteRelModal: false,
       isSubmitCheckModal: false,
       isLogoutCheckModal: false,
     };
@@ -1313,7 +1457,7 @@ export default {
               // グループ取得
               this.selectGroupApi(null, null);
               // グラフ取得
-              this.selectGraphApi();
+              this.selectGraphApi(null, null, null);
               // 登場人物取得
               this.selectActorApi(null, null);
             })
@@ -1401,7 +1545,7 @@ export default {
           // 成功
 
           // 画面反映処理
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
           this.selectActorApi(null, null);
 
           // モーダルウィンドウを閉じる
@@ -1456,7 +1600,7 @@ export default {
           // 成功
 
           // 画面反映処理
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
           this.selectActorApi(null, null);
 
           // 表示変数初期化
@@ -1467,7 +1611,6 @@ export default {
         })
         .catch(() => {
           // 失敗
-          this.editTime.valid = "is-invalid";
           console.log("登場人物更新に失敗しました。");
         });
     },
@@ -1487,7 +1630,7 @@ export default {
         .then(() => {
           // 成功
           // 画面反映処理
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
 
           // 表示変数初期化
           this.currentInfoFormat();
@@ -1498,6 +1641,31 @@ export default {
         .catch(() => {
           // 失敗
           console.log("登場人物削除に失敗しました。");
+        });
+    },
+    async selectRelApi(relId, relMstId) {
+      let params = {
+        rel_id: relId,
+        rel_mst_id: relMstId,
+        opus_id: this.$route.params.id,
+        time_id: this.currentId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 関係画面反映処理
+      // 関係取得
+      await this.$http
+        .get(ApiURL.SEARCH_REL, { params: params })
+        .then((response) => {
+          // 成功
+
+          // 関係
+          this.relList = response.data.optional;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係取得に失敗しました。");
         });
     },
     createRelApi() {
@@ -1524,7 +1692,7 @@ export default {
           // 成功
 
           // 画面反映処理
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
 
           // モーダルウィンドウを閉じる
           this.isCreateRelModal = false;
@@ -1532,6 +1700,73 @@ export default {
         .catch(() => {
           // 失敗
           console.log("関係登録に失敗しました。");
+        });
+    },
+    async editRelApi() {
+      // 更新処理
+
+      // パラメータ作成
+      let params = {
+        rel_id: this.editRel.relId,
+        rel_mst_id: this.editRel.relMstId,
+        rel_mst_info: this.editRel.relInfo,
+        actor_id: this.editRel.actorId,
+        target_id: this.editRel.targetId,
+        opus_id: this.$route.params.id,
+        time_id: this.currentId,
+        version: this.editRel.version,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 更新
+      this.$http
+        .put(ApiURL.EDIT_REL, params)
+        .then(() => {
+          // 成功
+
+          // 画面反映処理
+          this.selectGraphApi(null, null, null);
+          this.selectRelApi(null, null);
+
+          // 表示変数初期化
+          this.currentInfoFormat();
+
+          // モーダルウィンドウ閉じる
+          this.isEditRelModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係更新に失敗しました。");
+        });
+    },
+    deleteRelApi() {
+      // 削除処理
+
+      // パラメータ作成
+      let params = {
+        rel_id: this.currentInfo.currentId,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 削除
+      this.$http
+        .post(ApiURL.DELETE_REL, params)
+        .then(() => {
+          // 成功
+          // 画面反映処理
+          this.selectGraphApi(null, null, null);
+
+          // 表示変数初期化
+          this.currentInfoFormat();
+
+          // モーダルウィンドウ閉じる
+          this.isDeleteRelModal = false;
+        })
+        .catch(() => {
+          // 失敗
+          console.log("関係削除に失敗しました。");
         });
     },
     async selectTimeApi(timeId, timeName) {
@@ -1730,7 +1965,7 @@ export default {
 
           // 画面反映処理
           this.selectGroupApi(null, null);
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
 
           // モーダルウィンドウ閉じる
           this.isEditGroupModal = false;
@@ -1760,7 +1995,7 @@ export default {
 
           // 画面反映処理
           this.selectGroupApi(null, null);
-          this.selectGraphApi();
+          this.selectGraphApi(null, null, null);
 
           // モーダルウィンドウ閉じる
           this.isDeleteGroupModal = false;
@@ -1884,9 +2119,12 @@ export default {
           console.log("関係性削除に失敗しました。");
         });
     },
-    async selectGraphApi() {
+    async selectGraphApi(actorName, groupName, relMstName) {
       // パラメータ生成
       let params = {
+        actor_name: actorName,
+        group_name: groupName,
+        rel_mst_name: relMstName,
         opus_id: this.$route.params.id,
         time_id: this.currentId,
         user_id: this.$store.getters.getUserId,
@@ -1924,6 +2162,46 @@ export default {
         .catch(() => {
           // 失敗
           console.log("汎用マスタ取得に失敗しました。");
+        });
+    },
+    editOpusApi() {
+      // 作品更新処理
+      // パラメータ生成
+      let params = {
+        opus_id: this.$route.params.id,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 作品取得
+      this.$http
+        .get(ApiURL.SEARCH_OPUS, { params: params })
+        .then((response) => {
+          // パラメータ作成
+          params = {
+            opus_id: this.$route.params.id,
+            opus_flg: 1,
+            version: response.data.optional[0].version,
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+          };
+
+          // 作品更新
+          this.$http
+            .put(ApiURL.EDIT_OPUS, params)
+            .then(() => {
+              // 成功
+
+              // モーダルウィンドウ閉じる
+              this.isSubmitCheckModal = true;
+            })
+            .catch(() => {
+              // 失敗
+              console.log("投稿に失敗しました。");
+            });
+        })
+        .catch(() => {
+          console.log("作品取得に失敗しました。");
         });
     },
     /* バリデーション */
@@ -2106,7 +2384,7 @@ export default {
       // モーダルウィンドウ開く
       this.isDeleteGroupModal = true;
     },
-    isCreateActorModalOpen(groupId) {
+    isCreateActorModalOpen() {
       // 登録モーダルウィンドウ
 
       // 初期化
@@ -2156,8 +2434,32 @@ export default {
             });
         } else {
           // 関係編集
-          // モーダルウィンドウ開く
-          this.isEditTimeModal = true;
+          // パラメータ生成
+          let params = {
+            rel_id: this.currentInfo.currentId,
+            user_id: this.$store.getters.getUserId,
+            token: this.$store.getters.getToken,
+          };
+
+          // 関係取得
+          this.$http
+            .get(ApiURL.SEARCH_REL, { params: params })
+            .then((response) => {
+              // モーダルウィンドウ開く
+              this.editRel.relId = response.data.optional[0].rel_id;
+              this.editRel.relMstId = response.data.optional[0].rel_mst_id;
+              this.editRel.relInfo = response.data.optional[0].rel_mst_info;
+              this.editRel.actorId = response.data.optional[0].actor_id;
+              this.editRel.targetId = response.data.optional[0].target_id;
+              this.editRel.opusId = response.data.optional[0].opus_id;
+              this.editRel.version = response.data.optional[0].version;
+
+              // モーダルウィンドウ開く
+              this.isEditRelModal = true;
+            })
+            .catch(() => {
+              console.log("関係取得に失敗しました。");
+            });
         }
       }
     },
@@ -2169,11 +2471,22 @@ export default {
           // モーダルウィンドウ開く
           this.isDeleteActorModal = true;
         } else {
-          // 関係編集
           // モーダルウィンドウ開く
-          this.isEditTimeModal = true;
+          this.isDeleteRelModal = true;
         }
       }
+    },
+    isCreateRelModalOpen() {
+      // 登録モーダルウィンドウ
+
+      // 初期化
+      this.createRel.relMstId = null;
+      this.createRel.relInfo = "";
+      this.createRel.actorId = null;
+      this.createRel.targetId = null;
+
+      // モーダルウィンドウ開く
+      this.isCreateRelModal = true;
     },
     isEditRelMstModalOpen(relMstId, relMstName, version) {
       // 編集モーダルウィンドウ
@@ -2194,6 +2507,25 @@ export default {
 
       // モーダルウィンドウ開く
       this.isDeleteRelMstModal = true;
+    },
+    searchGraph() {
+      // 検索処理
+
+      // 初期化
+      switch (this.currentSearchBtn) {
+        case 1:
+          // 検索処理
+          this.selectGraphApi(this.currentSearchText, null, null);
+          break;
+        case 2:
+          // 検索処理
+          this.selectGraphApi(null, this.currentSearchText, null);
+          break;
+        case 3:
+          // 検索処理
+          this.selectGraphApi(null, null, this.currentSearchText);
+          break;
+      }
     },
     /* 相関図表示処理 */
     isSelectSvg(currentId) {
@@ -2402,7 +2734,6 @@ export default {
     options() {
       return {
         force: this.force,
-        // size:{ w:600, h:600},
         linkWidth: 5,
         nodeSize: this.nodeSize,
         nodeLabels: true,
