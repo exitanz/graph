@@ -32,6 +32,9 @@ try {
     $searchGraphRequest = new SearchGraphRequest();
     if (!empty($_REQUEST['time_id'])) $searchGraphRequest->setTimeId($_REQUEST['time_id']);
     if (!empty($_REQUEST['opus_id'])) $searchGraphRequest->setOpusId($_REQUEST['opus_id']);
+    if (!empty($_REQUEST['actor_name'])) $searchGraphRequest->setActorName($_REQUEST['actor_name']);
+    if (!empty($_REQUEST['rel_mst_name'])) $searchGraphRequest->setRelMstName($_REQUEST['rel_mst_name']);
+    if (!empty($_REQUEST['group_name'])) $searchGraphRequest->setGroupName($_REQUEST['group_name']);
 
     // バリデーションチェック
     if ($searchGraphRequest->validation()) {
@@ -46,7 +49,10 @@ try {
         // 検索
         $optional = (new GraphService())->searchGraph(
             $searchGraphRequest->getTimeId(),
-            $searchGraphRequest->getOpusId()
+            $searchGraphRequest->getOpusId(),
+            $searchGraphRequest->getActorName(),
+            $searchGraphRequest->getGroupName(),
+            $searchGraphRequest->getRelMstName(),
         );
         array_push($msg, "正常");
     } catch (Exception $e) {

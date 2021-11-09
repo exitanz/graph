@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 作品登録処理の値を保持する
+ * 関係性登録処理の値を保持する
  */
 class CreateRelMstRequest
 {
@@ -11,7 +11,7 @@ class CreateRelMstRequest
     private $errorMsg = array();
 
     /**
-     * 作品登録処理の値を格納します
+     * 関係性登録処理の値を格納します
      */
 
     public function __construct()
@@ -69,11 +69,11 @@ class CreateRelMstRequest
 
             // 関係性名の文字数チェック
             if (100 < strlen($this->relMstName)) {
-                array_push($this->errorMsg, 'エラー ：作品名は100文字以内で入力してください');
+                array_push($this->errorMsg, 'エラー ：関係性名は100文字以内で入力してください');
                 $validationFlg = true;
             }
 
-            // 作品IDの文字数チェック
+            // 作品の文字数チェック
             if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
                 array_push($this->errorMsg, 'エラー ：作品IDは' . Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR) . '文字で入力してください');
                 $validationFlg = true;

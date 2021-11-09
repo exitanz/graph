@@ -16,7 +16,7 @@ class GraphService {
     /**
      * グラフ検索をします
      */
-    public function searchGraph($timeId, $opusId) {
+    public function searchGraph($timeId, $opusId, $actorName, $groupName, $relMstName) {
         // 検索処理
 
         // 存在確認
@@ -30,15 +30,12 @@ class GraphService {
         $graphDao = new GraphDao();
 
         // 登場人物情報リスト取得
-        $nodes = $graphDao->selectGraphNodes($timeId, $opusId);
+        $nodes = $graphDao->selectGraphNodes($timeId, $opusId, $actorName, $groupName);
 
         // 関係情報リスト
-        $links = $graphDao->selectGraphLinks($timeId, $opusId);
+        $links = $graphDao->selectGraphLinks($timeId, $opusId, $relMstName);
 
-        return array(
-            "nodes" => $nodes,
-            "links" => $links
-        );
+        return (new GraphService)->consistencyGraph($nodes, $links, $relMstName);
     }
     /**
      * グラフ作成をします
@@ -175,6 +172,60 @@ class GraphService {
 
         return array(
             "opus_id" => $opusTargetId
+        );
+    }
+    /**
+     * 整合性の取れたグラフに直します
+     */
+    public function consistencyGraph($nodes, $links, $relMstName) {
+        if (!empty($relMstName)) {
+            // 関係を持っているノードのみ返却をする
+            $nodeList = array();
+            foreach ($nodes as $node) {
+                $nodeFlg = false;
+                foreach ($links as $link) {
+                    // 関係を保持している登場人物かチェックする
+                    if (strcmp($link['sid'], $node['id']) == 0) {
+                        $nodeFlg = true;
+                    }
+                    if (strcmp($link['tid'], $node['id']) == 0) {
+                        $nodeFlg = true;
+                    }
+                }
+                if ($nodeFlg) {
+                    // 関係を保持している登場人物のみリストに追加する
+                    array_push($nodeList, $node);
+                }
+            }
+        } else {
+            // 関係マスタで検索していない場合、登場人物はそのまま返却
+            $nodeList = $nodes;
+        }
+
+
+        // 返却値に存在しない登場人物を持つ関係を削除する
+        $linkList = array();
+        foreach ($links as $link) {
+            $linkFlg1 = false;
+            $linkFlg2 = false;
+            foreach ($nodeList as $node) {
+                // 関係の登場人物が存在するかチェックする
+                if (strcmp($link['sid'], $node['id']) == 0) {
+                    $linkFlg1 = true;
+                }
+                if (strcmp($link['tid'], $node['id']) == 0) {
+                    $linkFlg2 = true;
+                }
+            }
+            if ($linkFlg1 && $linkFlg2) {
+                // 登場人物が存在する関係のみリストに追加する
+                array_push($linkList, $link);
+            }
+        }
+
+        return array(
+            "nodes" => $nodeList,
+            "links" => $linkList
         );
     }
 }

@@ -6,6 +6,9 @@
 class SearchGraphRequest {
     private $timeId;
     private $opusId;
+    private $actorName = null;
+    private $groupName = null;
+    private $relMstName = null;
     private $errorMsg = array();
 
     /**
@@ -28,6 +31,30 @@ class SearchGraphRequest {
 
     public function setOpusId($opusId) {
         $this->opusId = $opusId;
+    }
+
+    public function getActorName() {
+        return $this->actorName;
+    }
+
+    public function setActorName($actorName) {
+        $this->actorName = $actorName;
+    }
+
+    public function getGroupName() {
+        return $this->groupName;
+    }
+
+    public function setGroupName($groupName) {
+        $this->groupName = $groupName;
+    }
+
+    public function getRelMstName() {
+        return $this->relMstName;
+    }
+
+    public function setRelMstName($relMstName) {
+        $this->relMstName = $relMstName;
     }
 
     public function getErrorMsg() {
@@ -56,6 +83,24 @@ class SearchGraphRequest {
             // 時系列IDの文字数チェック
             if (strlen($this->timeId) != Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR)) {
                 array_push($this->errorMsg, 'エラー ：時系列IDは' . Constant::TIME_ID_DIGIT + strlen(Constant::TIME_ID_STR) . '文字で入力してください');
+                $validationFlg = true;
+            }
+
+            // 登場人物名の文字数チェック
+            if (!empty($this->actorName) && 100 < strlen($this->actorName)) {
+                array_push($this->errorMsg, 'エラー ：登場人物名は100文字以内で入力してください');
+                $validationFlg = true;
+            }
+
+            // グループ名の文字数チェック
+            if (!empty($this->groupName) && 100 < strlen($this->groupName)) {
+                array_push($this->errorMsg, 'エラー ：グループ名は100文字以内で入力してください');
+                $validationFlg = true;
+            }
+
+            // 関係性名の文字数チェック
+            if (!empty($this->relMstName) && 100 < strlen($this->relMstName)) {
+                array_push($this->errorMsg, 'エラー ：関係性名は100文字以内で入力してください');
                 $validationFlg = true;
             }
         } catch (Exception $e) {

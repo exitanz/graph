@@ -157,6 +157,7 @@ class RelDao {
                 "actor_id" => $row['actor_id'],
                 "target_id" => $row['target_id'],
                 "opus_id" => $row['opus_id'],
+                "time_id" => $row['time_id'],
                 "user_id" => $row['user_id'],
                 "version" => $row['version']
             );
