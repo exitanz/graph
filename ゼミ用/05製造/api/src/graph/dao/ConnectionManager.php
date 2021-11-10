@@ -6,9 +6,9 @@
 class ConnectionManager {
 
     private $db;
-    private $host = 'mysql:dbname=dkgraph_correlation;host=localhost:3306'; // ローカル
-    private $username = 'dkgraph_exit';// ローカル
-    // private $host = 'mysql:dbname=dkgraph_correlation;host=mysql1.php.xdomain.ne.jp'; // 本番
+    private $host = 'mysql:dbname=homebit2019_graph;host=mysql1.php.xdomain.ne.jp'; // ローカル
+    private $username = 'homebit2019_test';// ローカル
+    // private $host = 'mysql:dbname=dkgraph_correlation;host=sv1.php.xdomain.ne.jp'; // 本番
     // private $username = 'dkgraph_exit'; // 本番
     private $password = 'g20e38h41AAbf';
 
