@@ -13,7 +13,7 @@ $optional = array();
 
 try {
     // メソッド確認
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'GET') != 0) {
+    if (strcmp((string)$_SERVER['REQUEST_METHOD'], 'GET') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
