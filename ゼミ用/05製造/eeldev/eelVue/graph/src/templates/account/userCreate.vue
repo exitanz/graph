@@ -12,21 +12,16 @@
       <div class="card">
         <article class="card-body">
           <h4 class="card-title text-center mb-4 mt-1">新規登録</h4>
-          <hr>
+          <hr />
           <div class="form-group">
             <br />
-            <div
-              v-for="(error, key) in errors"
-              :key="key"
-            >
-              <div class="alert alert-danger">{{error}}<br /></div>
+            <div v-for="(error, key) in errors" :key="key">
+              <div class="alert alert-danger">{{ error }}<br /></div>
             </div>
-            <div
-              v-if="complete"
-              class="alert alert-success"
-            >
+            <div v-if="complete" class="alert alert-success">
               ユーザ登録が完了しました。<br />
-              （ユーザID：<span class="bg-warning">{{userId}}</span>）<br />
+              （ユーザID：<span class="bg-warning">{{ userId }}</span
+              >）<br />
             </div>
             <br />
             <h3>ユーザ名</h3>
@@ -43,7 +38,7 @@
                 type="text"
                 name="user_name"
                 v-model="userName"
-              >
+              />
             </div>
           </div>
           <br />
@@ -62,7 +57,7 @@
                 type="password"
                 name="password"
                 v-model="password"
-              >
+              />
             </div>
           </div>
           <br />
@@ -97,7 +92,7 @@
 </template>
 
 <script>
-import { ApiURL } from "../../constants/ApiURL.js";
+// import { ApiURL } from "../../constants/ApiURL.js";
 import { CommonUtils } from "../../common/CommonUtils.js";
 import { VueFileName } from "../../constants/VueFileName.js";
 
@@ -125,7 +120,7 @@ export default {
   methods: {
     initialize() {
       // 初期化処理
-      },
+    },
     userCreate() {
       // パラメータ生成
       const params = {
@@ -138,18 +133,18 @@ export default {
         throw "バリデーションエラー";
       }
 
-      this.$http
-        .post(ApiURL.SIGNUP, params)
-        .then((response) => {
+      let test = eel
+        .CreateAccountControler(params)((response) => {
           // ログイン成功
           // 完了処理
           this.complete = true;
-          this.userId = response.data.optional.user_id;
-        })
-        .catch((error) => {
-          // ユーザ登録失敗
-          this.errors = error.response.data.optional.msg;
+          // this.userId = response.data.optional.user_id;
         });
+        console.log(test);
+        // .catch((error) => {
+        //   // ユーザ登録失敗
+        //   this.errors = error.response.data.optional.msg;
+        // });
     },
     validation(params) {
       // 初期化
