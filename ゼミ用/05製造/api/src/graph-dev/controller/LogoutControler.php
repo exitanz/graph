@@ -25,7 +25,7 @@ try {
         throw new Exception('リクエストの値が不正です。');
     }
     // ログアウト
-    setcookie("token[" . $_GET["user_id"] . "]", "", time() - 60);
+    setcookie("graphtoken[" . $_GET["user_id"] . "]", "", time() - 60);
     array_push($msg, "認証解除に成功しました。");
 } catch (Exception $e) {
     array_push($msg, '認証解除に失敗しました');

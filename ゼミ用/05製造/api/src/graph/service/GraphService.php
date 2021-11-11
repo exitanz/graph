@@ -324,10 +324,10 @@ class GraphService {
                 $nodeFlg = false;
                 foreach ($links as $link) {
                     // 関係を保持している登場人物かチェックする
-                    if (strcmp($link['sid'], $node['id']) == 0) {
+                    if (strcmp((string)$link['sid'], (string)$node['id']) == 0) {
                         $nodeFlg = true;
                     }
-                    if (strcmp($link['tid'], $node['id']) == 0) {
+                    if (strcmp((string)$link['tid'], (string)$node['id']) == 0) {
                         $nodeFlg = true;
                     }
                 }
@@ -349,10 +349,10 @@ class GraphService {
             $linkFlg2 = false;
             foreach ($nodeList as $node) {
                 // 関係の登場人物が存在するかチェックする
-                if (strcmp($link['sid'], $node['id']) == 0) {
+                if (strcmp((string)$link['sid'], (string)$node['id']) == 0) {
                     $linkFlg1 = true;
                 }
-                if (strcmp($link['tid'], $node['id']) == 0) {
+                if (strcmp((string)$link['tid'], (string)$node['id']) == 0) {
                     $linkFlg2 = true;
                 }
             }
