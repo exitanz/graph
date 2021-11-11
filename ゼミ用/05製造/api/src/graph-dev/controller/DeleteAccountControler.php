@@ -11,7 +11,7 @@ $resultCode = ResultCode::CODE000;
 $msg = array();
 
 try {
-    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
+    if (strcmp((string)$_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
@@ -47,7 +47,7 @@ try {
         $accountService->deleteAccount($deleteAccountRequest->getUserId());
         
         // ログアウト処理
-        setcookie("token[" . $REQUEST['user_id'] . "]", "", time() - 60);
+        setcookie("graphtoken[" . $REQUEST['user_id'] . "]", "", time() - 60);
         array_push($msg, "正常");
     } catch (Exception $e) {
         // 作品登録エラー

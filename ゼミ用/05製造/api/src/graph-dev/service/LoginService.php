@@ -33,13 +33,17 @@ class LoginService {
         // トークン生成
         $token = hash("sha256", $corUser['user_id'] . date('Y-m-d H:i:s'));
 
+        // クッキー削除
+        setcookie("graphtoken[" . $corUser['user_id'] . "]", "", time() - 60);
+
         // トークンをクッキーに保存
-        setcookie("token[" . $corUser['user_id'] . "]", $token, time() + 86400);
+        setcookie("graphtoken[" . $corUser['user_id'] . "]", $token, time() + 86400, "/");
 
         // ユーザIDとトークンを返却
         $result = array(
             "user_id" => $corUser['user_id'],
-            "token" => $token
+            "token" => $token,
+            "test" => $_COOKIE["graphtoken"][$corUser['user_id']]
         );
 
         return $result;
@@ -57,8 +61,8 @@ class LoginService {
             throw new Exception('認証確認ができません。');
         }
 
-        if (isset($_COOKIE["token"][$userId])) {
-            if (strcmp($_COOKIE["token"][$userId], $token) == 0) {
+        if (isset($_COOKIE["graphtoken"][$userId])) {
+            if (strcmp((string)$_COOKIE["graphtoken"][$userId], (string)$token) == 0) {
                 // 認証されている
                 $tokenFlg = true;
             }

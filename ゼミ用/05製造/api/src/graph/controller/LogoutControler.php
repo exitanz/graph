@@ -10,7 +10,7 @@ $resultCode = ResultCode::CODE000;
 $msg = array();
 
 try {
-    if(strcmp($_SERVER['REQUEST_METHOD'], 'GET') != 0){
+    if(strcmp((string)$_SERVER['REQUEST_METHOD'], 'GET') != 0){
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
@@ -25,7 +25,7 @@ try {
         throw new Exception('リクエストの値が不正です。');
     }
     // ログアウト
-    setcookie("token[" . $_GET["user_id"] . "]", "", time() - 60);
+    setcookie("graphtoken[" . $_GET["user_id"] . "]", "", time() - 60);
     array_push($msg, "認証解除に成功しました。");
 } catch (Exception $e) {
     array_push($msg, '認証解除に失敗しました');

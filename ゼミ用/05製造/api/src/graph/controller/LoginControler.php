@@ -11,7 +11,7 @@ $msg = array();
 $optional = array();
 
 try {
-    if(strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+    if(strcmp((string)$_SERVER['REQUEST_METHOD'], 'POST') != 0){
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
