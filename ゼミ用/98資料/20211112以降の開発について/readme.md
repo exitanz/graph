@@ -29,3 +29,20 @@
 7. eelの起動が確認できれば成功
 
 ![03](./img/03.png)
+
+# 命名規約
+
+### eelPy/api
+
+![04](./img/04.png)
+
+- Controler系
+    - 「～Controler」については `eelPy/main.py` 内にPHPのファイル名と同様のメソッドを作る
+    - 「～Controler」の処理については `eelPy/controler/～ControlerImpl.py` で行う
+- Request系
+    - 「～Request」については `eelPy/request/～Request.py` で処理を行う
+- Service系
+    - 「～Service」については  `eelPy/service/～Service.py` で処理を行う
+- Dao系
+    - 「～Dao」については `eelPy/dao/～Dao.py` で処理を行う
+    - 「～Dao」については `ConnectionManager.py` を使用してDB接続を行う
