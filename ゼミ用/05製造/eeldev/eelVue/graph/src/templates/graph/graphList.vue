@@ -84,7 +84,7 @@
                 row.opus_flg == 1 ? 'background-color: #ffa500;' : ''
               "
             >
-              <td class="col-sm-1">{{ row.opus_name }}</td>
+              <td>{{ row.opus_name }}</td>
               <td>
                 <button
                   type="button"

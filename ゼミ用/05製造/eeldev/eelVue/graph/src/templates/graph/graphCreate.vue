@@ -1202,7 +1202,7 @@
           variant="danger"
           size="sm"
           class="float-right"
-          @click="graphDelete()"
+          @click="deleteOpusApi()"
         >
           削除
         </b-button>
@@ -1631,6 +1631,7 @@ export default {
           // 成功
           // 画面反映処理
           this.selectGraphApi(null, null, null);
+          this.selectActorApi(null, null);
 
           // 表示変数初期化
           this.currentInfoFormat();
@@ -1757,6 +1758,7 @@ export default {
           // 成功
           // 画面反映処理
           this.selectGraphApi(null, null, null);
+          this.selectRelApi(null, null);
 
           // 表示変数初期化
           this.currentInfoFormat();
@@ -2202,6 +2204,28 @@ export default {
         })
         .catch(() => {
           console.log("作品取得に失敗しました。");
+        });
+    },
+    deleteOpusApi() {
+      // 作品削除処理
+      // パラメータ生成
+      let params = {
+        opus_id: this.$route.params.id,
+        user_id: this.$store.getters.getUserId,
+        token: this.$store.getters.getToken,
+      };
+
+      // 作品削除
+      this.$http
+        .post(ApiURL.DELETE_OPUS, params)
+        .then((response) => {
+          // 画面変更
+          this.$router.push({
+            name: VueFileName.graphList,
+          });
+        })
+        .catch(() => {
+          console.log("作品削除に失敗しました。");
         });
     },
     /* バリデーション */
