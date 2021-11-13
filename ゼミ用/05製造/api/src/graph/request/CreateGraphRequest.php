@@ -4,7 +4,6 @@
  * グラフ登録処理の値を保持する
  */
 class CreateGraphRequest {
-    private $graph;
     private $opusId;
     private $userId;
     private $errorMsg = array();
@@ -14,14 +13,6 @@ class CreateGraphRequest {
      */
 
     public function __construct() {
-    }
-
-    public function getGraph() {
-        return $this->graph;
-    }
-
-    public function setGraph($graph) {
-        $this->graph = $graph;
     }
 
     public function getOpusId() {
@@ -52,14 +43,14 @@ class CreateGraphRequest {
 
         try {
             // 入力項目チェック
-            if (empty($this->graph)) {
+            if (empty($this->opusId)) {
                 array_push($this->errorMsg, 'エラー ：必須項目が入力されていません');
                 $validationFlg = true;
             }
 
-            // 登場人物チェック
-            if (empty($this->graph['nodes'])) {
-                array_push($this->errorMsg, 'エラー ：登場人物を0件でグラフ登録はできません');
+            // 作品IDの文字数チェック
+            if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
+                array_push($this->errorMsg, 'エラー ：作品IDは'.Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR).'文字で入力してください');
                 $validationFlg = true;
             }
 

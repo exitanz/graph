@@ -216,6 +216,44 @@ class TimeMstDao {
     /**
      * 時系列情報を取得します
      */
+    public function selectByOpusId($opusId) {
+
+        // db接続
+        $connectionManager = new ConnectionManager();
+
+        // sql作成
+        $sql = "SELECT * FROM time_mst WHERE opus_id=:opus_id;";
+
+        // データベースへの接続を表すPDOインスタンスを生成
+        $pdo = $connectionManager->getDB();
+
+        // プリペアドステートメントを作成
+        $stmt = $pdo->prepare($sql);
+
+        // プレースホルダと変数をバインド
+        $stmt->bindParam(':opus_id', $opusId);
+
+        //  sql実行
+        $stmt->execute();
+
+        $dtoList = array();
+        foreach ($stmt->fetchAll() as $row) {
+            $dto = array(
+                "time_id" => $row['time_id'],
+                "time_name" => $row['time_name'],
+                "opus_id" => $row['opus_id'],
+                "user_id" => $row['user_id'],
+                "version" => $row['version']
+            );
+            array_push($dtoList, $dto);
+        }
+
+        return $dtoList;
+    }
+
+    /**
+     * 時系列情報を取得します
+     */
     public function selectByIdAndVersion($timeId, $timeName, $userId, $version) {
 
         // db接続

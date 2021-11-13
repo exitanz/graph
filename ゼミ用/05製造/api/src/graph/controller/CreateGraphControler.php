@@ -12,7 +12,7 @@ $msg = array();
 $optional = array();
 
 try {
-    if (strcmp((string)$_SERVER['REQUEST_METHOD'], 'POST') != 0) {
+    if (strcmp($_SERVER['REQUEST_METHOD'], 'POST') != 0) {
         // メソッドエラー
         http_response_code(404);
         $resultCode = ResultCode::CODE104;
@@ -32,7 +32,6 @@ try {
 
     // リクエストの値を格納
     $createGraphRequest = new CreateGraphRequest();
-    if (!empty($REQUEST['graph'])) $createGraphRequest->setGraph($REQUEST['graph']);
     if (!empty($REQUEST['opus_id'])) $createGraphRequest->setOpusId($REQUEST['opus_id']);
     if (!empty($REQUEST['user_id'])) $createGraphRequest->setUserId($REQUEST['user_id']);
 
@@ -47,7 +46,7 @@ try {
 
     try {
         // グラフ登録
-        $optional = (new GraphService())->createGraph($createGraphRequest->getGraph(), $createGraphRequest->getOpusId(), $createGraphRequest->getUserId());
+        $optional = (new GraphService())->createGraph($createGraphRequest->getOpusId(), $createGraphRequest->getUserId());
         array_push($msg, "正常");
     } catch (Exception $e) {
         // グラフ登録エラー
