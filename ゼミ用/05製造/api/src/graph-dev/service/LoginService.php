@@ -42,8 +42,7 @@ class LoginService {
         // ユーザIDとトークンを返却
         $result = array(
             "user_id" => $corUser['user_id'],
-            "token" => $token,
-            "test" => $_COOKIE["graphtoken"][$corUser['user_id']]
+            "token" => $token
         );
 
         return $result;
