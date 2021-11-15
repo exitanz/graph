@@ -24,9 +24,7 @@ axios.defaults.withCredentials = true;
 
 let client = axios.create({
   baseURL: 'http://localhost',
-  // baseURL: 'http://dkgraph.php.xdomain.jp',
-  // baseURL: 'http://homebit2019.php.xdomain.jp',
-  // baseURL: 'https://testgraph20211110.000webhostapp.com',
+  // baseURL: 'https://testgraphapi.herokuapp.com/',
   headers: {
     'content-type': 'application/json; charset=utf-8',
   },

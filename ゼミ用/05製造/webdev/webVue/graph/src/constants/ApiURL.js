@@ -5,6 +5,7 @@ export class ApiURL {
 
   // 共通部分
   static CONTROLLER = '/graph-dev/controller';
+  // static CONTROLLER = '/graph/controller';
   /** ログイン */
   static LOGIN = ApiURL.CONTROLLER + '/LoginControler.php';
   /** ログアウト */
