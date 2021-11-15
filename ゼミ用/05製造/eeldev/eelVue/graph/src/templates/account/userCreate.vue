@@ -134,7 +134,7 @@ export default {
       }
 
       let test = eel
-        .CreateAccountControler(params)((response) => {
+        .CreateAccountController(params)((response) => {
           // ログイン成功
           // 完了処理
           this.complete = true;
