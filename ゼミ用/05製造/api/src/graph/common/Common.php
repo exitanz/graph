@@ -25,7 +25,7 @@ class Common {
     public static function start_truncate($str, $num) {
         if (empty($str)) return 0;
         if ($num < 0 || strlen($str) <= $num) return 0;
-        return mb_substr($str, $num, strlen($str));
+        return substr($str, $num, strlen($str));
     }
 
     /**
@@ -37,7 +37,7 @@ class Common {
         if ($num < 0 || strlen($str) <= $num) {
             return $str;
         }
-        return mb_substr($str, 0, $num);
+        return substr($str, 0, $num);
     }
 
     /**

@@ -106,7 +106,7 @@ class ActorDao {
         if ($groupId != null) {
             $sql .= "group_id=:group_id AND ";
         }
-        $sql .= "user_id=:user_id LIMIT :offset, :limit;";
+        $sql .= "user_id=:user_id LIMIT :limit OFFSET :offset;";
 
         // db接続
         $connectionManager = new ConnectionManager();

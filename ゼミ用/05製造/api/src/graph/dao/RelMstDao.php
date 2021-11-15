@@ -83,7 +83,7 @@ class RelMstDao {
         if ($opusId != null) {
             $sql .= 'opus_id=:opus_id AND ';
         }
-        $sql .= "user_id=:user_id LIMIT :offset, :limit;";
+        $sql .= "user_id=:user_id LIMIT :limit OFFSET :offset;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();

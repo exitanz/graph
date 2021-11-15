@@ -45,7 +45,7 @@ class OpusDao {
         if ($opusName != null) {
             $sql .= "AND opus_name LIKE :opus_name ";
         }
-        $sql .= "LIMIT :offset, :limit;";
+        $sql .= "LIMIT :limit OFFSET :offset;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -99,7 +99,7 @@ class OpusDao {
         if ($opusName != null) {
             $sql .= 'opus_name LIKE :opus_name AND ';
         }
-        $sql .= "user_id=:user_id LIMIT :offset, :limit;";
+        $sql .= "user_id=:user_id LIMIT :limit OFFSET :offset;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
