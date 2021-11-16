@@ -1507,17 +1507,17 @@ export default {
 
       if (!!this.createActor.imgFile) {
         // 画像登録
-        await this.$http
-          .post(ApiURL.CREATE_IMG_ACTOR, params)
-          .then((response) => {
+        try {
+        await eel
+          .CreateActorImgControler(params)((response) => {
             // 成功
             // 画像取得
             this.createActor.actorImg = response.data.optional[0].actor_img;
-          })
-          .catch(() => {
+          });
+        } catch (error) {
             // 失敗
             console.log("画像登録に失敗しました。");
-          });
+        }
       }
 
       params = {

@@ -133,18 +133,22 @@ export default {
         throw "バリデーションエラー";
       }
 
-      let test = eel
-        .CreateAccountController(params)((response) => {
+      try {
+        eel.CreateAccountController(params)((response) => {
           // ログイン成功
           // 完了処理
           this.complete = true;
           // this.userId = response.data.optional.user_id;
         });
-        console.log(test);
-        // .catch((error) => {
-        //   // ユーザ登録失敗
-        //   this.errors = error.response.data.optional.msg;
-        // });
+      } catch (error) {
+        // ユーザ登録失敗
+        this.errors = error.response.data.optional.msg;
+      }
+      console.log(test);
+      // .catch((error) => {
+      //   // ユーザ登録失敗
+      //   this.errors = error.response.data.optional.msg;
+      // });
     },
     validation(params) {
       // 初期化

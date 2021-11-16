@@ -1,13 +1,12 @@
 import eel
-from api.controller import CreateAccountControllerImpl
+from api.controller.CreateAccountControllerImpl import CreateAccountControllerImpl
 
 eel.init('web')
 
 
 @eel.expose
 def CreateAccountController(request):
-    createAccountControllerImpl = CreateAccountControllerImpl.CreateAccountControllerImpl(request)
-    return None
+    return CreateAccountControllerImpl(request)
 
 
 # say_hello_py('Python World!')
