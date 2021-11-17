@@ -105,12 +105,6 @@ class CreateActorRequest {
                 $validationFlg = true;
             }
 
-            // 登場人物画像の文字数チェック
-            if (!empty($this->actorImg) && 2000 < strlen($this->actorImg)) {
-                array_push($this->errorMsg, 'エラー ：登場人物画像は2000文字以内で入力してください');
-                $validationFlg = true;
-            }
-
             // 作品IDの文字数チェック
             if (strlen($this->opusId) != Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR)) {
                 array_push($this->errorMsg, 'エラー ：作品IDは' . Constant::OPUS_ID_DIGIT + strlen(Constant::OPUS_ID_STR) . '文字で入力してください');

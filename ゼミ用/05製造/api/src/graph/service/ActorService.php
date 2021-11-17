@@ -30,7 +30,7 @@ class ActorService {
     public function createActor($actorName, $actorInfo, $actorImg, $opusId, $timeId, $groupId, $userId) {
 
         if(empty( (new OpusDao())->selectById($opusId, null, $userId))){
-            throw new Exception('登場人物が存在しません。');
+            throw new Exception('作品が存在しません。');
         }
 
         // IDの最大値を取得

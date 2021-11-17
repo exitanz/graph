@@ -23,8 +23,8 @@ axios.defaults.jar = new tough.CookieJar();
 axios.defaults.withCredentials = true;
 
 let client = axios.create({
-  baseURL: 'http://localhost',
-  // baseURL: 'https://testgraphapi.herokuapp.com/',
+  // baseURL: 'http://localhost',
+  baseURL: 'https://testgraphapi.herokuapp.com/',
   headers: {
     'content-type': 'application/json; charset=utf-8',
   },

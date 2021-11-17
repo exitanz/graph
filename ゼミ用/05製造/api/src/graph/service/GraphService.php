@@ -182,7 +182,6 @@ class GraphService {
             }
         } catch (Exception $e) {
             // グラフ登録エラー
-            print_r($e);
             throw new Exception('DB操作エラー');
         }
 

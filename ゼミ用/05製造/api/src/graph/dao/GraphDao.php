@@ -12,7 +12,7 @@ class GraphDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT CAST(REPLACE(actor.actor_id, 'actor', '') AS SIGNED) AS id, actor.actor_id, actor.actor_name AS name, actor.actor_info, actor.actor_img, actor.group_id, actor.time_id, actor.opus_id, actor.version, group_mst.group_name, time_mst.time_name, opus.opus_name, group_mst.group_color AS _color, group_mst.group_info FROM actor INNER JOIN group_mst ON actor.group_id = group_mst.group_id INNER JOIN time_mst ON actor.time_id = time_mst.time_id INNER JOIN opus ON actor.opus_id = opus.opus_id WHERE ";
+        $sql = "SELECT CAST(REPLACE(actor.actor_id, 'actor', '') AS INTEGER) AS id, actor.actor_id, actor.actor_name AS name, actor.actor_info, actor.actor_img, actor.group_id, actor.time_id, actor.opus_id, actor.version, group_mst.group_name, time_mst.time_name, opus.opus_name, group_mst.group_color AS _color, group_mst.group_info FROM actor INNER JOIN group_mst ON actor.group_id = group_mst.group_id INNER JOIN time_mst ON actor.time_id = time_mst.time_id INNER JOIN opus ON actor.opus_id = opus.opus_id WHERE ";
         if ($actorName != null) {
             $sql .= "actor.actor_name LIKE :actor_name AND ";
         }
@@ -75,7 +75,7 @@ class GraphDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT CAST(REPLACE(rel.actor_id, 'actor', '') AS SIGNED) AS sid, CAST(REPLACE(rel.target_id, 'actor', '') AS SIGNED) AS tid, rel.rel_id, rel.rel_mst_id, rel.rel_mst_info, rel.time_id, rel.opus_id, rel.version, rel_mst.rel_mst_name, time_mst.time_name, opus.opus_name FROM rel INNER JOIN rel_mst ON rel.rel_mst_id = rel_mst.rel_mst_id INNER JOIN time_mst ON rel.time_id = time_mst.time_id INNER JOIN opus ON rel.opus_id = opus.opus_id WHERE ";
+        $sql = "SELECT CAST(REPLACE(rel.actor_id, 'actor', '') AS INTEGER) AS sid, CAST(REPLACE(rel.target_id, 'actor', '') AS INTEGER) AS tid, rel.rel_id, rel.rel_mst_id, rel.rel_mst_info, rel.time_id, rel.opus_id, rel.version, rel_mst.rel_mst_name, time_mst.time_name, opus.opus_name FROM rel INNER JOIN rel_mst ON rel.rel_mst_id = rel_mst.rel_mst_id INNER JOIN time_mst ON rel.time_id = time_mst.time_id INNER JOIN opus ON rel.opus_id = opus.opus_id WHERE ";
         if ($relMstName != null) {
             $sql .= "rel_mst.rel_mst_name LIKE :rel_mst_name AND ";
         }
