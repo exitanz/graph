@@ -97,7 +97,7 @@ CREATE TABLE actor(
     actor_id VARCHAR(8) NOT NULL,
     actor_name VARCHAR(100) NOT NULL,
     actor_info VARCHAR(1200),
-    actor_img VARCHAR(2000),
+    actor_img VARCHAR,
     opus_id VARCHAR(8) NOT NULL,
     time_id VARCHAR(8) NOT NULL,
     group_id VARCHAR(9) NOT NULL,
