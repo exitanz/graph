@@ -400,9 +400,8 @@ export default {
       };
 
       // 作品一覧取得
-      this.$http
-        .get(ApiURL.SEARCH_OPUS, { params: params })
-        .then((response) => {
+      try {
+        eel.SearchOpusControler({ params: params })((response) => {
           // 成功
           this.opusList = response.data.optional;
 
@@ -417,9 +416,8 @@ export default {
           };
 
           // 作品数取得
-          this.$http
-            .get(ApiURL.SEARCH_OPUS, { params: initParams })
-            .then((response) => {
+          try {
+            eel.SearchOpusControler({ params: initParams })((response) => {
               // 成功
 
               // 画面切り替えボタン表示数
@@ -463,17 +461,18 @@ export default {
                   this.searchOpus.min = 1;
                 }
               }
-            })
-            .catch((error) => {
-              // 失敗
-              this.dangerMsgList = error.response.data.msg;
             });
-        })
-        .catch((error) => {
-          // 失敗
-          this.dangerMsgList = error.response.data.msg;
+          } catch (error) {
+            // 失敗
+            this.dangerMsgList = error.response.data.msg;
+          }
         });
+      } catch (error) {
+        // 失敗
+        this.dangerMsgList = error.response.data.msg;
+      }
     },
+
     async uploadListApi() {
       // 作品投稿処理
 
@@ -488,15 +487,14 @@ export default {
         };
 
         // 作品更新
-        await this.$http
-          .put(ApiURL.EDIT_OPUS, params)
-          .then((response) => {
+        try {
+          await eel.EditOpusControler(params)((response) => {
             // 成功
-          })
-          .catch((error) => {
-            // 失敗
-            this.dangerMsgList = error.response.data.msg;
           });
+        } catch (error) {
+          // 失敗
+          this.dangerMsgList = error.response.data.msg;
+        }
       }
 
       // メッセージ更新
@@ -532,9 +530,8 @@ export default {
       }
 
       // 作品登録
-      this.$http
-        .post(ApiURL.CREATE_OPUS, params)
-        .then((response) => {
+      try {
+        eel.CreateOpusControler(params)((response) => {
           // 成功
 
           // 作品画面反映処理
@@ -542,12 +539,13 @@ export default {
 
           // メッセージ更新
           this.successMsgList = ["作品を登録しました。"];
-        })
-        .catch((error) => {
-          // 失敗
-          this.dangerMsgList = error.response.data.msg;
         });
+      } catch (error) {
+        // 失敗
+        this.dangerMsgList = error.response.data.msg;
+      }
     },
+
     editOpusApi() {
       // 作品更新処理
 
@@ -567,9 +565,8 @@ export default {
       }
 
       // 作品更新
-      this.$http
-        .put(ApiURL.EDIT_OPUS, params)
-        .then((response) => {
+      try {
+        eel.EditOpusControler(params)((response) => {
           // 成功
 
           // 作品画面反映処理
@@ -580,12 +577,13 @@ export default {
 
           // メッセージ更新
           this.successMsgList = ["作品を更新しました。"];
-        })
-        .catch((error) => {
-          // 失敗
-          this.dangerMsgList = error.response.data.msg;
         });
+      } catch (error) {
+        // 失敗
+        this.dangerMsgList = error.response.data.msg;
+      }
     },
+
     deleteOpusApi() {
       // 作品削除処理
 
@@ -597,9 +595,8 @@ export default {
       };
 
       // 作品削除
-      this.$http
-        .post(ApiURL.DELETE_OPUS, params)
-        .then((response) => {
+      try {
+        eel.EditOpusControler(params)((response) => {
           // 成功
 
           // 作品画面反映処理
@@ -610,12 +607,13 @@ export default {
 
           // メッセージ更新
           this.successMsgList = ["作品を削除しました。"];
-        })
-        .catch((error) => {
-          // 失敗
-          this.dangerMsgList = error.response.data.msg;
         });
+      } catch (error) {
+        // 失敗
+        this.dangerMsgList = error.response.data.msg;
+      }
     },
+
     /* モーダルウィンドウ処理 */
     isEditOpusModalOpen(opusId, opusName, opusFlg, version) {
       // 作品編集モーダルウィンドウ
@@ -692,20 +690,19 @@ export default {
       };
 
       // ログアウト処理
-      this.$http
-        .get(ApiURL.LOGOUT, { params: params })
-        .then((response) => {
+      try {
+        eel.LogoutControler({ params: params })((response) => {
           // 成功
 
           // 画面変更
           this.$router.push({
             name: VueFileName.login,
           });
-        })
-        .catch((error) => {
-          // 失敗
-          this.dangerMsgList = error.response.data.msg;
         });
+      } catch (error) {
+        // 失敗
+        this.dangerMsgList = error.response.data.msg;
+      }
     },
   },
 };

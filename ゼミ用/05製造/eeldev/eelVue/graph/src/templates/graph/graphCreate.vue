@@ -42,9 +42,6 @@
           <b-dropdown-item variant="danger" @click="isGraphDeleteModal = true"
             >相関図を削除</b-dropdown-item
           >
-          <b-dropdown-item variant="danger" @click="isLogoutCheckModal = true"
-            >ログアウト</b-dropdown-item
-          >
         </b-dropdown>
       </b-navbar-brand>
     </b-navbar>
@@ -1208,31 +1205,6 @@
         </b-button>
       </template>
     </b-modal>
-    <!-----------ログアウト モーダル-------------->
-    <b-modal v-model="isLogoutCheckModal" title="確認画面">
-      <b-container fluid>
-        <p class="my-4">ログアウトしますか？</p>
-      </b-container>
-
-      <template #modal-footer>
-        <b-button
-          variant="secondary"
-          size="sm"
-          class="float-right"
-          @click="isLogoutCheckModal = false"
-        >
-          閉じる
-        </b-button>
-        <b-button
-          variant="danger"
-          size="sm"
-          class="float-right"
-          @click="logout()"
-        >
-          ログアウト
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 
@@ -1393,7 +1365,6 @@ export default {
       isEditRelModal: false,
       isDeleteRelModal: false,
       isSubmitCheckModal: false,
-      isLogoutCheckModal: false,
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -1415,9 +1386,9 @@ export default {
       };
 
       // 作品取得
-      this.$http
-        .get(ApiURL.SEARCH_OPUS, { params: params })
-        .then((response) => {
+
+      try {
+        eel.SearchOpusControler(params)((response) => {
           // 作品情報格納
           this.opusInfo.opusId = response.data.optional[0].opus_id;
           this.opusInfo.opusName = response.data.optional[0].opus_name;
@@ -1439,9 +1410,9 @@ export default {
 
           // 時系列画面反映処理
           // 時系列取得
-          this.$http
-            .get(ApiURL.SEARCH_TIME, { params: params })
-            .then((response) => {
+
+          try {
+            eel.SearchTimeControler(params)((response) => {
               // 成功
 
               // 時系列
@@ -1460,16 +1431,16 @@ export default {
               this.selectGraphApi(null, null, null);
               // 登場人物取得
               this.selectActorApi(null, null);
-            })
-            .catch(() => {
-              // 失敗
-              console.log("時系列取得に失敗しました。");
             });
-        })
-        .catch(() => {
-          // 失敗
-          console.log("作品取得に失敗しました。");
+          } catch (error) {
+            // 失敗
+            console.log("時系列取得に失敗しました。");
+          }
         });
+      } catch (error) {
+        // 失敗
+        console.log("作品取得に失敗しました。");
+      }
     },
     /* API */
     async selectActorApi(actorId, actorName) {
@@ -1484,18 +1455,17 @@ export default {
 
       // 登場人物画面反映処理
       // 登場人物取得
-      await this.$http
-        .get(ApiURL.SEARCH_ACTOR, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchActorControler(params)((response) => {
           // 成功
 
           // 登場人物
           this.actorList = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("登場人物取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("登場人物取得に失敗しました。");
+      }
     },
     async createActorApi() {
       // 画像登録
@@ -1508,15 +1478,14 @@ export default {
       if (!!this.createActor.imgFile) {
         // 画像登録
         try {
-        await eel
-          .CreateActorImgControler(params)((response) => {
+          await eel.CreateActorImgControler(params)((response) => {
             // 成功
             // 画像取得
             this.createActor.actorImg = response.data.optional[0].actor_img;
           });
         } catch (error) {
-            // 失敗
-            console.log("画像登録に失敗しました。");
+          // 失敗
+          console.log("画像登録に失敗しました。");
         }
       }
 
@@ -1539,9 +1508,9 @@ export default {
       }
 
       // 登録
-      this.$http
-        .post(ApiURL.CREATE_ACTOR, params)
-        .then(() => {
+
+      try {
+        eel.CreateActorControler(params)(() => {
           // 成功
 
           // 画面反映処理
@@ -1550,11 +1519,11 @@ export default {
 
           // モーダルウィンドウを閉じる
           this.isCreateActorModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("登場人物登録に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("登場人物登録に失敗しました。");
+      }
     },
     async editActorApi() {
       // 更新処理
@@ -1566,17 +1535,17 @@ export default {
 
       if (!!this.editActor.imgFile) {
         // 画像登録
-        await this.$http
-          .post(ApiURL.CREATE_IMG_ACTOR, params)
-          .then((response) => {
+
+        try {
+          await eel.CreateActorImgControler(params)((response) => {
             // 成功
             // 画像取得
             this.editActor.actorImg = response.data.optional[0].actor_img;
-          })
-          .catch(() => {
-            // 失敗
-            console.log("画像登録に失敗しました。");
           });
+        } catch (error) {
+          // 失敗
+          console.log("画像登録に失敗しました。");
+        }
       }
 
       // パラメータ作成
@@ -1594,9 +1563,9 @@ export default {
       };
 
       // 更新
-      this.$http
-        .put(ApiURL.EDIT_ACTOR, params)
-        .then(() => {
+
+      try {
+        eel.EditActorControler(params)(() => {
           // 成功
 
           // 画面反映処理
@@ -1608,11 +1577,11 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isEditActorModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("登場人物更新に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("登場人物更新に失敗しました。");
+      }
     },
     deleteActorApi() {
       // 削除処理
@@ -1625,9 +1594,8 @@ export default {
       };
 
       // 削除
-      this.$http
-        .post(ApiURL.DELETE_ACTOR, params)
-        .then(() => {
+      try {
+        eel.DeleteActorControler(params)(() => {
           // 成功
           // 画面反映処理
           this.selectGraphApi(null, null, null);
@@ -1638,11 +1606,11 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isDeleteActorModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("登場人物削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("登場人物削除に失敗しました。");
+      }
     },
     async selectRelApi(relId, relMstId) {
       let params = {
@@ -1656,18 +1624,17 @@ export default {
 
       // 関係画面反映処理
       // 関係取得
-      await this.$http
-        .get(ApiURL.SEARCH_REL, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchRelControler(params)((response) => {
           // 成功
 
           // 関係
           this.relList = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係取得に失敗しました。");
+      }
     },
     createRelApi() {
       let params = {
@@ -1687,9 +1654,8 @@ export default {
       }
 
       // 登録
-      this.$http
-        .post(ApiURL.CREATE_REL, params)
-        .then(() => {
+      try {
+        eel.CreateRelControler(params)(() => {
           // 成功
 
           // 画面反映処理
@@ -1697,11 +1663,11 @@ export default {
 
           // モーダルウィンドウを閉じる
           this.isCreateRelModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係登録に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係登録に失敗しました。");
+      }
     },
     async editRelApi() {
       // 更新処理
@@ -1721,9 +1687,8 @@ export default {
       };
 
       // 更新
-      this.$http
-        .put(ApiURL.EDIT_REL, params)
-        .then(() => {
+      try {
+        eel.EditRelControler(params)(() => {
           // 成功
 
           // 画面反映処理
@@ -1735,12 +1700,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isEditRelModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係更新に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係更新に失敗しました。");
+      }
     },
+
     deleteRelApi() {
       // 削除処理
 
@@ -1752,9 +1718,8 @@ export default {
       };
 
       // 削除
-      this.$http
-        .post(ApiURL.DELETE_REL, params)
-        .then(() => {
+      try {
+        eel.DeleteRelControler(params)(() => {
           // 成功
           // 画面反映処理
           this.selectGraphApi(null, null, null);
@@ -1765,12 +1730,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isDeleteRelModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係削除に失敗しました。");
+      }
     },
+
     async selectTimeApi(timeId, timeName) {
       let params = {
         time_id: timeId,
@@ -1782,19 +1748,19 @@ export default {
 
       // 時系列画面反映処理
       // 時系列取得
-      await this.$http
-        .get(ApiURL.SEARCH_TIME, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchTimeControler({ params: params })((response) => {
           // 成功
 
           // 時系列
           this.timeList = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("時系列取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("時系列取得に失敗しました。");
+      }
     },
+
     createTimeApi() {
       let params = {
         time_name: this.createTime.timeName,
@@ -1809,20 +1775,19 @@ export default {
       }
 
       // 時系列登録
-      this.$http
-        .post(ApiURL.CREATE_TIME, params)
-        .then(() => {
+      try {
+        eel.CreateTimeControler(params)(() => {
           // 成功
 
           // 画面反映処理
           this.selectTimeApi(null, null);
-        })
-        .catch(() => {
-          // 失敗
-          this.createTime.valid = "is-invalid";
-          console.log("時系列登録に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("時系列登録に失敗しました。");
+      }
     },
+
     editTimeApi() {
       // 更新処理
 
@@ -1841,9 +1806,8 @@ export default {
       }
 
       // 更新
-      this.$http
-        .put(ApiURL.EDIT_TIME, params)
-        .then((response) => {
+      try {
+        eel.EditTimeControler(params)((response) => {
           // 成功
 
           // 画面反映処理
@@ -1851,13 +1815,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isEditTimeModal = false;
-        })
-        .catch((error) => {
-          // 失敗
-          this.editTime.valid = "is-invalid";
-          console.log("時系列更新に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("時系列更新に失敗しました。");
+      }
     },
+
     deleteTimeApi() {
       // 削除処理
 
@@ -1869,9 +1833,8 @@ export default {
       };
 
       // 削除
-      this.$http
-        .post(ApiURL.DELETE_TIME, params)
-        .then((response) => {
+      try {
+        eel.DeleteTimeControler(params)((response) => {
           // 成功
 
           // 画面反映処理
@@ -1879,12 +1842,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isDeleteTimeModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("時系列削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("時系列削除に失敗しました。");
+      }
     },
+
     async selectGroupApi(groupId, groupName) {
       let params = {
         group_id: groupId,
@@ -1897,19 +1861,19 @@ export default {
 
       // グループ画面反映処理
       // グループ取得
-      await this.$http
-        .get(ApiURL.SEARCH_GROUP, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchGroupControler({ params: params })((response) => {
           // 成功
 
           // グループ
           this.groupList = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("グループ取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("グループ取得に失敗しました。");
+      }
     },
+
     createGroupApi() {
       let params = {
         group_name: this.createGroup.groupName,
@@ -1926,21 +1890,19 @@ export default {
       }
 
       // 登録
-      this.$http
-        .post(ApiURL.CREATE_GROUP, params)
-        .then(() => {
+      try {
+        eel.CreateGroupControler(params)(() => {
           // 成功
 
           // 画面反映処理
           this.selectGroupApi(null, null);
-        })
-        .catch(() => {
-          // 失敗
-          this.createGroup.groupNameValid = "is-invalid";
-          this.createGroup.groupColorValid = "is-invalid";
-          console.log("グループ登録に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("グループ登録に失敗しました。");
+      }
     },
+
     editGroupApi() {
       // 更新処理
 
@@ -1960,9 +1922,8 @@ export default {
       }
 
       // 更新
-      this.$http
-        .put(ApiURL.EDIT_GROUP, params)
-        .then((response) => {
+      try {
+        eel.EditGroupControler(params)((response) => {
           // 成功
 
           // 画面反映処理
@@ -1971,14 +1932,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isEditGroupModal = false;
-        })
-        .catch((error) => {
-          // 失敗
-          this.editGroup.groupNameValid = "is-invalid";
-          this.editGroup.groupColorValid = "is-invalid";
-          console.log("グループ更新に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("グループ更新に失敗しました。");
+      }
     },
+
     deleteGroupApi() {
       // 削除処理
 
@@ -1990,9 +1950,8 @@ export default {
       };
 
       // 削除
-      this.$http
-        .post(ApiURL.DELETE_GROUP, params)
-        .then(() => {
+      try {
+        eel.DeleteGroupControler(params)(() => {
           // 成功
 
           // 画面反映処理
@@ -2001,12 +1960,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isDeleteGroupModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("グループ削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("グループ削除に失敗しました。");
+      }
     },
+
     async selectRelMstApi(relMstId, relMstName) {
       let params = {
         rel_mst_id: relMstId,
@@ -2018,19 +1978,19 @@ export default {
 
       // 関係性画面反映処理
       // 関係性取得
-      await this.$http
-        .get(ApiURL.SEARCH_RELMST, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchRelMstControler({ params: params })((response) => {
           // 成功
 
           // 関係性
           this.relMstList = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係性取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係性取得に失敗しました。");
+      }
     },
+
     createRelMstApi() {
       let params = {
         rel_mst_name: this.createRelMst.relMstName,
@@ -2045,20 +2005,20 @@ export default {
       }
 
       // 関係性登録
-      this.$http
-        .post(ApiURL.CREATE_RELMST, params)
-        .then(() => {
+      try {
+        eel;
+        CreateRelMstControler(params)(() => {
           // 成功
 
           // 画面反映処理
           this.selectRelMstApi(null, null);
-        })
-        .catch(() => {
-          // 失敗
-          this.createRelMst.valid = "is-invalid";
-          console.log("関係性登録に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係性登録に失敗しました。");
+      }
     },
+
     editRelMstApi() {
       // 更新処理
 
@@ -2077,9 +2037,8 @@ export default {
       }
 
       // 更新
-      this.$http
-        .put(ApiURL.EDIT_RELMST, params)
-        .then((response) => {
+      try {
+        eel.EditRelMstControler(params)((response) => {
           // 成功
 
           // 画面反映処理
@@ -2087,13 +2046,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isEditRelMstModal = false;
-        })
-        .catch((error) => {
-          // 失敗
-          this.editRelMst.valid = "is-invalid";
-          console.log("関係性更新に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係性更新に失敗しました。");
+      }
     },
+
     deleteRelMstApi() {
       // 削除処理
 
@@ -2105,9 +2064,8 @@ export default {
       };
 
       // 削除
-      this.$http
-        .post(ApiURL.DELETE_RELMST, params)
-        .then((response) => {
+      try {
+        eel.DeleteRelMstControler(params)((response) => {
           // 成功
 
           // 画面反映処理
@@ -2115,12 +2073,13 @@ export default {
 
           // モーダルウィンドウ閉じる
           this.isDeleteRelMstModal = false;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("関係性削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("関係性削除に失敗しました。");
+      }
     },
+
     async selectGraphApi(actorName, groupName, relMstName) {
       // パラメータ生成
       let params = {
@@ -2134,16 +2093,17 @@ export default {
       };
 
       // グラフ取得
-      await this.$http
-        .get(ApiURL.SEARCH_GRAPH, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchGroupControler({ params: params }).then((response) => {
           this.nodes = response.data.optional.nodes;
           this.links = response.data.optional.links;
-        })
-        .catch(() => {
-          console.log("グラフ取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("グラフ取得に失敗しました。");
+      }
     },
+
     async selectCommonMstApi(commonKey) {
       let params = {
         common_key: commonKey,
@@ -2153,19 +2113,19 @@ export default {
 
       // 汎用マスタ画面反映処理
       // 汎用マスタ取得
-      await this.$http
-        .get(ApiURL.COMMON_MST, { params: params })
-        .then((response) => {
+      try {
+        await eel.SearchCommonControler({ params: params })((response) => {
           // 成功
 
           // 汎用マスタ
           this.commonMstColor = response.data.optional;
-        })
-        .catch(() => {
-          // 失敗
-          console.log("汎用マスタ取得に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("汎用マスタ取得に失敗しました。");
+      }
     },
+
     editOpusApi() {
       // 作品更新処理
       // パラメータ生成
@@ -2176,9 +2136,8 @@ export default {
       };
 
       // 作品取得
-      this.$http
-        .get(ApiURL.SEARCH_OPUS, { params: params })
-        .then((response) => {
+      try {
+        eel.SearchOpusControler({ params: params })((response) => {
           // パラメータ作成
           params = {
             opus_id: this.$route.params.id,
@@ -2187,24 +2146,24 @@ export default {
             user_id: this.$store.getters.getUserId,
             token: this.$store.getters.getToken,
           };
-
-          // 作品更新
-          this.$http
-            .put(ApiURL.EDIT_OPUS, params)
-            .then(() => {
-              // 成功
-
-              // モーダルウィンドウ閉じる
-              this.isSubmitCheckModal = true;
-            })
-            .catch(() => {
-              // 失敗
-              console.log("投稿に失敗しました。");
-            });
-        })
-        .catch(() => {
-          console.log("作品取得に失敗しました。");
         });
+
+        // 作品更新
+        try {
+          eel.EditOpusControler(params)(() => {
+            // 成功
+
+            // モーダルウィンドウ閉じる
+            this.isSubmitCheckModal = true;
+          });
+        } catch (error) {
+          // 失敗
+          console.log("投稿に失敗しました。");
+        }
+      } catch (error) {
+        // 失敗
+        console.log("作品取得に失敗しました。");
+      }
     },
     deleteOpusApi() {
       // 作品削除処理
@@ -2216,18 +2175,19 @@ export default {
       };
 
       // 作品削除
-      this.$http
-        .post(ApiURL.DELETE_OPUS, params)
-        .then((response) => {
+      try {
+        eel.DeleteOpusControler(params)((response) => {
           // 画面変更
           this.$router.push({
             name: VueFileName.graphList,
           });
-        })
-        .catch(() => {
-          console.log("作品削除に失敗しました。");
         });
+      } catch (error) {
+        // 失敗
+        console.log("作品削除に失敗しました。");
+      }
     },
+
     /* バリデーション */
     createActorValidation(params) {
       // 初期化
@@ -2437,9 +2397,8 @@ export default {
           };
 
           // 登場人物取得
-          this.$http
-            .get(ApiURL.SEARCH_ACTOR, { params: params })
-            .then((response) => {
+          eel
+            .SearchActorControler({ params: params })((response) => {
               // モーダルウィンドウ開く
               this.editActor.actorId = response.data.optional[0].actor_id;
               this.editActor.actorName = response.data.optional[0].actor_name;
@@ -2456,6 +2415,26 @@ export default {
             .catch(() => {
               console.log("登場人物取得に失敗しました。");
             });
+
+          try {
+            eel.SearchActorControler({ params: params })((response) => {
+              // モーダルウィンドウ開く
+              this.editActor.actorId = response.data.optional[0].actor_id;
+              this.editActor.actorName = response.data.optional[0].actor_name;
+              this.editActor.actorInfo = response.data.optional[0].actor_info;
+              this.editActor.actorImg = response.data.optional[0].actor_img;
+              this.editActor.opusId = response.data.optional[0].opus_id;
+              this.editActor.timeId = response.data.optional[0].time_id;
+              this.editActor.groupId = response.data.optional[0].group_id;
+              this.editActor.version = response.data.optional[0].version;
+
+              // モーダルウィンドウ開く
+              this.isEditActorModal = true;
+            });
+          } catch (error) {
+            // 失敗
+            console.log("登場人物取得に失敗しました。");
+          }
         } else {
           // 関係編集
           // パラメータ生成
@@ -2466,9 +2445,8 @@ export default {
           };
 
           // 関係取得
-          this.$http
-            .get(ApiURL.SEARCH_REL, { params: params })
-            .then((response) => {
+          try {
+            eel.SearchRelControler({ params: params })((response) => {
               // モーダルウィンドウ開く
               this.editRel.relId = response.data.optional[0].rel_id;
               this.editRel.relMstId = response.data.optional[0].rel_mst_id;
@@ -2480,13 +2458,15 @@ export default {
 
               // モーダルウィンドウ開く
               this.isEditRelModal = true;
-            })
-            .catch(() => {
-              console.log("関係取得に失敗しました。");
             });
+          } catch (error) {
+            // 失敗
+            console.log("関係取得に失敗しました。");
+          }
         }
       }
     },
+
     isDeleteActorOrLinkModalOpen() {
       // 編集モーダルウィンドウ
 
@@ -2567,9 +2547,8 @@ export default {
         };
 
         // グラフ取得
-        this.$http
-          .get(ApiURL.SEARCH_GRAPH, { params: params })
-          .then((response) => {
+        try {
+          eel.SearchGraphControler({ params: params })((response) => {
             this.nodes = response.data.optional.nodes;
             this.links = response.data.optional.links;
             // 表示変数初期化
@@ -2588,14 +2567,16 @@ export default {
               }
             }
             this.selectGroupApi();
-          })
-          .catch((error) => {
-            console.log("グラフ取得に失敗しました。");
           });
-      } catch (e) {
-        console.log(e);
+        } catch (e) {
+          console.log(e);
+        }
+      } catch (error) {
+        // 失敗
+        console.log("グラフ取得に失敗しました。");
       }
     },
+
     /* 前ページ遷移処理 */
     returnBtn() {
       this.$router.go(-1);
@@ -2724,30 +2705,6 @@ export default {
       };
 
       return imgFlg;
-    },
-    /* ログアウト処理 */
-    logout() {
-      // ログアウト
-
-      // パラメータ作成
-      let params = {
-        user_id: this.$store.getters.getUserId,
-      };
-
-      // ログアウト処理
-      this.$http
-        .get(ApiURL.LOGOUT, { params: params })
-        .then((response) => {
-          // 成功
-
-          // 画面変更
-          this.$router.push({
-            name: VueFileName.login,
-          });
-        })
-        .catch((error) => {
-          // 失敗
-        });
     },
   },
   components: {
