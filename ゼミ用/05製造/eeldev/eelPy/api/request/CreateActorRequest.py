@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * 作品登録処理の値を保持する
 # */
@@ -48,7 +51,8 @@ class CreateActorRequest:
 
         try:
             # 入力項目チェック
-            if (len(self.actorName) == 0 or len(self.opusId) == 0 or len(self.timeId) == 0 or len(self.groupId) == 0 or len(self.userId) == 0):
+            if (len(self.actorName) == 0 or len(self.opusId) == 0 or len(self.timeId) == 0 or len(
+                    self.groupId) == 0 or len(self.userId) == 0):
                 self.errorMsg.append('エラー ：必須項目が入力されていません')
                 validationFlg = True
 
@@ -58,33 +62,32 @@ class CreateActorRequest:
                 validationFlg = True
 
             # 登場人物説明の文字数チェック
-            if (2000 < len(self.actorInfo)):
+            if (1200 < len(self.actorInfo)):
                 self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
-                validationFlg = True
-
-            # 登場人物画像の文字数チェック
-            if (len(self.actorImg) != 0 and 2000 < len(self.actorImg)):
-                self.errorMsg.append('エラー ：登場人物画像は2000文字以内で入力してください')
                 validationFlg = True
 
             # 作品IDの文字数チェック
-            if (2000 < len(self.opusId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.OPUS_ID_DIGIT + len(Constant.OPUS_ID_STR) < len(self.opusId)):
+                self.errorMsg.append(
+                    'エラー ：登場人物説明は' + Constant.OPUS_ID_DIGIT + len(Constant.OPUS_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # 時系列IDの文字数チェック
-            if (2000 < len(self.timeId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) < len(self.timeId)):
+                self.errorMsg.append(
+                    'エラー ：時系列IDは' + Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # グループIDの文字数チェック
-            if (2000 < len(self.groupId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.GROUP_ID_DIGIT + len(Constant.OPUS_ID_STR) < len(self.groupId)):
+                self.errorMsg.append(
+                    'エラー ：グループIDは' + Constant.GROUP_ID_DIGIT + len(Constant.OPUS_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # ユーザIDの文字数チェック
-            if (2000 < len(self.userId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) < len(self.userId)):
+                self.errorMsg.append(
+                    'エラー ：登場人物説明は' + Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
         except Exception as e:
