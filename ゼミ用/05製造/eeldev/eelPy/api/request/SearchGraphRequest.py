@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * グラフ検索処理の値を保持する
 # */
@@ -45,14 +48,16 @@ class SearchGraphRequest:
                 validationFlg = True
 
             # 作品IDの文字数チェック
-            if (2000 < len(self.opusId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.OPUS_ID_DIGIT + len(Constant.OPUS_ID_STR) < len(self.opusId)):
+                self.errorMsg.append(
+                    'エラー ：作品IDは' + Constant.OPUS_ID_DIGIT + len(Constant.OPUS_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # 時系列IDの文字数チェック
-            if (2000 < len(self.timeId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
-                validationFlg = True   
+            if (Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) < len(self.timeId)):
+                self.errorMsg.append(
+                    'エラー ：時系列IDは' + Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) + '文字以内で入力してください')
+                validationFlg = True
 
             # 登場人物名の文字数チェック
             if (len(self.actorName) != 0 and 100 < len(self.actorName)):

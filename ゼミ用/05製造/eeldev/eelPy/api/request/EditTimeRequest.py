@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * 時系列編集処理の値を保持する
 # */
@@ -41,8 +44,9 @@ class EditTimeRequest:
                 validationFlg = True
 
             # 時系列IDの文字数チェック
-            if (2000 < len(self.timeId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) < len(self.timeId)):
+                self.errorMsg.append(
+                    'エラー ：時系列IDは' + Constant.TIME_ID_DIGIT + len(Constant.TIME_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # 時系列名の文字数チェック
@@ -51,9 +55,10 @@ class EditTimeRequest:
                 validationFlg = True
 
             # ユーザIDの文字数チェック
-            if (2000 < len(self.userId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
-                validationFlg = True      
+            if (Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) < len(self.userId)):
+                self.errorMsg.append(
+                    'エラー ：ユーザIDは' + Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) + '文字以内で入力してください')
+                validationFlg = True
 
         except Exception as e:
             validationFlg = True

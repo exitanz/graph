@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * 登場人物検索処理の値を保持する
 # */
@@ -61,9 +64,10 @@ class SearchActorRequest:
 
         try:
             # ユーザIDの文字数チェック
-            if (2000 < len(self.userId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
-                validationFlg = True      
+            if (Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) < len(self.userId)):
+                self.errorMsg.append(
+                    'エラー ：ユーザIDは' + Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) + '文字以内で入力してください')
+                validationFlg = True
 
         except Exception as e:
             validationFlg = True

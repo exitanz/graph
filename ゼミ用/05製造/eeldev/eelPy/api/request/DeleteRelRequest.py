@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * 関係削除処理の値を保持する
 # */
@@ -37,13 +40,15 @@ class DeleteRelRequest:
                 validationFlg = True
 
             # 関係IDの文字数チェック
-            if (2000 < len(self.relId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.REL_ID_DIGIT + len(Constant.REL_ID_STR) < len(self.relId)):
+                self.errorMsg.append(
+                    'エラー ：関係IDは' + Constant.REL_ID_DIGIT + len(Constant.REL_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # ユーザIDの文字数チェック
-            if (2000 < len(self.userId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) < len(self.userId)):
+                self.errorMsg.append(
+                    'エラー ：ユーザIDは' + Constant.USER_ID_DIGIT + len(Constant.USER_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
         except Exception as e:

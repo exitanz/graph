@@ -1,3 +1,6 @@
+from ..common.Constant import Constant
+
+
 # /**
 # * 関係性編集処理の値を保持する
 # */
@@ -41,8 +44,9 @@ class EditRelMstRequest:
                 validationFlg = True
 
             # 関係性IDの文字数チェック
-            if (2000 < len(self.relMstId)):
-                self.errorMsg.append('エラー ：登場人物説明は1200文字以内で入力してください')
+            if (Constant.REL_MST_ID_DIGIT + len(Constant.REL_MST_ID_STR) < len(self.relMstId)):
+                self.errorMsg.append(
+                    'エラー ：関係性IDは' + Constant.REL_MST_ID_DIGIT + len(Constant.REL_MST_ID_STR) + '文字以内で入力してください')
                 validationFlg = True
 
             # 関係性名の文字数チェック
