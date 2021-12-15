@@ -12,7 +12,7 @@ class TimeMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT Max(time_id) AS time_id FROM time_mst;";
+        $sql = "SELECT Max(time_id) AS time_id FROM time_mst ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -38,7 +38,7 @@ class TimeMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst;";
+        $sql = "SELECT * FROM time_mst ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -82,7 +82,7 @@ class TimeMstDao {
         if ($opusId != null) {
             $sql .= 'opus_id=:opus_id AND ';
         }
-        $sql .= "user_id=:user_id LIMIT :limit OFFSET :offset;";
+        $sql .= "user_id=:user_id ORDER BY time_id LIMIT :limit OFFSET :offset;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -139,7 +139,7 @@ class TimeMstDao {
         if ($timeName != null) {
             $sql .= 'time_name LIKE :time_name AND ';
         }
-        $sql .= "user_id=:user_id;";
+        $sql .= "user_id=:user_id ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -184,7 +184,7 @@ class TimeMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst WHERE time_id=:time_id;";
+        $sql = "SELECT * FROM time_mst WHERE time_id=:time_id ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -222,7 +222,7 @@ class TimeMstDao {
         $connectionManager = new ConnectionManager();
 
         // sql作成
-        $sql = "SELECT * FROM time_mst WHERE opus_id=:opus_id;";
+        $sql = "SELECT * FROM time_mst WHERE opus_id=:opus_id ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
@@ -265,7 +265,7 @@ class TimeMstDao {
         if ($timeName != null) {
             $sql .= 'time_name LIKE :time_name AND ';
         }
-        $sql .= "version=:version AND user_id=:user_id;";
+        $sql .= "version=:version AND user_id=:user_id ORDER BY time_id;";
 
         // データベースへの接続を表すPDOインスタンスを生成
         $pdo = $connectionManager->getDB();
